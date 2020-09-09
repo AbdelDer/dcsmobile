@@ -1,0 +1,6 @@
+#this file is important for container animation
+
+analyzer:
+  enable-experiment:
+    - control-flow-collections
+    - spread-collections
