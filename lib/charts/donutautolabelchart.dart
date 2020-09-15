@@ -82,15 +82,12 @@ class DonutAutoLabelChart extends StatelessWidget {
 
     return [
       new charts.Series<VehicleStatus, String>(
-        id: 'Sales',
+        id: 'vehicle',
         domainFn: (VehicleStatus vstatus, _) => vstatus.status,
         measureFn: (VehicleStatus vstatus, _) => vstatus.value,
         data: data,
         colorFn: (VehicleStatus vstatus, _) =>
             charts.ColorUtil.fromDartColor(vstatus.colorVal),
-        // // Set a label accessor to control the text of the arc label.
-        // labelAccessorFn: (VehicleStatus row, _) => '${row.year}: ${row.sales}',
-        // fillColorFn: (VehicleStatus sales, _) => sales.colorVal,
       )
     ];
   }

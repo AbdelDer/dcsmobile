@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//this app bar used in dashboard only
 class FancyAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String text; //Specify content from outside
   final Color statusBarColor; //Set the color of statusbar
@@ -31,17 +32,22 @@ class _FancyAppBarState extends State<FancyAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    var divHeight = MediaQuery.of(context).size.height * 0.5;
+    var divHeight = MediaQuery.of(context).size.height * 0.6;// was multiplied by 0.5
     if (MediaQuery.of(context).orientation == Orientation.portrait &&
         MediaQuery.of(context).size.shortestSide >= 600) {
       _iconSize = 40.0;
+      divHeight = MediaQuery.of(context).size.height * 0.45;// was multiplied by 0.5
 //      print("tablet portrait");
     } else if (MediaQuery.of(context).orientation == Orientation.landscape &&
         MediaQuery.of(context).size.shortestSide >= 550) {
       _iconSize = 40.0;
+      divHeight = MediaQuery.of(context).size.height * 0.75;// was multiplied by 0.5
 //      print("tablet landscape");
     } else {
       _iconSize = 30.0;
+      if(MediaQuery.of(context).orientation == Orientation.landscape) {
+        divHeight = MediaQuery.of(context).size.height * 0.95;
+      }
     }
     return Container(
       height: divHeight,

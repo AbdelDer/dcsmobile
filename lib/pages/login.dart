@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/animations/fadeanimation.dart';
@@ -260,6 +258,7 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> _login(params) async {
+    //first we verify if we will use user inputs or saved information
     if (params != null) {
       _accountController.text = params[0];
       _usernameController.text = params[1];
@@ -276,6 +275,7 @@ class _LoginState extends State<Login> {
           ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: _.message, type: 'error');
         } else {
           await saveLoginInfo();
+          //here if it's the first time the user uses the app we'll show a guide, else we will navigate to dashboard
           if(showIntroduction) {
             Navigator.of(context).pushNamedAndRemoveUntil(
                 '/introduction', (Route<dynamic> route) => false);
@@ -291,7 +291,7 @@ class _LoginState extends State<Login> {
     }
   }
 
-  //here we verify if we have already stored login data (username, password, account)
+  //here we verify if we have already login data (username, password, account) stored in device.
   void _verifySavedInfo() async {
     var userID, accountID, pass;
     bool error = false;

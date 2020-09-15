@@ -22,6 +22,7 @@ class _TransparentContainerState extends State<TransparentContainer> {
 
   double _fontSize;
   double _iconSize;
+  double _width;
 
   @override
   Widget build(BuildContext context) {
@@ -31,20 +32,24 @@ class _TransparentContainerState extends State<TransparentContainer> {
             MediaQuery.of(context).orientation == Orientation.portrait)) {
       _iconSize = 30;
       _fontSize = 20;
-//      print("phone shortest size");
+      _width = 160;
+  //      print("phone shortest size");
     } else if (MediaQuery.of(context).orientation == Orientation.portrait &&
         MediaQuery.of(context).size.shortestSide >= 600) {
       _iconSize = 40;
-      _fontSize = 30;
+      _fontSize = 25;
+      _width = 160;
 //      print("tablet portrait");
     } else if (MediaQuery.of(context).orientation == Orientation.landscape &&
         MediaQuery.of(context).size.shortestSide >= 550) {
       _iconSize = 50;
-      _fontSize = 30;
+      _fontSize = 25;
+      _width = 160;
 //      print("tablet landscape");
     } else {
       _iconSize = 40;
       _fontSize = 20;
+      _width = 120;
 //      print("size ${MediaQuery.of(context).size.shortestSide}");
     }
     return InkResponse(
@@ -61,9 +66,9 @@ class _TransparentContainerState extends State<TransparentContainer> {
         }
       },
       child: Container(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(5),
         height: 140,
-        width: 220,
+        width: _width,
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
         ),

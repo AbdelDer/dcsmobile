@@ -19,10 +19,9 @@ class Api {
   // static final baseUrl = 'http://31.207.38.29:9090';
 //  static final baseUrl = 'http://192.168.1.254:9090';
 //  static final baseUrl = 'http://192.168.1.6:9090';
-  static final baseUrl = 'http://192.168.100.111:9090';
+  static final baseUrl = 'http://192.168.1.4:9090';
 
   static Future<Response> login(params) async {
-    // print('in login');
     await connected();
     var body;
     var httpCustom;
@@ -44,6 +43,7 @@ class Api {
 
     if (httpResponse.statusCode != 200) {
       String message = responseBody['message'];
+      print("$message");
       return Response.error(message);
     }
 
