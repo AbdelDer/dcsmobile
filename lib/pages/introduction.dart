@@ -125,7 +125,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
       ),
       PageViewModel(
         decoration: _pageDecoration,
-        title: "Notifications",
+        title: "Alarms",
         bodyWidget: Container(
           width: _width,
           height: _height,

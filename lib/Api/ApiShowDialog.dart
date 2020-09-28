@@ -21,7 +21,7 @@ class ApiShowDialog{
           context: scaffoldKey.currentContext,
           builder: (__) => AlertDialog(
             title: Text('erreur', style: TextStyle(color: type =='error' ? Colors.red : Colors.blue),),
-            content: Text(message),
+            content: Text("message"),
             actions: <Widget>[
               FlatButton(child: Text('ok'),onPressed: () => Navigator.of(__).pop(),)
             ],

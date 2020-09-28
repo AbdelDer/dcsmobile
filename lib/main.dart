@@ -1,4 +1,8 @@
-import 'package:dcsmobile/pages/notificationview.dart';
+import 'package:dcsmobile/pages/helpscreen.dart';
+import 'package:dcsmobile/pages/historytest.dart';
+import 'package:dcsmobile/pages/alarmview.dart';
+import 'package:dcsmobile/pages/notificationsview.dart';
+import 'package:dcsmobile/pages/reportscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:dcsmobile/pages/Position.dart';
 import 'package:dcsmobile/pages/dashboard.dart';
@@ -9,16 +13,21 @@ void main() => runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Tracking App",
-      initialRoute: '/login',
+      initialRoute: '/commands',
       routes: {
         // When navigating to the "/" rou
         // te, build the FirstScreen widget.
         // When navigating to the "/second" route, build the SecondScreen widget.
         '/login': (context) => Login(),
+        '/history': (context) => Position("Tous", "History"),
         '/introduction': (context) => IntroductionPage(),
         '/dashboard': (context) => Dashboard(),
         '/position': (context) => Position("Tous", ""),
-        '/notification': (context) => Position("Tous", "Notifications"),
+        '/alarm': (context) => Position("Tous", "Alarms"),
+        '/notifications': (context) => NotificationsView(),
+        '/help': (context) => HelpScreen("Assistance"),
+        '/report' : (context) => Position("Tous", "Report"),
+        '/commands' : (context) => Position("Tous", "Commands"),
       },
       // home: Home(),
     )

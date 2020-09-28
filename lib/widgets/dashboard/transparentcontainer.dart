@@ -26,7 +26,7 @@ class _TransparentContainerState extends State<TransparentContainer> {
 
   @override
   Widget build(BuildContext context) {
-    if ((MediaQuery.of(context).size.width < 550 &&:
+    if ((MediaQuery.of(context).size.width < 550 &&
             MediaQuery.of(context).orientation == Orientation.landscape) ||
         (MediaQuery.of(context).size.width < 400 &&
             MediaQuery.of(context).orientation == Orientation.portrait)) {

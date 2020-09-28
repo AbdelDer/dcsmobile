@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/pages/ReportView.dart';
-import 'package:dcsmobile/pages/notificationview.dart';
+import 'package:dcsmobile/pages/commandsscreen.dart';
+import 'package:dcsmobile/pages/alarmview.dart';
+import 'package:dcsmobile/pages/reportscreen.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -100,6 +102,7 @@ class VehicleListViewState extends State {
 
   ListView _devicesListView(data) {
     return ListView.builder(
+        shrinkWrap: true,
         itemCount: data.length,
         itemBuilder: (context, index) {
           return _tile(data[index]);
@@ -114,20 +117,28 @@ class VehicleListViewState extends State {
       elevation: 2,
       child: ExpansionTile(
         initiallyExpanded: false,
-        children: _option == "Notifications" ? <Widget>[
-          NotificationView(scaffoldKey, data.deviceID)
+        children: _option == "Alarms" ? <Widget>[
+          AlarmView(scaffoldKey, data.deviceID)
         ] : [],
         backgroundColor: Colors.transparent,
         onExpansionChanged: (val) async {
           if (_option == "Report") {
-            showModalBottomSheet(
-              isScrollControlled: true,
-                backgroundColor: Colors.transparent,
+            showDialog(
+              // isScrollControlled: true,
+              //   backgroundColor: Colors.transparent,
                 context: context,
                 builder: (context) {
-                  return ReportView(scaffoldKey, data.deviceID, data.vehicleModel);
+                  return ReportScreen();
                 });
-          } else if(_option == "History" || _option == "Live") {
+          }else if (_option == "Commands") {
+            showDialog(
+              // isScrollControlled: true,
+              //   backgroundColor: Colors.transparent,
+                context: context,
+                builder: (context) {
+                  return CommandsScreen();
+                });
+          }else if(_option == "History" || _option == "Live") {
             Navigator.push(
               context,
               MaterialPageRoute(

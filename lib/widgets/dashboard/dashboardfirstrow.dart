@@ -58,9 +58,9 @@ class _DashboardFirstRowState extends State<DashboardFirstRow> {
               TransparentContainer(
                   icon: Icons.place, quantity: data['Tous'], description: "Tous"),
               TransparentContainer(
-                  icon: Icons.place, quantity: data['En marche'], description: "En marche"),
+                  icon: Icons.place, quantity: data['En marche'] ?? 0, description: "En marche"),
               TransparentContainer(
-                  icon: Icons.place, quantity: data['En parking'], description: "En parking"),
+                  icon: Icons.place, quantity: data['En parking'] ?? 0, description: "En parking"),
             ],
           ),
           Row(
@@ -71,9 +71,9 @@ class _DashboardFirstRowState extends State<DashboardFirstRow> {
               TransparentContainer(
                   icon: Icons.place, quantity: data['Tous'], description: "Tous"),
               TransparentContainer(
-                  icon: Icons.place, quantity: data['En marche'], description: "En marche"),
+                  icon: Icons.place, quantity: data['En marche'] ?? 0, description: "En marche"),
               TransparentContainer(
-                  icon: Icons.place, quantity: data['En parking'], description: "En parking"),
+                  icon: Icons.place, quantity: data['En parking'] ?? 0, description: "En parking"),
             ],
           ),
         ],

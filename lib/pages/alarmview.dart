@@ -4,22 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:numberpicker/numberpicker.dart';
 
-class NotificationView extends StatefulWidget {
+class AlarmView extends StatefulWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey;
   final _model;
 
-  const NotificationView(this._scaffoldKey, this._model);
+  const AlarmView(this._scaffoldKey, this._model);
 
   @override
-  _NotificationViewState createState() =>
-      _NotificationViewState(_scaffoldKey, _model);
+  _AlarmViewState createState() =>
+      _AlarmViewState(_scaffoldKey, _model);
 }
 
-class _NotificationViewState extends State<NotificationView> {
+class _AlarmViewState extends State<AlarmView> {
   final GlobalKey<ScaffoldState> _scaffoldKey;
   final _model;
 
-  _NotificationViewState(this._scaffoldKey, this._model);
+  _AlarmViewState(this._scaffoldKey, this._model);
 
   bool _isRunning = false;
   bool _isSpeedLimited = false;

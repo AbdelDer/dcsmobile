@@ -1,5 +1,8 @@
 import 'package:dcsmobile/pages/Position.dart';
+import 'package:dcsmobile/pages/helpscreen.dart';
 import 'package:dcsmobile/pages/introduction.dart';
+import 'package:dcsmobile/pages/notificationsview.dart';
+import 'package:dcsmobile/pages/reportscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -50,10 +53,10 @@ class FEDrawer extends StatelessWidget {
                 ),
               ),
             ),
-//            ListTile(
-//              leading: Icon(Icons.group_work),
-//              title: Text('Groupe de véhicules'),
-//            ),
+           ListTile(
+             leading: Icon(Icons.group_work),
+             title: Text('Groupe de véhicules'),
+           ),
             ListTile(
               leading: Icon(Icons.insert_drive_file),
               title: Text('Rapport'),
@@ -64,25 +67,76 @@ class FEDrawer extends StatelessWidget {
                 ),
               ),
             ),
-//            ListTile(
-//              leading: Icon(Icons.accessibility_new),
-//              title: Text('Commandes'),
-//            ),
-//            ListTile(
-//              leading: Icon(Icons.alarm),
-//              title: Text('Alarmes'),
-//            ),
+           ListTile(
+             leading: Icon(Icons.accessibility_new),
+             title: Text('Commandes'),
+             onTap: () => Navigator.push(
+               context,
+               MaterialPageRoute(
+                 builder: (context) => Position("Tous", "Commands"),
+               ),
+             ),
+           ),
+           ListTile(
+             leading: Icon(Icons.alarm),
+             title: Text('Notifications'),
+             onTap: () => Navigator.push(
+               context,
+               MaterialPageRoute(
+                 builder: (context) => NotificationsView(),
+               ),
+             ),
+           ),
             ListTile(
               leading: Icon(Icons.notifications),
-              title: Text('Notifications'),
+              title: Text('Alarms'),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Position("Tous", "Notifications"),
+                  builder: (context) => Position("Tous", "Alarms"),
                 ),
               ),
             ),
-
+            ListTile(
+              leading: Icon(Icons.visibility),
+              title: Text('Radar'),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Position("Tous", "Alarms"),
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.report_problem),
+              title: Text('Maintenance'),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Position("Tous", "Alarms"),
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.subscriptions),
+              title: Text('Abonnement'),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Position("Tous", "Alarms"),
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.live_help),
+              title: Text('Assistance'),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HelpScreen("Assistance"),
+                ),
+              ),
+            ),
             ListTile(
               leading: Icon(Icons.search),
               title: Text('guide'),

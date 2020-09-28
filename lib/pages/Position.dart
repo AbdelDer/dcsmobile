@@ -34,10 +34,12 @@ class _PositionState extends State<Position> {
       _title = Text("Rapport");
     } else if (_option == 'History') {
       _title = Text("Historique");
-    } else if (_option == 'Notifications') {
-      _title = Text("Notifications");
+    } else if (_option == 'Alarms') {
+      _title = Text("Alarms");
     } else if(_option == "Live"){
       _title = Text("Position");
+    } else if(_option == "Commands"){
+      _title = Text("Commandes");
     }
   }
 
@@ -88,18 +90,28 @@ class _PositionState extends State<Position> {
                   );
                 });
               } else {
-                setState(() {
+                setState((){
                   _icon = Icons.search;
+                  if (_option == 'Report') {
+                    _title = Text("Rapport");
+                  } else if (_option == 'History') {
+                    _title = Text("Historique");
+                  } else if (_option == 'Alarms') {
+                    _title = Text("Alarms");
+                  } else if(_option == "Live") {
+                    _title = Text("Position");
+                  } else if(_option == "Commands") {
+                    _title = Text("Commandes");
+                  }
                 });
-                if (_option == 'Report') {
-                  _title = Text("Rapport");
-                } else if (_option == 'History') {
-                  _title = Text("Historique");
-                } else if (_option == 'Notifications') {
-                  _title = Text("Notifications");
-                } else if(_option == "Live") {
-                  _title = Text("Position");
-                }
+                setState(() {
+                  _deviceListViewKey.currentState.setState(() {
+                    _deviceListViewKey.currentState.search = "";
+                  });
+                  _deviceListViewKey.currentState.setState(() async {
+                    await _deviceListViewKey.currentState.fetchDevices();
+                  });
+                });
               }
             },
           ),

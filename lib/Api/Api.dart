@@ -3,8 +3,6 @@ import 'dart:io';
 
 import 'package:dcsmobile/Api/Response.dart';
 import 'package:dcsmobile/models/Account.dart';
-import 'package:dcsmobile/models/Device.dart';
-import 'package:dcsmobile/models/DeviceList.dart';
 import 'package:dcsmobile/models/EventData.dart';
 import 'package:dcsmobile/models/Group.dart';
 import 'package:dcsmobile/models/Report.dart';
@@ -15,11 +13,7 @@ import 'HttpCustom.dart';
 
 class Api {
   static final httpClient = HttpClient();
-
-  // static final baseUrl = 'http://31.207.38.29:9090';
-//  static final baseUrl = 'http://192.168.1.254:9090';
-//  static final baseUrl = 'http://192.168.1.6:9090';
-  static final baseUrl = 'http://192.168.1.4:9090';
+  static final baseUrl = 'http://91.234.195.124:9090/api';
 
   static Future<Response> login(params) async {
     await connected();
