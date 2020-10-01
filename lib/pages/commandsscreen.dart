@@ -6,8 +6,12 @@ import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 
 class CommandsScreen extends StatefulWidget {
+  String _vehicleModel;
+
+  CommandsScreen(this._vehicleModel);
+
   @override
-  _CommandsScreenState createState() => _CommandsScreenState();
+  _CommandsScreenState createState() => _CommandsScreenState(_vehicleModel);
 }
 
 class _CommandsScreenState extends State<CommandsScreen> {
@@ -19,6 +23,13 @@ class _CommandsScreenState extends State<CommandsScreen> {
     fontSize: 18,
   );
 
+  String _vehicleModel;
+
+
+  String get vehicleModel => _vehicleModel;
+
+  _CommandsScreenState(this._vehicleModel);
+
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
@@ -29,8 +40,8 @@ class _CommandsScreenState extends State<CommandsScreen> {
       contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       title: Center(
         child: Text(
-          "Commandes",
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          "Commandes: ${_vehicleModel}",
+          style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
         ),
       ),
       children: [
@@ -38,9 +49,10 @@ class _CommandsScreenState extends State<CommandsScreen> {
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: RaisedButton(
-              child: Text("cm 1"),
+              padding: const EdgeInsets.symmetric(horizontal: 50),
+              child: Text("Allumer / éteindre", style: TextStyle(color: Colors.white),),
               onPressed: () {},
-              color: Colors.blueAccent,
+              color: Colors.green.shade500,
             ),
           ),
         ),
@@ -48,9 +60,10 @@ class _CommandsScreenState extends State<CommandsScreen> {
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: RaisedButton(
-              child: Text("cm 2"),
+              padding: const EdgeInsets.symmetric(horizontal: 70),
+              child: Text("DÉBLOQUER", style: TextStyle(color: Colors.white),),
               onPressed: () {},
-              color: Colors.blue,
+              color: Colors.red.shade500,
             ),
           ),
         ),
@@ -58,9 +71,10 @@ class _CommandsScreenState extends State<CommandsScreen> {
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: RaisedButton(
-              child: Text("cm 3"),
+              // padding: const EdgeInsets.symmetric(horizontal: 0),
+              child: Text("RÉINITIALISATION DU FLUSH", style: TextStyle(color: Colors.white),),
               onPressed: () {},
-              color: Colors.greenAccent,
+              color: Colors.lightBlueAccent.shade700,
             ),
           ),
         ),
@@ -68,9 +82,10 @@ class _CommandsScreenState extends State<CommandsScreen> {
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: RaisedButton(
-              child: Text("cm 4"),
+              padding: const EdgeInsets.symmetric(horizontal: 70),
+              child: Text("KLAXONNER", style: TextStyle(color: Colors.white),),
               onPressed: () {},
-              color: Colors.redAccent,
+              color: Colors.lightBlueAccent.shade700,
             ),
           ),
         ),
@@ -78,9 +93,10 @@ class _CommandsScreenState extends State<CommandsScreen> {
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: RaisedButton(
-              child: Text("cm 5"),
+              padding: const EdgeInsets.symmetric(horizontal: 60),
+              child: Text("SMS LOCATION", style: TextStyle(color: Colors.white),),
               onPressed: () {},
-              color: Colors.indigoAccent,
+              color: Colors.lightBlueAccent.shade700,
             ),
           ),
         ),

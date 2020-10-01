@@ -31,24 +31,24 @@ class _TransparentContainerState extends State<TransparentContainer> {
         (MediaQuery.of(context).size.width < 400 &&
             MediaQuery.of(context).orientation == Orientation.portrait)) {
       _iconSize = 30;
-      _fontSize = 20;
-      _width = 160;
-  //      print("phone shortest size");
+      _fontSize = 12;
+      _width = 100;
+  // print("phone shortest size");
     } else if (MediaQuery.of(context).orientation == Orientation.portrait &&
         MediaQuery.of(context).size.shortestSide >= 600) {
       _iconSize = 40;
-      _fontSize = 25;
+      _fontSize = 13;
       _width = 160;
 //      print("tablet portrait");
     } else if (MediaQuery.of(context).orientation == Orientation.landscape &&
         MediaQuery.of(context).size.shortestSide >= 550) {
       _iconSize = 50;
-      _fontSize = 25;
+      _fontSize = 13;
       _width = 160;
 //      print("tablet landscape");
     } else {
       _iconSize = 40;
-      _fontSize = 20;
+      _fontSize = 13;
       _width = 120;
 //      print("size ${MediaQuery.of(context).size.shortestSide}");
     }

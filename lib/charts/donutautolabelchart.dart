@@ -18,7 +18,7 @@ class DonutAutoLabelChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.PieChart(seriesList,
+    return charts.PieChart(seriesList,
         animate: true,
         animationDuration: Duration(seconds: 1),
         behaviors: [
@@ -68,9 +68,9 @@ class DonutAutoLabelChart extends StatelessWidget {
     var data;
     if (receivedData != null) {
       data = [
-        new VehicleStatus("En marche", num.parse(receivedData['En marche'] ?? 0.toString()),
+        new VehicleStatus("En marche", num.parse(receivedData['En marche'].toString()) ?? 0,
             Colors.orangeAccent.shade200),
-        new VehicleStatus("En parking", num.parse(receivedData['En parking'] ?? 0.toString()),
+        new VehicleStatus("En parking", num.parse(receivedData['En parking'].toString()) ?? 0,
             Colors.deepOrange.shade200),
       ];
     } else {

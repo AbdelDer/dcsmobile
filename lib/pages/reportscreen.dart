@@ -16,7 +16,7 @@ class _ReportScreenState extends State<ReportScreen> {
   DateTime _pickedDateTimeEnd = DateTime.now();
   var _textStyle = TextStyle(
     color: Colors.black,
-    fontSize: 18,
+    fontSize: 16,
   );
 
   @override

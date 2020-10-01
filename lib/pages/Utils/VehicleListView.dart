@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
+import 'package:dcsmobile/pages/HistoryScreen.dart';
 import 'package:dcsmobile/pages/ReportView.dart';
 import 'package:dcsmobile/pages/commandsscreen.dart';
 import 'package:dcsmobile/pages/alarmview.dart';
@@ -136,9 +137,9 @@ class VehicleListViewState extends State {
               //   backgroundColor: Colors.transparent,
                 context: context,
                 builder: (context) {
-                  return CommandsScreen();
+                  return CommandsScreen(data.vehicleModel);
                 });
-          }else if(_option == "History" || _option == "Live") {
+          }else if(_option == "Live") {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -146,6 +147,14 @@ class VehicleListViewState extends State {
                     VehicleLivePosition(deviceID: data.deviceID, option: _option),
               ),
             );
+          }else if(_option == "History") {
+            showDialog(
+              // isScrollControlled: true,
+              //   backgroundColor: Colors.transparent,
+                context: context,
+                builder: (context) {
+                  return HistoryScreen(data.deviceID, data.vehicleModel, _option);
+                });
           }
         },
         leading: Icon(Icons.place, color: Colors.black,),

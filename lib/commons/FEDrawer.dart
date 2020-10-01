@@ -1,3 +1,4 @@
+import 'package:dcsmobile/commons/fancyappbar.dart';
 import 'package:dcsmobile/pages/Position.dart';
 import 'package:dcsmobile/pages/helpscreen.dart';
 import 'package:dcsmobile/pages/introduction.dart';
@@ -19,14 +20,13 @@ class FEDrawer extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white70,
                 ),
-                child:
-                Image.asset('assets/images/logo.png')
+                child: Image.asset('assets/images/logo.png')
 //                Icon(
 //                  Icons.track_changes,
 //                  size: 100.0,
 //                  color: Colors.white,
 //                )
-            ),
+                ),
             ListTile(
               leading: Icon(Icons.dashboard),
               title: Text('Tableau de bord'),
@@ -53,10 +53,10 @@ class FEDrawer extends StatelessWidget {
                 ),
               ),
             ),
-           ListTile(
-             leading: Icon(Icons.group_work),
-             title: Text('Groupe de véhicules'),
-           ),
+            ListTile(
+              leading: Icon(Icons.group_work),
+              title: Text('Groupe de véhicules'),
+            ),
             ListTile(
               leading: Icon(Icons.insert_drive_file),
               title: Text('Rapport'),
@@ -67,26 +67,26 @@ class FEDrawer extends StatelessWidget {
                 ),
               ),
             ),
-           ListTile(
-             leading: Icon(Icons.accessibility_new),
-             title: Text('Commandes'),
-             onTap: () => Navigator.push(
-               context,
-               MaterialPageRoute(
-                 builder: (context) => Position("Tous", "Commands"),
-               ),
-             ),
-           ),
-           ListTile(
-             leading: Icon(Icons.alarm),
-             title: Text('Notifications'),
-             onTap: () => Navigator.push(
-               context,
-               MaterialPageRoute(
-                 builder: (context) => NotificationsView(),
-               ),
-             ),
-           ),
+            ListTile(
+              leading: Icon(Icons.accessibility_new),
+              title: Text('Commandes'),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Position("Tous", "Commands"),
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.alarm),
+              title: Text('Notifications'),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NotificationsView(),
+                ),
+              ),
+            ),
             ListTile(
               leading: Icon(Icons.notifications),
               title: Text('Alarms'),
@@ -103,7 +103,13 @@ class FEDrawer extends StatelessWidget {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Position("Tous", "Alarms"),
+                  builder: (context) => Scaffold(
+                    appBar: AppBar(
+                      title: Text("Radar"),
+                      backgroundColor: Colors.deepOrange,
+                    ),
+                    drawer: FEDrawer(),
+                  ),
                 ),
               ),
             ),
@@ -113,7 +119,13 @@ class FEDrawer extends StatelessWidget {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Position("Tous", "Alarms"),
+                  builder: (context) => Scaffold(
+                    appBar: AppBar(
+                      title: Text("Maintenance"),
+                      backgroundColor: Colors.deepOrange,
+                    ),
+                    drawer: FEDrawer(),
+                  ),
                 ),
               ),
             ),
@@ -123,7 +135,13 @@ class FEDrawer extends StatelessWidget {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Position("Tous", "Alarms"),
+                  builder: (context) => Scaffold(
+                    appBar: AppBar(
+                      title: Text("Abonnement"),
+                      backgroundColor: Colors.deepOrange,
+                    ),
+                    drawer: FEDrawer(),
+                  ),
                 ),
               ),
             ),
@@ -147,11 +165,11 @@ class FEDrawer extends StatelessWidget {
                 ),
               ),
             ),
-
             ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text('Déconnexion'),
-              onTap: () => Navigator.of(context).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false),
+              onTap: () => Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/login', (Route<dynamic> route) => false),
             ),
             ListTile(
               leading: Icon(Icons.close),

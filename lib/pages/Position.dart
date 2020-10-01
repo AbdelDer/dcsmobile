@@ -56,7 +56,7 @@ class _PositionState extends State<Position> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.deepOrange.shade400,
+        backgroundColor: Colors.deepOrange,
         title: _title,
         actions: <Widget>[
           InkResponse(

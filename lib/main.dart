@@ -13,7 +13,7 @@ void main() => runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Tracking App",
-      initialRoute: '/commands',
+      initialRoute: '/dashboard',
       routes: {
         // When navigating to the "/" rou
         // te, build the FirstScreen widget.

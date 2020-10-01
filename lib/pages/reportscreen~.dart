@@ -75,8 +75,8 @@ class _ReportScreenState extends State<ReportScreen> {
       },
       items: data.map((ed) {
         return DropdownMenuItem<dynamic>(
-          value: ed.vehicleModel,
-          child: Text("${ed.vehicleModel}"),
+          value: ed._vehicleModel,
+          child: Text("${ed._vehicleModel}"),
         );
       }).toList(),
     );

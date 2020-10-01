@@ -48,11 +48,11 @@ class _DashboardFirstRowState extends State<DashboardFirstRow> {
       bottom: _bottom,
       right: _right,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               TransparentContainer(
@@ -69,11 +69,11 @@ class _DashboardFirstRowState extends State<DashboardFirstRow> {
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               TransparentContainer(
-                  icon: Icons.place, quantity: data['Tous'], description: "Tous"),
+                  icon: Icons.place, quantity: data['En retard'] ?? 0, description: "En retard"),
               TransparentContainer(
-                  icon: Icons.place, quantity: data['En marche'] ?? 0, description: "En marche"),
+                  icon: Icons.place, quantity: data['Renouvellement'] ?? 0, description: "Renouvellement"),
               TransparentContainer(
-                  icon: Icons.place, quantity: data['En parking'] ?? 0, description: "En parking"),
+                  icon: Icons.place, quantity: data['Alerte'] ?? 0, description: "Alerte"),
             ],
           ),
         ],

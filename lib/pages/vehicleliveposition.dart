@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:math' as math;
 
+import 'package:geodesy/geodesy.dart' as gdesy;
+
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/animations/speedometer.dart';
@@ -42,6 +44,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
   Marker _marker;
   double _speedKPH = 0;
   final double _warningSpeed = 100;
+  gdesy.Geodesy _geodesy = gdesy.Geodesy();
 
   _VehicleLivePositionState(this._deviceID, this._option);
 
@@ -95,7 +98,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
   _loadCarPin() async {
     final byteData = await rootBundle.load("assets/icons/car.png");
     _carPin = byteData.buffer.asUint8List();
-    final codec = await ui.instantiateImageCodec(_carPin, targetWidth: 100);
+    final codec = await ui.instantiateImageCodec(_carPin, targetWidth: 50, targetHeight: 50);
     final ui.FrameInfo frameInfo = await codec.getNextFrame();
     _carPin = (await frameInfo.image.toByteData(format: ui.ImageByteFormat.png))
         .buffer
@@ -165,7 +168,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
     final customPolyline = Polyline(
         polylineId: PolylineId("custom"),
         points: _route,
-        color: Colors.lightBlueAccent,
+        color: Colors.deepOrangeAccent,
         width: 8);
     final infoWindow = InfoWindow(
         snippet: "lat: ${data.latitude}, lon: ${data.longitude}",
@@ -185,6 +188,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
       final _currentPosititon =
           Position(longitude: data.longitude, latitude: data.latitude);
       final rotation = _getMyBearing(_lastPosition, _currentPosititon);
+      //final rotation = _geodesy.finalBearingBetweenTwoGeoPoints(gdesy.LatLng(_lastPosition.latitude, _lastPosition.longitude), gdesy.LatLng(_currentPosititon.latitude, _currentPosititon.longitude));
       _marker = _marker.copyWith(
           positionParam: LatLng(data.latitude, data.longitude),
           rotationParam: rotation,
