@@ -1,4 +1,7 @@
 import 'package:dcsmobile/pages/Position.dart';
+import 'package:dcsmobile/pages/commandsscreen.dart';
+import 'package:dcsmobile/pages/notificationsview.dart';
+import 'package:dcsmobile/pages/subscriptionscreen.dart';
 import 'package:flutter/material.dart';
 
 class DashboardBtn extends StatefulWidget {
@@ -32,13 +35,34 @@ class _DashboardBtnState extends State<DashboardBtn> {
         containedInkWell: true,
         splashColor: Colors.black,
         onTap: () {
-          if(quantity != 0) {
+          if(description == 'En retard') {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Position(description, "Live"),
+                builder: (context) => Position("Tous", "Commands"),
               ),
             );
+          }else if(description == 'Renouvellement') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SubscriptionScreen(),
+              ),
+            );
+          }else if(description == "Alerte") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NotificationsView(),
+              ),
+            );
+          }else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Position(description, "Live"),
+                ),
+              );
           }
         },
         child: Padding(

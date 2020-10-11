@@ -9,16 +9,20 @@ class CustomSwipper extends StatefulWidget {
   CustomSwipper({this.mediaQuery, this.data}) : super();
 
   @override
-  _CustomSwipperState createState() => _CustomSwipperState(this.mediaQuery, this.data);
+  _CustomSwipperState createState() =>
+      _CustomSwipperState(this.mediaQuery, this.data);
 }
 
 class _CustomSwipperState extends State<CustomSwipper> {
   final MediaQueryData mediaQuery;
   final data;
+
   _CustomSwipperState(this.mediaQuery, this.data);
+
   double itemHeight;
   double itemWidth;
   double boxConstraints;
+
   @override
   void initState() {
     super.initState();
@@ -67,31 +71,209 @@ class _CustomSwipperState extends State<CustomSwipper> {
           itemBuilder: (context, index) {
             return customContainer(index);
           },
-          itemCount: 2),
+          itemCount: 5),
     );
   }
 
   Container customContainer(index) {
     if (index == 0) {
+        return Container(
+            color: Colors.white,
+            child: DonutAutoLabelChart.withSampleData(data));
+      } else if (index == 1) {
       return Container(
-          // color: Color.fromRGBO(250, 224, 216, 1),
-          color: Colors.white,
-          child: DonutAutoLabelChart.withSampleData(data));
-    } else if (index == 1) {
-      return Container(
-        color: Colors.grey.shade200,
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+          child: Column(
+            children: [
+              Center(
+                child: Text(
+                  'Alarmes',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Icon(Icons.error, size: 120,),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '0- Speed',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                        ),
+                        Text(
+                          '0- Geozone',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                        ),
+                        Text(
+                          '0- GPS low battery',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                        ),
+                        Text(
+                          '47- Start-up',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                        ),
+                        Text(
+                          '0- Open hood',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       );
     } else if (index == 2) {
       return Container(
-        color: Colors.grey.shade100,
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+          child: Column(
+            children: [
+              Center(
+                child: Text(
+                  'Distance Totale',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Center(
+                child: Row(
+                  children: [
+                    Icon(Icons.airport_shuttle, size: 120,),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40.0),
+                      child: Text(
+                        '120 KM/J',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       );
     } else if (index == 3) {
       return Container(
-        color: Colors.grey.shade200,
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+          child: Column(
+            children: [
+              Center(
+                child: Text(
+                  'EVACUATION',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Center(
+                child: Row(
+                  children: [
+                    Icon(Icons.directions_car, size: 120,),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40.0),
+                      child: Text(
+                        'aucune donée',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       );
     } else if (index == 4) {
       return Container(
-        color: Colors.grey.shade100,
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+          child: Column(
+            children: [
+              Center(
+                child: Text(
+                  'CONSOMMATION TOTALE PARC',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Center(
+                child: Row(
+                  children: [
+                    Icon(Icons.local_parking, size: 120,),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40.0),
+                      child: Text(
+                        'aucune donée',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       );
     }
     return Container(
