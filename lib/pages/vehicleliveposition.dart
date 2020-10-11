@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:math' as math;
@@ -169,7 +168,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
         polylineId: PolylineId("custom"),
         points: _route,
         color: Colors.deepOrangeAccent,
-        width: 8);
+        width: 4);
     final infoWindow = InfoWindow(
         snippet: "lat: ${data.latitude}, lon: ${data.longitude}",
         title: "Speed: ${data.speedKPH}");

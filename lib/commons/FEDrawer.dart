@@ -4,6 +4,7 @@ import 'package:dcsmobile/pages/helpscreen.dart';
 import 'package:dcsmobile/pages/introduction.dart';
 import 'package:dcsmobile/pages/notificationsview.dart';
 import 'package:dcsmobile/pages/reportscreen.dart';
+import 'package:dcsmobile/pages/subscriptionscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -135,13 +136,7 @@ class FEDrawer extends StatelessWidget {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Scaffold(
-                    appBar: AppBar(
-                      title: Text("Abonnement"),
-                      backgroundColor: Colors.deepOrange,
-                    ),
-                    drawer: FEDrawer(),
-                  ),
+                  builder: (context) => SubscriptionScreen(),
                 ),
               ),
             ),

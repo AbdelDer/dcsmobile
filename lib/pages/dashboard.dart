@@ -2,16 +2,15 @@ import 'dart:io';
 
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
-import 'package:dcsmobile/animations/fadeanimation.dart';
 import 'package:dcsmobile/commons/FEDrawer.dart';
-import 'package:dcsmobile/commons/fancyappbar.dart';
 import 'package:dcsmobile/widgets/dashboard/customswipper.dart';
-import 'package:dcsmobile/widgets/dashboard/dashboardfirstrow.dart';
+import 'package:dcsmobile/widgets/dashboardbtn.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 
 import '../widgets/dashboard/dashboardsecondrow.dart';
+import 'Position.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -30,19 +29,41 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
-      // appBar: FancyAppBar(scaffoldKey: _scaffoldKey),
+      appBar: AppBar(
+        title: Text(
+          'Dashboard',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.deepOrange,
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: IconButton(
+              icon: Icon(Icons.exit_to_app),
+              onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/login', (Route<dynamic> route) => false),
+            ),
+          )
+        ],
+      ),
       drawer: FEDrawer(),
       body: FutureBuilder(
         future: _fetchData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
-              ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: '${snapshot.error}', type: 'error');
+              ApiShowDialog.dialog(
+                  scaffoldKey: _scaffoldKey,
+                  message: '${snapshot.error}',
+                  type: 'error');
             } else if (snapshot.hasData) {
               return _content(snapshot.data);
             }
           } else if (snapshot.connectionState == ConnectionState.none) {
-            ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: 'Problème de connexion', type: 'error');
+            ApiShowDialog.dialog(
+                scaffoldKey: _scaffoldKey,
+                message: 'Problème de connexion',
+                type: 'error');
           }
           return Center(child: CircularProgressIndicator());
         },
@@ -59,19 +80,18 @@ class _DashboardState extends State<Dashboard> {
     await prefs.getString("userID").then((value) {
       userID = value;
     });
-    List params = [
-      accountID,
-      userID
-    ];
+    List params = [accountID, userID];
     var list;
     await Api.dashboardFirstRow(params).then((_) {
       if (_.message != null) {
-        ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: '${_.message}', type: 'error');
+        ApiShowDialog.dialog(
+            scaffoldKey: _scaffoldKey, message: '${_.message}', type: 'error');
       } else {
         list = _.data;
       }
     }).catchError((err) {
-      ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: err, type: 'error');
+      ApiShowDialog.dialog(
+          scaffoldKey: _scaffoldKey, message: err, type: 'error');
     });
     return list;
   }
@@ -80,18 +100,88 @@ class _DashboardState extends State<Dashboard> {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          FadeAnimation(
-            1.6,
-            Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                FancyAppBar(scaffoldKey: _scaffoldKey),
-                // Padding(
-                //   padding: EdgeInsets.only(top: 120),
-                // ),
-                DashboardFirstRow(_scaffoldKey, data),
+          Container(
+            color: Colors.black,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Row(
+                  children: [
+                    DashboardBtn(
+                      quantity: data['Tous'],
+                      description: 'Tous',
+                      color: Colors.blue,
+                    ),
+                    DashboardBtn(
+                      quantity: data['En marche'],
+                      description: 'En marche',
+                      color: Colors.green,
+                    ),
+                    DashboardBtn(
+                      quantity: data['En parking'],
+                      description: 'En parking',
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    DashboardBtn(
+                      quantity: data['En retard'],
+                      description: 'En retard',
+                      color: Colors.yellow,
+                    ),
+                    DashboardBtn(
+                      quantity: data['Renouvellement'],
+                      description: 'Renouvellement',
+                      color: Colors.brown,
+                    ),
+                    DashboardBtn(
+                      quantity: data['Alerte'],
+                      description: 'Alerte',
+                      color: Colors.red,
+                    ),
+                  ],
+                ),
               ],
             ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+            child: Row(children: <Widget>[
+              Expanded(
+                  child: Divider(
+                thickness: 2,
+                color: Colors.orangeAccent,
+              )),
+              GestureDetector(
+                child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.orange,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+                      child: Text(
+                        '+ PLUS DE DETAILS',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    )),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Position("Tous", "Live"),
+                  ),
+                ),
+              ),
+              Expanded(
+                  child: Divider(
+                thickness: 2,
+                color: Colors.orangeAccent,
+              )),
+            ]),
           ),
           Container(
             padding: EdgeInsets.all(10),
@@ -102,13 +192,46 @@ class _DashboardState extends State<Dashboard> {
             child: Column(
               children: <Widget>[
                 DashboardSecondRow(),
-                Divider(
-                  height: 20,
-                  color: Colors.black,
+                Padding(
+                  padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+                  child: Row(children: <Widget>[
+                    Expanded(
+                        child: Divider(
+                          thickness: 2,
+                          color: Colors.orangeAccent,
+                        )),
+                    GestureDetector(
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.orange,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+                            child: Text(
+                              '+ PLUS DE DETAILS',
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          )),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Position("Tous", "Report"),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                        child: Divider(
+                          thickness: 2,
+                          color: Colors.orangeAccent,
+                        )),
+                  ]),
                 ),
-                FadeAnimation(
-                  2.5,
-                  CustomSwipper(mediaQuery: mediaQuery, data: data,),
+                CustomSwipper(
+                  mediaQuery: mediaQuery,
+                  data: data,
                 ),
               ],
             ),

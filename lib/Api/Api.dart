@@ -6,6 +6,7 @@ import 'package:dcsmobile/models/Account.dart';
 import 'package:dcsmobile/models/EventData.dart';
 import 'package:dcsmobile/models/Group.dart';
 import 'package:dcsmobile/models/Report.dart';
+import 'package:dcsmobile/models/Subscription.dart';
 import 'package:dcsmobile/models/User.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 
@@ -21,18 +22,17 @@ class Api {
     var httpCustom;
     if (params[1] == '' || params[1] == null) {
       body = jsonEncode({'accountID': params[0], 'password': params[2]});
-      httpCustom =
-          HttpCustom(url: '$baseUrl/account/login', body: body);
+      httpCustom = HttpCustom(url: '$baseUrl/account/login', body: body);
     } else {
       body = jsonEncode({
         'userID': {'userID': params[1], 'accountID': params[0]},
         'password': params[2]
       });
-      httpCustom =
-          HttpCustom(url: '$baseUrl/user/login', body: body);
+      httpCustom = HttpCustom(url: '$baseUrl/user/login', body: body);
     }
-    final httpResponse = await httpCustom.post().catchError((
-        err) => throw('erreur lié au serveur $err'));
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur $err'));
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
     if (httpResponse.statusCode != 200) {
@@ -55,11 +55,11 @@ class Api {
     var body = jsonEncode({
       'groupID': {'accountID': accountID, 'userID': userID}
     });
-    final httpCustom =
-    HttpCustom(url: '$baseUrl/user/group', body: body);
+    final httpCustom = HttpCustom(url: '$baseUrl/user/group', body: body);
 
-    final httpResponse = await httpCustom.post().catchError((
-        err) => throw('erreur lié au serveur'));
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
 
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
@@ -83,24 +83,22 @@ class Api {
         "search": params[3]
       });
       switch (params[2]) {
-        case "Tous" :
+        case "Tous":
           {
             httpCustom =
                 HttpCustom(url: '$baseUrl/account/devices', body: body);
             break;
           }
-        case "En parking" :
+        case "En parking":
           {
-            httpCustom =
-                HttpCustom(
-                    url: '$baseUrl/account/parking/vehicles', body: body);
+            httpCustom = HttpCustom(
+                url: '$baseUrl/account/parking/vehicles', body: body);
             break;
           }
-        case "En marche" :
+        case "En marche":
           {
-            httpCustom =
-                HttpCustom(
-                    url: '$baseUrl/account/running/vehicles', body: body);
+            httpCustom = HttpCustom(
+                url: '$baseUrl/account/running/vehicles', body: body);
             break;
           }
       }
@@ -112,19 +110,18 @@ class Api {
         "search": params[3]
       });
       switch (params[2]) {
-        case "Tous" :
+        case "Tous":
           {
-            httpCustom =
-                HttpCustom(url: '$baseUrl/user/devices', body: body);
+            httpCustom = HttpCustom(url: '$baseUrl/user/devices', body: body);
             break;
           }
-        case "En parking" :
+        case "En parking":
           {
             httpCustom =
                 HttpCustom(url: '$baseUrl/user/parking/vehicles', body: body);
             break;
           }
-        case "En marche" :
+        case "En marche":
           {
             httpCustom =
                 HttpCustom(url: '$baseUrl/user/running/vehicles', body: body);
@@ -133,8 +130,9 @@ class Api {
       }
     }
 
-    final httpResponse = await httpCustom.post().catchError((
-        err) => throw('erreur lié au serveur'));
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
     if (httpResponse.statusCode != 200) {
@@ -145,9 +143,9 @@ class Api {
     } else {
       return Response.completed(responseBody.map((device) => DeviceList.fromJson(device)).toList());
     }*/
-    return Response.completed(
-        responseBody.map((eventData) => EventData.fromJson(eventData))
-            .toList());
+    return Response.completed(responseBody
+        .map((eventData) => EventData.fromJson(eventData))
+        .toList());
   }
 
   static Future<Response> dashboardFirstRow(params) async {
@@ -157,109 +155,135 @@ class Api {
     var body;
     var httpCustom;
     if (params[1] == null || params[1] == '') {
-      body = jsonEncode({
-        "accountID": params[0]
-      });
-      httpCustom =
-          HttpCustom(url: '$baseUrl/account/vehicles', body: body);
+      body = jsonEncode({"accountID": params[0]});
+      httpCustom = HttpCustom(url: '$baseUrl/account/vehicles', body: body);
     } else {
       body = jsonEncode({
         'accountID': params[0],
         'userID': params[1],
         'groupID': await prefs.getString("groupID")
       });
-      httpCustom =
-      HttpCustom(url: '$baseUrl/user/vehicles', body: body);
-      }
+      httpCustom = HttpCustom(url: '$baseUrl/user/vehicles', body: body);
+    }
 
-      final httpResponse = await httpCustom.post().catchError((
-          err) => throw('erreur lié au serveur'));
-      var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
-      if (httpResponse.statusCode != 200) {
-        return Response.error(responseBody['message']);
-      }
-      /*if(params[1] == null || params[1] == '') {
+    if (httpResponse.statusCode != 200) {
+      return Response.error(responseBody['message']);
+    }
+    /*if(params[1] == null || params[1] == '') {
       return Response.completed(responseBody);
     } else {
       return Response.completed(responseBody);
     }*/
-      return Response.completed(responseBody);
+    return Response.completed(responseBody);
+  }
+
+  static Future<Response> getHistory(deviceID) async {
+    await connected();
+    var body;
+    var httpCustom;
+    body = jsonEncode({"deviceID": deviceID});
+    httpCustom = HttpCustom(url: '$baseUrl/solo/eventdataList', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      return Response.error(responseBody['message']);
     }
-
-    static Future<Response> getHistory(deviceID) async {
-      await connected();
-      var body;
-      var httpCustom;
-      body = jsonEncode({
-        "deviceID": deviceID
-      });
-      httpCustom =
-          HttpCustom(url: '$baseUrl/solo/eventdataList', body: body);
-
-      final httpResponse = await httpCustom.post().catchError((
-          err) => throw('erreur lié au serveur'));
-      var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
-
-      if (httpResponse.statusCode != 200) {
-        return Response.error(responseBody['message']);
-      }
 //    return Response.completed(EventData.fromJson(json.decode(utf8.decode(httpResponse.bodyBytes))));
-      //for testing purposes
-      return Response.completed(
-          responseBody.map((eventdata) => EventData.fromJson(eventdata))
-              .toList());
-    }
+    //for testing purposes
+    return Response.completed(responseBody
+        .map((eventdata) => EventData.fromJson(eventdata))
+        .toList());
+  }
 
-    static Future<Response> getActualPosition(deviceID) async {
-      await connected();
-      var body;
-      var httpCustom;
+  static Future<Response> getActualPosition(deviceID) async {
+    await connected();
+    var body;
+    var httpCustom;
+    body = jsonEncode({"deviceID": deviceID});
+    httpCustom = HttpCustom(url: '$baseUrl/solo/eventdata', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      return Response.error(responseBody['message']);
+    }
+    return Response.completed(
+        EventData.fromJson(json.decode(utf8.decode(httpResponse.bodyBytes))));
+  }
+
+  static Future<Response> getReport(deviceID) async {
+    await connected();
+    var body;
+    var httpCustom;
+    body = jsonEncode({"deviceID": deviceID});
+    httpCustom = HttpCustom(url: '$baseUrl/report', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      return Response.error(responseBody['message']);
+    }
+    return Response.completed(
+        Report.fromJson(json.decode(utf8.decode(httpResponse.bodyBytes))));
+  }
+
+  static Future<Response> getDevicesSubscription() async {
+    await connected();
+    var body;
+    var httpCustom;
+    final prefs = EncryptedSharedPreferences();
+    if (await prefs.getString("userID") == null ||
+        await prefs.getString("userID") == '') {
+      body = jsonEncode({"accountID": await prefs.getString("accountID")});
+
+      httpCustom = HttpCustom(url: '$baseUrl/account/subscription', body: body);
+    } else {
       body = jsonEncode({
-        "deviceID": deviceID
+        "accountID": await prefs.getString("accountID"),
+        "userID": await prefs.getString("userID"),
+        "groupID": await prefs.getString("groupID"),
       });
-      httpCustom =
-          HttpCustom(url: '$baseUrl/solo/eventdata', body: body);
 
-      final httpResponse = await httpCustom.post().catchError((
-          err) => throw('erreur lié au serveur'));
-      var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
-
-      if (httpResponse.statusCode != 200) {
-        return Response.error(responseBody['message']);
-      }
-      return Response.completed(
-          EventData.fromJson(json.decode(utf8.decode(httpResponse.bodyBytes))));
+      httpCustom = HttpCustom(url: '$baseUrl/user/subscription', body: body);
     }
 
-    static Future<Response> getReport(deviceID) async {
-      await connected();
-      var body;
-      var httpCustom;
-      body = jsonEncode({
-        "deviceID": deviceID
-      });
-      httpCustom =
-          HttpCustom(url: '$baseUrl/report', body: body);
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
-      final httpResponse = await httpCustom.post().catchError((
-          err) => throw('erreur lié au serveur'));
-      var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
-
-      if (httpResponse.statusCode != 200) {
-        return Response.error(responseBody['message']);
-      }
-      return Response.completed(
-          Report.fromJson(json.decode(utf8.decode(httpResponse.bodyBytes))));
+    if (httpResponse.statusCode != 200) {
+      return Response.error(responseBody['message']);
     }
-    static connected() async {
-      try {
-        final result = await InternetAddress.lookup('google.com');
-        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          return true;
-        }
-      } on SocketException catch (_) {
-        throw('vérifier votre connexion');
+
+    return Response.completed(responseBody
+        .map((sub) => Subscription.fromJson(sub))
+        .toList());
+  }
+
+  static connected() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        return true;
       }
+    } on SocketException catch (_) {
+      throw ('vérifier votre connexion');
     }
   }
+}
