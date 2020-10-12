@@ -43,7 +43,7 @@ class SubscriptionScreen extends StatelessWidget {
     var subscriptionDetails;
     await Api.getDevicesSubscription().then((value) {
       subscriptionDetails = value.data;
-      print('${value.data}');
+      // print('${value.data}');
     }).catchError((error) {
       print('error is $error');
     });

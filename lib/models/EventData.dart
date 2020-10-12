@@ -38,7 +38,7 @@ class EventData {
     final addresses =
     await Geocoder.local.findAddressesFromCoordinates(coordinates);
     final first = addresses.first;
-    print('${first.addressLine}');
+    // print('${first.addressLine}');
     return '${first.addressLine}';
   }
 

@@ -4,7 +4,7 @@ import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/pages/HistoryScreen.dart';
 import 'package:dcsmobile/pages/ReportView.dart';
-import 'package:dcsmobile/pages/commandsscreen.dart';
+import 'package:dcsmobile/pages/commandsscreen~.dart';
 import 'package:dcsmobile/pages/alarmview.dart';
 import 'package:dcsmobile/pages/reportscreen.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
@@ -19,16 +19,13 @@ class VehicleListView<T> extends StatefulWidget {
   final Key _key;
   final _description;
   final _option;
-  final _search;
 
-  VehicleListView(this.scaffoldKey, this._key, this._description, this._option,
-      this._search)
+  VehicleListView(this.scaffoldKey, this._key, this._description, this._option)
       : super(key: _key);
 
   @override
   VehicleListViewState createState() {
-    return VehicleListViewState(this.scaffoldKey, this._key, this._description,
-        this._option, this._search);
+    return VehicleListViewState(this.scaffoldKey, this._key, this._description, this._option);
   }
 }
 
@@ -37,10 +34,10 @@ class VehicleListViewState extends State {
   final Key _key;
   final _description;
   final _option;
-  String search;
+  String search = "";
 
   VehicleListViewState(this.scaffoldKey, this._key, this._description,
-      this._option, this.search);
+      this._option);
 
   @override
   void initState() {
@@ -125,19 +122,15 @@ class VehicleListViewState extends State {
         onExpansionChanged: (val) async {
           if (_option == "Report") {
             showDialog(
-              // isScrollControlled: true,
-              //   backgroundColor: Colors.transparent,
                 context: context,
                 builder: (context) {
                   return ReportScreen();
                 });
           }else if (_option == "Commands") {
             showDialog(
-              // isScrollControlled: true,
-              //   backgroundColor: Colors.transparent,
                 context: context,
                 builder: (context) {
-                  return CommandsScreen(data.vehicleModel);
+                  return CommandsScreenDeprecated(data.vehicleModel);
                 });
           }else if(_option == "Live") {
             Navigator.push(

@@ -1,3 +1,4 @@
+import 'package:dcsmobile/pages/commandsscreen.dart';
 import 'package:dcsmobile/pages/helpscreen.dart';
 import 'package:dcsmobile/pages/notificationsview.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,7 @@ void main() => runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Tracking App",
-      initialRoute: '/dashboard',
+      initialRoute: '/commands',
       routes: {
         // When navigating to the "/" rou
         // te, build the FirstScreen widget.
@@ -24,7 +25,7 @@ void main() => runApp(
         '/notifications': (context) => NotificationsView(),
         '/help': (context) => HelpScreen("Assistance"),
         '/report' : (context) => Position("Tous", "Report"),
-        '/commands' : (context) => Position("Tous", "Commands"),
+        '/commands' : (context) => CommandsScreen(),
       },
       // home: Home(),
     )

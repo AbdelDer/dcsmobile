@@ -1,6 +1,4 @@
 import 'package:dcsmobile/commons/FEDrawer.dart';
-import 'package:dcsmobile/models/Account.dart';
-import 'package:dcsmobile/models/User.dart';
 import 'package:dcsmobile/pages/Utils/VehicleListView.dart';
 import 'package:flutter/material.dart';
 
@@ -46,8 +44,7 @@ class _PositionState extends State<Position> {
   @override
   void initState() {
     setState(() {
-      _deviceListView = VehicleListView(
-          _scaffoldKey, _deviceListViewKey, _description, _option, '');
+      _deviceListView = VehicleListView(_scaffoldKey, _deviceListViewKey, _description, _option);
     });
   }
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/commons/FEDrawer.dart';
@@ -6,101 +8,230 @@ import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 
 class CommandsScreen extends StatefulWidget {
-  String _vehicleModel;
-
-  CommandsScreen(this._vehicleModel);
-
   @override
-  _CommandsScreenState createState() => _CommandsScreenState(_vehicleModel);
+  _CommandsScreenState createState() => _CommandsScreenState();
 }
 
-class _CommandsScreenState extends State<CommandsScreen> {
-  var _selectedType;
-  DateTime _pickedDateTimeStart = DateTime.now();
-  DateTime _pickedDateTimeEnd = DateTime.now();
-  var _textStyle = TextStyle(
-    color: Colors.black,
-    fontSize: 18,
-  );
-
-  String _vehicleModel;
-
-
-  String get vehicleModel => _vehicleModel;
-
-  _CommandsScreenState(this._vehicleModel);
+class _CommandsScreenState extends State<CommandsScreen>
+    with SingleTickerProviderStateMixin {
+  StreamController _streamController;
+  Stream _stream;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<VehicleListViewState> _deviceListViewKey =
+      GlobalKey<VehicleListViewState>();
+  Widget _title;
+  IconData _icon = Icons.search;
+  TabController _tabController;
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    return SimpleDialog(
-      elevation: 20,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        backgroundColor: Colors.deepOrange,
+        title: _title,
+        actions: <Widget>[
+          InkResponse(
+            containedInkWell: true,
+            splashColor: Colors.orange.shade900,
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            radius: 10,
+            child: Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(_icon),
+            ),
+            onTap: () {
+              if (_icon == Icons.search) {
+                _icon = Icons.close;
+                setState(() {
+                  _title = TextField(
+                    autofocus: true,
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                    decoration: InputDecoration(
+                        hintText: "Cherche ...",
+                        hintStyle: TextStyle(color: Colors.white),
+                        border: InputBorder.none),
+                    onChanged: (newValue) {
+                      if (_selectedIndex == 0) {
+                        _deviceListViewKey.currentState.setState(() {
+                          _deviceListViewKey.currentState.search = newValue;
+                        });
+                      } else {
+                        fetchData(newValue);
+                      }
+                      if (_selectedIndex == 0) {
+                        _deviceListViewKey.currentState.setState(() async {
+                          await _deviceListViewKey.currentState.fetchDevices();
+                        });
+                      }
+                    },
+                  );
+                });
+              } else {
+                setState(() {
+                  _icon = Icons.search;
+                  _title = Text("Commandes");
+                });
+                setState(() {
+                  if (_selectedIndex == 0) {
+                    _deviceListViewKey.currentState.setState(() {
+                      _deviceListViewKey.currentState.search = "";
+                    });
+                  } else {
+                    fetchData("");
+                  }
+                  if (_selectedIndex == 0) {
+                    _deviceListViewKey.currentState.setState(() {
+                      _deviceListViewKey.currentState.fetchDevices();
+                    });
+                  }
+                });
+              }
+            },
+          ),
+        ],
+        bottom: TabBar(
+          indicatorColor: Colors.white,
+          controller: _tabController,
+          tabs: [
+            Tab(text: 'Tous'),
+            Tab(
+              text: 'En retard',
+            )
+          ],
+        ),
       ),
-      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      title: Center(
-        child: Text(
-          "Commandes: ${_vehicleModel}",
-          style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
-        ),
+      drawer: FEDrawer(),
+      body: Column(
+        children: [
+          Expanded(
+            child: TabBarView(
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        color: Colors.white,
+                        height: MediaQuery.of(context).size.height - 100,
+                        child: VehicleListView(_scaffoldKey, _deviceListViewKey,
+                            "Tous", "Commands"),
+                      ),
+                    ],
+                  ),
+                ),
+                StreamBuilder(
+                  stream: _stream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) {
+                            double _modelFontSize = 24;
+                            double _addressFontSize = 18;
+                            double _detailsFontSize = 16;
+                            return Card(
+                              elevation: 2,
+                              child: ExpansionTile(
+                                initiallyExpanded: false,
+                                backgroundColor: Colors.transparent,
+                                onExpansionChanged: (val) async {
+                                  //here open commands dialog
+                                },
+                                leading: Icon(
+                                  Icons.place,
+                                  color: Colors.black,
+                                ),
+                                title: Row(children: <Widget>[
+                                  Icon(Icons.directions_car),
+                                  Text(
+                                    snapshot.data[index].vehicleModel,
+                                    style: TextStyle(
+                                        fontSize: _modelFontSize,
+                                        color: Colors.black),
+                                  )
+                                ]),
+                                subtitle: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    FutureBuilder(
+                                      future: snapshot.data[index].address,
+                                      builder: (context, snapshot) {
+                                        return Text(
+                                          '${snapshot.data}',
+                                          style: TextStyle(
+                                              color: Colors.lightBlue,
+                                              fontSize: _addressFontSize),
+                                        );
+                                      },
+                                    ),
+                                    Text(
+                                      "${snapshot.data[index].timestampAsString} ${snapshot.data[index].speedKPH} Km/h",
+                                      style:
+                                          TextStyle(fontSize: _detailsFontSize),
+                                    ),
+                                  ],
+                                ),
+                                trailing: Icon(
+                                  Icons.network_wifi,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            );
+                          });
+                    } else if (snapshot.hasError) {
+                      return ApiShowDialog.dialog(
+                          scaffoldKey: _scaffoldKey,
+                          message: snapshot.data.message,
+                          type: 'error');
+                    } else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
+              ],
+              controller: _tabController,
+            ),
+          ),
+        ],
       ),
-      children: [
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: RaisedButton(
-              padding: const EdgeInsets.symmetric(horizontal: 50),
-              child: Text("Allumer / éteindre", style: TextStyle(color: Colors.white),),
-              onPressed: () {},
-              color: Colors.green.shade500,
-            ),
-          ),
-        ),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: RaisedButton(
-              padding: const EdgeInsets.symmetric(horizontal: 70),
-              child: Text("DÉBLOQUER", style: TextStyle(color: Colors.white),),
-              onPressed: () {},
-              color: Colors.red.shade500,
-            ),
-          ),
-        ),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: RaisedButton(
-              // padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: Text("RÉINITIALISATION DU FLUSH", style: TextStyle(color: Colors.white),),
-              onPressed: () {},
-              color: Colors.lightBlueAccent.shade700,
-            ),
-          ),
-        ),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: RaisedButton(
-              padding: const EdgeInsets.symmetric(horizontal: 70),
-              child: Text("KLAXONNER", style: TextStyle(color: Colors.white),),
-              onPressed: () {},
-              color: Colors.lightBlueAccent.shade700,
-            ),
-          ),
-        ),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: RaisedButton(
-              padding: const EdgeInsets.symmetric(horizontal: 60),
-              child: Text("SMS LOCATION", style: TextStyle(color: Colors.white),),
-              onPressed: () {},
-              color: Colors.lightBlueAccent.shade700,
-            ),
-          ),
-        ),
-      ],
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _title = Text("Commandes");
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() async {
+      setState(() {
+        _selectedIndex = _tabController.index;
+      });
+      if (_selectedIndex == 1) {
+        await fetchData("");
+      }
+      setState(() {
+        _icon = Icons.search;
+        _title = Text("Commandes");
+      });
+    });
+    _streamController = StreamController.broadcast();
+    _stream = _streamController.stream;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _streamController.close();
+  }
+
+  fetchData(search) async {
+    await Api.late(search).then((r) {
+      _streamController.add(r.data);
+    }).catchError((err) {
+      ApiShowDialog.dialog(
+          scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
+    });
   }
 }

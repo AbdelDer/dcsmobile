@@ -14,7 +14,8 @@ import 'HttpCustom.dart';
 
 class Api {
   static final httpClient = HttpClient();
-  static final baseUrl = 'http://91.234.195.124:9090/api';
+  // static final baseUrl = 'http://91.234.195.124:9090/api';
+  static final baseUrl = 'http://192.168.100.235:9090/api';
 
   static Future<Response> login(params) async {
     await connected();
@@ -37,7 +38,7 @@ class Api {
 
     if (httpResponse.statusCode != 200) {
       String message = responseBody['message'];
-      print("$message");
+      // print("$message");
       return Response.error(message);
     }
 
@@ -71,6 +72,7 @@ class Api {
         Group.fromJson(json.decode(utf8.decode(httpResponse.bodyBytes))));
   }
 
+  // TODO : remove params from devices parameters
   static Future<Response> devices(params) async {
     await connected();
     final prefs = EncryptedSharedPreferences();
@@ -143,6 +145,36 @@ class Api {
     } else {
       return Response.completed(responseBody.map((device) => DeviceList.fromJson(device)).toList());
     }*/
+    return Response.completed(responseBody
+        .map((eventData) => EventData.fromJson(eventData))
+        .toList());
+  }
+
+  static Future<Response> late(search) async {
+    await connected();
+    final prefs = EncryptedSharedPreferences();
+    var body;
+    var httpCustom;
+
+      body = jsonEncode({
+        "accountID": await prefs.getString("accountID"),
+        "userID": await prefs.getString("userID") ?? '',
+        "groupID": await prefs.getString("groupID") ?? '',
+        "search": search
+      });
+
+    httpCustom = HttpCustom(
+        url: '$baseUrl/late', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      return Response.error(responseBody['message']);
+    }
+
     return Response.completed(responseBody
         .map((eventData) => EventData.fromJson(eventData))
         .toList());

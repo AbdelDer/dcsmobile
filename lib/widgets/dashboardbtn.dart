@@ -1,5 +1,5 @@
 import 'package:dcsmobile/pages/Position.dart';
-import 'package:dcsmobile/pages/commandsscreen.dart';
+import 'package:dcsmobile/pages/commandsscreen~.dart';
 import 'package:dcsmobile/pages/notificationsview.dart';
 import 'package:dcsmobile/pages/subscriptionscreen.dart';
 import 'package:flutter/material.dart';
