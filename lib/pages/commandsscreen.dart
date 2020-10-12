@@ -4,12 +4,17 @@ import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/commons/FEDrawer.dart';
 import 'package:dcsmobile/pages/Utils/VehicleListView.dart';
+import 'package:dcsmobile/pages/commandsdialog.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 
 class CommandsScreen extends StatefulWidget {
+  final initIndex;
+
+  CommandsScreen({this.initIndex = 0});
+
   @override
-  _CommandsScreenState createState() => _CommandsScreenState();
+  _CommandsScreenState createState() => _CommandsScreenState(initIndex);
 }
 
 class _CommandsScreenState extends State<CommandsScreen>
@@ -22,7 +27,10 @@ class _CommandsScreenState extends State<CommandsScreen>
   Widget _title;
   IconData _icon = Icons.search;
   TabController _tabController;
-  int _selectedIndex = 0;
+  int _selectedIndex;
+  final initIndex;
+
+  _CommandsScreenState(this.initIndex);
 
   @override
   Widget build(BuildContext context) {
@@ -137,6 +145,11 @@ class _CommandsScreenState extends State<CommandsScreen>
                                 backgroundColor: Colors.transparent,
                                 onExpansionChanged: (val) async {
                                   //here open commands dialog
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return CommandsDialog(snapshot.data[index].vehicleModel, true);
+                                      });
                                 },
                                 leading: Icon(
                                   Icons.place,
@@ -203,7 +216,11 @@ class _CommandsScreenState extends State<CommandsScreen>
   void initState() {
     super.initState();
     _title = Text("Commandes");
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 2, vsync: this, initialIndex: initIndex);
+    _selectedIndex = initIndex;
+    if(initIndex == 1) {
+      fetchData("");
+    }
     _tabController.addListener(() async {
       setState(() {
         _selectedIndex = _tabController.index;

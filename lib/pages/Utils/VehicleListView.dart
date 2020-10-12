@@ -4,7 +4,7 @@ import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/pages/HistoryScreen.dart';
 import 'package:dcsmobile/pages/ReportView.dart';
-import 'package:dcsmobile/pages/commandsscreen~.dart';
+import 'package:dcsmobile/pages/commandsdialog.dart';
 import 'package:dcsmobile/pages/alarmview.dart';
 import 'package:dcsmobile/pages/reportscreen.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
@@ -130,7 +130,7 @@ class VehicleListViewState extends State {
             showDialog(
                 context: context,
                 builder: (context) {
-                  return CommandsScreenDeprecated(data.vehicleModel);
+                  return CommandsDialog(data.vehicleModel, false);
                 });
           }else if(_option == "Live") {
             Navigator.push(

@@ -1,5 +1,6 @@
 import 'package:dcsmobile/commons/fancyappbar.dart';
 import 'package:dcsmobile/pages/Position.dart';
+import 'package:dcsmobile/pages/commandsscreen.dart';
 import 'package:dcsmobile/pages/helpscreen.dart';
 import 'package:dcsmobile/pages/introduction.dart';
 import 'package:dcsmobile/pages/notificationsview.dart';
@@ -74,7 +75,7 @@ class FEDrawer extends StatelessWidget {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Position("Tous", "Commands"),
+                  builder: (context) => CommandsScreen(),
                 ),
               ),
             ),

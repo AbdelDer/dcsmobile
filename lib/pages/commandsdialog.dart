@@ -5,17 +5,18 @@ import 'package:dcsmobile/pages/Utils/VehicleListView.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 
-class CommandsScreenDeprecated extends StatefulWidget {
+class CommandsDialog extends StatefulWidget {
   String _vehicleModel;
+  bool _last;
 
-  CommandsScreenDeprecated(this._vehicleModel);
+  CommandsDialog(this._vehicleModel, this._last);
 
   @override
-  _CommandsScreenDeprecatedState createState() => _CommandsScreenDeprecatedState(_vehicleModel);
+  _CommandsDialogState createState() => _CommandsDialogState(_vehicleModel, _last);
 }
 
-class _CommandsScreenDeprecatedState extends State<CommandsScreenDeprecated> {
-  var _selectedType;
+class _CommandsDialogState extends State<CommandsDialog> {
+
   DateTime _pickedDateTimeStart = DateTime.now();
   DateTime _pickedDateTimeEnd = DateTime.now();
   var _textStyle = TextStyle(
@@ -24,11 +25,10 @@ class _CommandsScreenDeprecatedState extends State<CommandsScreenDeprecated> {
   );
 
   String _vehicleModel;
+  //in on tap functions we will verify if last we'll disable some buttons
+  bool _last;
 
-
-  String get vehicleModel => _vehicleModel;
-
-  _CommandsScreenDeprecatedState(this._vehicleModel);
+  _CommandsDialogState(this._vehicleModel, this._last);
 
   @override
   Widget build(BuildContext context) {

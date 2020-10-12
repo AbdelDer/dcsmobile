@@ -15,7 +15,7 @@ import 'HttpCustom.dart';
 class Api {
   static final httpClient = HttpClient();
   // static final baseUrl = 'http://91.234.195.124:9090/api';
-  static final baseUrl = 'http://192.168.100.235:9090/api';
+  static final baseUrl = 'http://192.168.1.7:9090/api';
 
   static Future<Response> login(params) async {
     await connected();

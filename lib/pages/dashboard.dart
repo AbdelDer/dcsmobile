@@ -147,7 +147,7 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+            padding: EdgeInsets.all(8.0),
             child: Row(children: <Widget>[
               Expanded(
                   child: Divider(
@@ -193,7 +193,7 @@ class _DashboardState extends State<Dashboard> {
               children: <Widget>[
                 DashboardSecondRow(),
                 Padding(
-                  padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+                  padding: EdgeInsets.all(8.0),
                   child: Row(children: <Widget>[
                     Expanded(
                         child: Divider(
