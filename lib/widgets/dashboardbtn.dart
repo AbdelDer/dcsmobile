@@ -94,7 +94,7 @@ class _DashboardBtnState extends State<DashboardBtn> {
                       ),
                       Text(
                         description,
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white, fontSize: 11.5),
                       ),
                     ],
                   ),

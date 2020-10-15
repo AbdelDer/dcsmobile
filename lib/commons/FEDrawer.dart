@@ -1,15 +1,28 @@
-import 'package:dcsmobile/commons/fancyappbar.dart';
 import 'package:dcsmobile/pages/Position.dart';
 import 'package:dcsmobile/pages/commandsscreen.dart';
+import 'package:dcsmobile/pages/dashboard.dart';
 import 'package:dcsmobile/pages/helpscreen.dart';
 import 'package:dcsmobile/pages/introduction.dart';
 import 'package:dcsmobile/pages/notificationsview.dart';
-import 'package:dcsmobile/pages/reportscreen.dart';
 import 'package:dcsmobile/pages/subscriptionscreen.dart';
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class FEDrawer extends StatelessWidget {
+  EncryptedSharedPreferences _preferences = EncryptedSharedPreferences();
+  String _username;
+
+  getUsername() async {
+    if(_username == null || _username == '') {
+      _username = await _preferences.getString("userID");
+      if (_username == null || _username == '') {
+        _username = await _preferences.getString("accountID");
+      }
+    }
+    return _username;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -22,7 +35,28 @@ class FEDrawer extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white70,
                 ),
-                child: Image.asset('assets/images/logo.png')
+                child: Stack(
+                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Center(child: Image.asset('assets/images/logo.png')),
+                    Container(
+                      child: FutureBuilder(
+                        future: getUsername(),
+                        builder: (context, snapshot) {
+                          return Align(
+                            alignment: Alignment.bottomRight,
+                            child: Text(
+                              'Logged as ${snapshot.data}',
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                )
 //                Icon(
 //                  Icons.track_changes,
 //                  size: 100.0,
@@ -32,7 +66,12 @@ class FEDrawer extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.dashboard),
               title: Text('Tableau de bord'),
-              onTap: () => Navigator.of(context).pushNamed("/dashboard"),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Dashboard(),
+                ),
+              ),
             ),
             ListTile(
               leading: Icon(Icons.place),

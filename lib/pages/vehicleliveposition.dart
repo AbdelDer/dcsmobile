@@ -44,6 +44,8 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
   double _speedKPH = 0;
   final double _warningSpeed = 100;
   gdesy.Geodesy _geodesy = gdesy.Geodesy();
+  MapType _mapType = MapType.normal;
+  List<String> _choices = ["normal", "hybrid", "satellite", "terrain"];
 
   _VehicleLivePositionState(this._deviceID, this._option);
 
@@ -77,17 +79,19 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
       await Api.getHistory(deviceID).then((r) {
         response = r;
       }).catchError((err) {
-        ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
+        ApiShowDialog.dialog(
+            scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
       });
       for (EventData ed in response.data) {
         await Future.delayed(Duration(milliseconds: 1500));
         yield ed;
       }
-    } else if(_option == "Live") {
+    } else if (_option == "Live") {
       await Api.getActualPosition(deviceID).then((r) {
         response = r;
       }).catchError((err) {
-        ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
+        ApiShowDialog.dialog(
+            scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
       });
       yield response.data;
       await Future.delayed(Duration(milliseconds: 1500));
@@ -97,7 +101,8 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
   _loadCarPin() async {
     final byteData = await rootBundle.load("assets/icons/car.png");
     _carPin = byteData.buffer.asUint8List();
-    final codec = await ui.instantiateImageCodec(_carPin, targetWidth: 50, targetHeight: 50);
+    final codec = await ui.instantiateImageCodec(_carPin,
+        targetWidth: 50, targetHeight: 50);
     final ui.FrameInfo frameInfo = await codec.getNextFrame();
     _carPin = (await frameInfo.image.toByteData(format: ui.ImageByteFormat.png))
         .buffer
@@ -123,6 +128,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
               zoomControlsEnabled: false,
               markers: Set.of(_markers.values),
               polylines: Set.of(_polylines),
+              mapType: _mapType,
               onMapCreated: (GoogleMapController googleMapController) {
                 _googleMapController = googleMapController;
                 _loadCarPin();
@@ -152,7 +158,33 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                   displayText: 'speed',
                 ),
               ),
-            )
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: PopupMenuButton(
+                color: Colors.white,
+                tooltip: 'map style',
+                itemBuilder: (BuildContext context) {
+                  return _choices.map((choice) {
+                    return PopupMenuItem<String>(
+                      value: choice,
+                      child: Text(choice),
+                    );
+                  }).toList();
+                },
+                onSelected: (choice) {
+                  setState(() {
+                    switch(choice) {
+                    // "normal", "hybrid", "satellite", "terrain"
+                      case "normal": _mapType = MapType.normal; break;
+                      case "hybrid": _mapType = MapType.hybrid; break;
+                      case "satellite": _mapType = MapType.satellite; break;
+                      case "terrain": _mapType = MapType.terrain; break;
+                    }
+                  });
+                }
+              ),
+            ),
           ],
         ),
       ),
