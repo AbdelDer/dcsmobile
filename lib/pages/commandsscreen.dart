@@ -148,7 +148,7 @@ class _CommandsScreenState extends State<CommandsScreen>
                                   showDialog(
                                       context: context,
                                       builder: (context) {
-                                        return CommandsDialog(snapshot.data[index].vehicleModel, true);
+                                        return CommandsDialog(snapshot.data[index].vehicleModel, snapshot.data[index].simPhoneNumber, true);
                                       });
                                 },
                                 leading: Icon(

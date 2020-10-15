@@ -130,7 +130,7 @@ class VehicleListViewState extends State {
             showDialog(
                 context: context,
                 builder: (context) {
-                  return CommandsDialog(data.vehicleModel, false);
+                  return CommandsDialog(data.vehicleModel, data.simPhoneNumber, false);
                 });
           }else if(_option == "Live") {
             Navigator.push(

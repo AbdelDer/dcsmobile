@@ -11,6 +11,7 @@ class EventData {
   double _longitude;
   double _altitude;
   double _speedKPH;
+  String _simPhoneNumber;
 
   String get deviceID => _deviceID;
 
@@ -26,8 +27,11 @@ class EventData {
 
   double get speedKPH => _speedKPH;
 
+  String get simPhoneNumber => _simPhoneNumber;
+
   String get timestampAsString {
-    final date = new DateTime.fromMillisecondsSinceEpoch(timestamp.toInt() * 1000);
+    final date =
+        new DateTime.fromMillisecondsSinceEpoch(timestamp.toInt() * 1000);
     final formatter = new DateFormat('yyyy-MM-dd HH:mm:ss');
     final String formatted = formatter.format(date);
     return formatted;
@@ -36,7 +40,7 @@ class EventData {
   Future<String> get address async {
     final coordinates = new Coordinates(latitude, longitude);
     final addresses =
-    await Geocoder.local.findAddressesFromCoordinates(coordinates);
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
     final first = addresses.first;
     // print('${first.addressLine}');
     return '${first.addressLine}';
@@ -49,14 +53,16 @@ class EventData {
       latitude,
       longitude,
       altitude,
-      speedKPH})
+      speedKPH,
+      simPhoneNumber})
       : _deviceID = deviceID,
         _vehicleModel = vehicleModel,
         _timestamp = timestamp,
         _latitude = latitude,
         _longitude = longitude,
         _altitude = altitude,
-        _speedKPH = speedKPH;
+        _speedKPH = speedKPH,
+        _simPhoneNumber = simPhoneNumber;
 
   factory EventData.fromJson(Map<String, dynamic> json) {
     return EventData(
@@ -66,6 +72,7 @@ class EventData {
         longitude: json['longitude'],
         latitude: json['latitude'],
         altitude: json['altitude'],
-        speedKPH: json['speedKPH']);
+        speedKPH: json['speedKPH'],
+        simPhoneNumber: json['simPhoneNumber']);
   }
 }
