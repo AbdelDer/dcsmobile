@@ -302,11 +302,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
 
     return Api.getSummaryReport(_body).then(
       (value) {
-        if (_deviceID == '') {
-          return value.data;
-        } else {
-          return value.data[0];
-        }
+        return value.data[0];
       },
     ).catchError(
       (error) => ApiShowDialog.dialog(

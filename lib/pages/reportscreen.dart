@@ -18,7 +18,7 @@ class ReportScreenState extends State<ReportScreen> {
   DateTime _pickedDateTimeEnd = DateTime(DateTime.now().month + 1);
   var _vehicleModel = "choisir véhicule(s)";
   var _deviceID = "choisir véhicule(s)";
-  var _selectedType = "Choisissez le type du rapport";
+  var _selectedType;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   var _textStyle = TextStyle(
@@ -241,7 +241,7 @@ class ReportScreenState extends State<ReportScreen> {
                             .difference(_pickedDateTimeStart)
                             .inMilliseconds >
                         0) {
-                      if(_selectedType == "Rapport Sommaire") {
+                      if(_selectedType == "Rapport sommaire") {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -264,7 +264,7 @@ class ReportScreenState extends State<ReportScreen> {
                           message:
                           'veuillez chosir un ou plusieurs véhicules',
                           type: 'error');
-                    } else if (_selectedType == "Choisissez le type du rapport") {
+                    } else if (_selectedType == null) {
                       ApiShowDialog.dialog(
                           scaffoldKey: _scaffoldKey,
                           message:
