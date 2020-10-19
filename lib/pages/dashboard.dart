@@ -216,12 +216,12 @@ class _DashboardState extends State<Dashboard> {
                               ),
                             ),
                           )),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Position("Tous", "Report"),
-                        ),
-                      ),
+                      // onTap: () => Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => Position("Tous", "Report"),
+                      //   ),
+                      // ),
                     ),
                     Expanded(
                         child: Divider(
