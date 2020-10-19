@@ -1,19 +1,26 @@
+import 'dart:convert';
+
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/commons/FEDrawer.dart';
-import 'package:dcsmobile/pages/Utils/VehicleListView.dart';
+import 'package:dcsmobile/pages/Report/summaryreport.dart';
+import 'package:dcsmobile/widgets/devicechooser.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 
 class ReportScreen extends StatefulWidget {
   @override
-  _ReportScreenState createState() => _ReportScreenState();
+  ReportScreenState createState() => ReportScreenState();
 }
 
-class _ReportScreenState extends State<ReportScreen> {
-  var _selectedType;
+class ReportScreenState extends State<ReportScreen> {
   DateTime _pickedDateTimeStart = DateTime.now();
-  DateTime _pickedDateTimeEnd = DateTime.now();
+  DateTime _pickedDateTimeEnd = DateTime(DateTime.now().month + 1);
+  var _vehicleModel = "choisir véhicule(s)";
+  var _deviceID = "choisir véhicule(s)";
+  var _selectedType = "Choisissez le type du rapport";
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   var _textStyle = TextStyle(
     color: Colors.black,
     fontSize: 16,
@@ -21,191 +28,262 @@ class _ReportScreenState extends State<ReportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SimpleDialog(
-      elevation: 20,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Text("Rapport"),
+        backgroundColor: Colors.deepOrange,
       ),
-      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      title: Center(
-        child: Text(
-          "Rapport",
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-        ),
-      ),
-      children: [
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: DropdownButton(
-              onChanged: (Value) {
-                setState(() {
-                  _selectedType = Value;
-                });
-              },
-              hint: Text(
-                "Choisissez le type du rapport",
-                style: _textStyle,
+      drawer: FEDrawer(),
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 80.0),
+                child: Text(
+                  "Rapport",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-              value: _selectedType,
-              items: [
-                DropdownMenuItem(
-                  child: Text(
-                    "Rapport de consommation",
-                    style: _textStyle,
-                  ),
-                  value: "Rapport de consommation",
-                ),
-                DropdownMenuItem(
-                  child: Text(
-                    "Maintenance",
-                    style: _textStyle,
-                  ),
-                  value: "Maintenance",
-                ),
-                DropdownMenuItem(
-                  child: Text(
-                    "Rapport sommaire",
-                    style: _textStyle,
-                  ),
-                  value: "Rapport sommaire",
-                ),
-                DropdownMenuItem(
-                  child: Text(
-                    "Rapport de vitesse",
-                    style: _textStyle,
-                  ),
-                  value: "Rapport de vitesse",
-                ),
-                DropdownMenuItem(
-                  child: Text(
-                    "Température",
-                    style: _textStyle,
-                  ),
-                  value: "Température",
-                ),
-                DropdownMenuItem(
-                  child: Text(
-                    "Probe",
-                    style: _textStyle,
-                  ),
-                  value: "Probe",
-                ),
-                DropdownMenuItem(
-                  child: Text(
-                    "Comportement du conducteur",
-                    style: _textStyle,
-                  ),
-                  value: "Comportement du conducteur",
-                ),
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 20),
-          child: Text(
-            "Date début:",
-            style: TextStyle(
-              color: Colors.blueAccent,
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 20),
-          child: Center(
-            child: GestureDetector(
-              onTap: () async {
-                _pickDateTime("start");
-              },
-              child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "${_pickedDateTimeStart.year}-${_pickedDateTimeStart.month}-${_pickedDateTimeStart.day} ${_pickedDateTimeStart.hour}:${_pickedDateTimeStart.minute}",
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
+              Center(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.only(top: 20.0, left: 20, right: 20),
+                  child: DropdownButton(
+                    isExpanded: true,
+                    onChanged: (Value) {
+                      setState(() {
+                        _selectedType = Value;
+                      });
+                    },
+                    hint: Text(
+                      "Choisissez le type du rapport",
+                      style: _textStyle,
                     ),
-                    Icon(Icons.keyboard_arrow_down),
-                  ]),
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 20),
-          child: Text(
-            "Date fin:",
-            style: TextStyle(
-              color: Colors.blueAccent,
-            ),
-          ),
-        ),
-        Center(
-          child: Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: Center(
-              child: GestureDetector(
-                onTap: () async {
-                  await _pickDateTime("end");
-                },
-                child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
+                    value: _selectedType,
+                    items: [
+                      DropdownMenuItem(
+                        child: Text(
+                          "Rapport de consommation",
+                          style: _textStyle,
+                        ),
+                        value: "Rapport de consommation",
+                      ),
+                      DropdownMenuItem(
+                        child: Text(
+                          "Maintenance",
+                          style: _textStyle,
+                        ),
+                        value: "Maintenance",
+                      ),
+                      DropdownMenuItem(
+                        child: Text(
+                          "Rapport sommaire",
+                          style: _textStyle,
+                        ),
+                        value: "Rapport sommaire",
+                      ),
+                      DropdownMenuItem(
+                        child: Text(
+                          "Rapport de vitesse",
+                          style: _textStyle,
+                        ),
+                        value: "Rapport de vitesse",
+                      ),
+                      DropdownMenuItem(
+                        child: Text(
+                          "Température",
+                          style: _textStyle,
+                        ),
+                        value: "Température",
+                      ),
+                      DropdownMenuItem(
+                        child: Text(
+                          "Probe",
+                          style: _textStyle,
+                        ),
+                        value: "Probe",
+                      ),
+                      DropdownMenuItem(
+                        child: Text(
+                          "Comportement du conducteur",
+                          style: _textStyle,
+                        ),
+                        value: "Comportement du conducteur",
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
+                child: GestureDetector(
+                  onTap: () async {
+                    var result = await showDialog(
+                        context: context,
+                        builder: (context) {
+                          return SimpleDialog(
+                              title: DeviceChooser(_scaffoldKey));
+                        });
+
+                    if (result != null) {
+                      setState(() {
+                        _vehicleModel = result[0];
+                        _deviceID = result[1];
+                      });
+                    }
+                  },
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "${_pickedDateTimeEnd.year}-${_pickedDateTimeEnd.month}-${_pickedDateTimeEnd.day} ${_pickedDateTimeEnd.hour}:${_pickedDateTimeEnd.minute}",
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
+                        _vehicleModel,
+                        style: TextStyle(fontSize: 18),
                       ),
-                      Icon(Icons.keyboard_arrow_down),
-                    ]),
-              ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(
-            top: 20,
-          ),
-          child: GestureDetector(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.deepOrange,
-                // gradient: LinearGradient(
-                //     begin: Alignment.topRight,
-                //     end: Alignment.bottomLeft,
-                //     colors: [Colors.deepOrange, Colors.orange]),
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black54,
-                    blurRadius: 5,
-                    offset: Offset(0, 5),
-                  )
-                ],
-              ),
-              height: 45,
-              margin: EdgeInsets.symmetric(horizontal: 80),
-              child: Center(
-                child: Text(
-                  "Valider",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                      Icon(Icons.arrow_drop_down),
+                    ],
                   ),
                 ),
               ),
-            ),
-            onTap: () => Navigator.of(context).pop(),
+              Padding(
+                padding: EdgeInsets.only(top: 20, right: 20, left: 20),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    "Date début:",
+                    style: TextStyle(
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 20, right: 20, left: 20),
+                child: Center(
+                  child: GestureDetector(
+                    onTap: () async {
+                      _pickDateTime("start");
+                    },
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "${_pickedDateTimeStart.year}-${_pickedDateTimeStart.month}-${_pickedDateTimeStart.day} ${_pickedDateTimeStart.hour}:${_pickedDateTimeStart.minute}",
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                          Icon(Icons.arrow_drop_down),
+                        ]),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 20, right: 20, left: 20),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    "Date fin:",
+                    style: TextStyle(
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                ),
+              ),
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 20, right: 20, left: 20),
+                  child: Center(
+                    child: GestureDetector(
+                      onTap: () async {
+                        await _pickDateTime("end");
+                      },
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "${_pickedDateTimeEnd.year}-${_pickedDateTimeEnd.month}-${_pickedDateTimeEnd.day} ${_pickedDateTimeEnd.hour}:${_pickedDateTimeEnd.minute}",
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                            Icon(Icons.arrow_drop_down),
+                          ]),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  top: 20,
+                ),
+                child: RaisedButton(
+                  color: Colors.deepOrange,
+                  child: Text(
+                    'Valider',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  onPressed: () async {
+                    if (_pickedDateTimeEnd
+                            .difference(_pickedDateTimeStart)
+                            .inMilliseconds >
+                        0) {
+                      if(_selectedType == "Rapport Sommaire") {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                SummaryReportScreen(_deviceID, _vehicleModel, _pickedDateTimeStart, _pickedDateTimeEnd),
+                          ),
+                        );
+                      } else if(_selectedType == "Rapport de vitesse") {
+
+                      } else {
+                        ApiShowDialog.dialog(
+                            scaffoldKey: _scaffoldKey,
+                            message:
+                            'veuillez chosir soit rapport de vitesse soit rapport sommaire',
+                            type: 'error');
+                      }
+                    } else if (_deviceID == "choisir véhicule(s)") {
+                      ApiShowDialog.dialog(
+                          scaffoldKey: _scaffoldKey,
+                          message:
+                          'veuillez chosir un ou plusieurs véhicules',
+                          type: 'error');
+                    } else if (_selectedType == "Choisissez le type du rapport") {
+                      ApiShowDialog.dialog(
+                          scaffoldKey: _scaffoldKey,
+                          message:
+                          'veuillez chosir un type de rapport',
+                          type: 'error');
+                    } else {
+                      ApiShowDialog.dialog(
+                          scaffoldKey: _scaffoldKey,
+                          message:
+                              'veuillez chosir date fin grande que date début',
+                          type: 'error');
+                    }
+                  },
+                ),
+              ),
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
 
@@ -213,26 +291,49 @@ class _ReportScreenState extends State<ReportScreen> {
     DateTime pickedDate;
     TimeOfDay time;
     DateTime date = await showDatePicker(
+      /*builder: (context, child) {
+        return Theme(
+          data: ThemeData(
+            dialogBackgroundColor: Colors.deepOrange,
+            buttonColor: Colors.white
+          ),// This will change to light theme.
+          child: child,
+        );
+      },*/
       context: context,
-      firstDate: DateTime(DateTime.now().year - 5),
-      lastDate: DateTime(DateTime.now().year + 5),
+      firstDate: DateTime(DateTime.now().month - 1),
+      lastDate: DateTime.now(),
       initialDate: DateTime.now(),
+      helpText: 'Choisir une date',
+      // Can be used as title
+      cancelText: 'annuler',
+      confirmText: 'ok',
+      fieldLabelText: 'date',
+      fieldHintText: 'Mois/Jour/Année',
     );
     if (date != null) {
       pickedDate = date;
     }
-    TimeOfDay t =
-        await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    TimeOfDay t = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      helpText: 'Choisir une heure',
+      // Can be used as title
+      cancelText: 'annuler',
+      confirmText: 'ok',
+    );
     if (t != null) {
       time = t;
     }
     setState(() {
-      if (startOrEnd == "start") {
-        _pickedDateTimeStart = DateTime(pickedDate.year, pickedDate.month,
-            pickedDate.day, time.hour, time.minute);
-      } else {
-        _pickedDateTimeEnd = DateTime(pickedDate.year, pickedDate.month,
-            pickedDate.day, time.hour, time.minute);
+      if (pickedDate != null) {
+        if (startOrEnd == "start") {
+          _pickedDateTimeStart = DateTime(pickedDate.year, pickedDate.month,
+              pickedDate.day, time.hour, time.minute);
+        } else {
+          _pickedDateTimeEnd = DateTime(pickedDate.year, pickedDate.month,
+              pickedDate.day, time.hour, time.minute);
+        }
       }
     });
   }

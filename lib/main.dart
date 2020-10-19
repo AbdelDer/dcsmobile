@@ -1,6 +1,9 @@
+import 'package:dcsmobile/pages/Report/summaryreport.dart';
 import 'package:dcsmobile/pages/commandsscreen.dart';
 import 'package:dcsmobile/pages/helpscreen.dart';
 import 'package:dcsmobile/pages/notificationsview.dart';
+import 'package:dcsmobile/pages/reportscreen.dart';
+import 'package:dcsmobile/widgets/devicechooser.dart';
 import 'package:flutter/material.dart';
 import 'package:dcsmobile/pages/Position.dart';
 import 'package:dcsmobile/pages/dashboard.dart';
@@ -11,7 +14,15 @@ void main() => runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Tracking App",
-      initialRoute: '/commands',
+      initialRoute: '/report',
+      theme: ThemeData(
+          primaryColor: Colors.deepOrange,
+          accentColor: Colors.deepOrange,
+          // cardColor: Colors.orange,
+          // backgroundColor: Colors.orange,
+          // highlightColor: Colors.orange,
+          // splashColor: Colors.orange
+      ),
       routes: {
         // When navigating to the "/" rou
         // te, build the FirstScreen widget.
@@ -24,7 +35,8 @@ void main() => runApp(
         '/alarm': (context) => Position("Tous", "Alarms"),
         '/notifications': (context) => NotificationsView(),
         '/help': (context) => HelpScreen("Assistance"),
-        '/report' : (context) => Position("Tous", "Report"),
+        '/report' : (context) => ReportScreen(),
+        // '/report' : (context) => SummaryReport(),
         '/commands' : (context) => CommandsScreen(),
       },
       // home: Home(),
