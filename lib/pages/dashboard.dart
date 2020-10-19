@@ -108,17 +108,17 @@ class _DashboardState extends State<Dashboard> {
                 Row(
                   children: [
                     DashboardBtn(
-                      quantity: data['Tous'],
+                      quantity: data['all'],
                       description: 'Tous',
                       color: Colors.blue,
                     ),
                     DashboardBtn(
-                      quantity: data['En marche'],
+                      quantity: data['moving'],
                       description: 'En marche',
                       color: Colors.green,
                     ),
                     DashboardBtn(
-                      quantity: data['En parking'],
+                      quantity: data['parked'],
                       description: 'En parking',
                       color: Colors.white,
                     ),
@@ -127,17 +127,18 @@ class _DashboardState extends State<Dashboard> {
                 Row(
                   children: [
                     DashboardBtn(
-                      quantity: data['En retard'],
+                      quantity: data['late'],
                       description: 'En retard',
                       color: Colors.yellow,
                     ),
                     DashboardBtn(
-                      quantity: data['Renouvellement'],
+                      quantity: data['renewal'],
                       description: 'Renouvellement',
                       color: Colors.brown,
                     ),
                     DashboardBtn(
-                      quantity: data['Alerte'],
+                      // quantity: data['Alerte'],
+                      quantity: 0,
                       description: 'Alerte',
                       color: Colors.red,
                     ),
