@@ -302,6 +302,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
 
     return Api.getSummaryReport(_body).then(
       (value) {
+        print('test');
         return value.data[0];
       },
     ).catchError(
