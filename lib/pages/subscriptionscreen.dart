@@ -8,6 +8,7 @@ class SubscriptionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text('Abonnement'),
           backgroundColor: Colors.deepOrange,
@@ -21,10 +22,13 @@ class SubscriptionScreen extends StatelessWidget {
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       // print('${snapshot.data}');
-                      return ListTile(
-                        leading: Icon(Icons.directions_car, color: Colors.black,),
-                        title: Text(snapshot.data[index].vehicleModel, style: TextStyle(color: Colors.black),),
-                        trailing: Text('${snapshot.data[index].subscriptionTime.toString()} jours'),
+                      return Card(
+                        color: snapshot.data[index].color,
+                        child: ListTile(
+                          leading: Icon(Icons.directions_car, color: Colors.black,),
+                          title: Text(snapshot.data[index].vehicleModel, style: TextStyle(color: Colors.black),),
+                          trailing: Text('${snapshot.data[index].subscriptionTime.toString()} jours'),
+                        ),
                       );
                     });
               } else if (snapshot.hasError) {

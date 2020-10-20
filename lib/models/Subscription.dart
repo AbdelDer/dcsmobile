@@ -1,8 +1,11 @@
+import 'package:flutter/material.dart';
+
 class Subscription {
   String _vehicleModel;
   String _deviceID;
   num _startDate;
   num _endDate;
+  Color _color;
 
   String get vehicleModel => _vehicleModel;
 
@@ -12,11 +15,11 @@ class Subscription {
 
   num get endDate => _endDate;
 
+  Color get color => subscriptionTime < 30 ? Colors.orange : Colors.white;
+
   int get subscriptionTime {
-    final start =
-        new DateTime.fromMillisecondsSinceEpoch(startDate.toInt() * 1000);
     final end = new DateTime.fromMillisecondsSinceEpoch(endDate.toInt() * 1000);
-    final subscriptionTime = end.difference(start);
+    final subscriptionTime = end.difference(DateTime.now());
     return subscriptionTime.inDays;
   }
 
