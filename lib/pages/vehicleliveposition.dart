@@ -159,30 +159,34 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.topRight,
-              child: PopupMenuButton(
-                color: Colors.white,
-                tooltip: 'map style',
-                itemBuilder: (BuildContext context) {
-                  return _choices.map((choice) {
-                    return PopupMenuItem<String>(
-                      value: choice,
-                      child: Text(choice),
-                    );
-                  }).toList();
-                },
-                onSelected: (choice) {
-                  setState(() {
-                    switch(choice) {
-                    // "normal", "hybrid", "satellite", "terrain"
-                      case "normal": _mapType = MapType.normal; break;
-                      case "hybrid": _mapType = MapType.hybrid; break;
-                      case "satellite": _mapType = MapType.satellite; break;
-                      case "terrain": _mapType = MapType.terrain; break;
-                    }
-                  });
-                }
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: PopupMenuButton(
+                  icon: Icon(Icons.more_vert, color: Colors.deepOrange.shade700, size: 35,),
+                  color: Colors.white,
+                  tooltip: 'map style',
+                  itemBuilder: (BuildContext context) {
+                    return _choices.map((choice) {
+                      return PopupMenuItem<String>(
+                        value: choice,
+                        child: Text(choice),
+                      );
+                    }).toList();
+                  },
+                  onSelected: (choice) {
+                    setState(() {
+                      switch(choice) {
+                      // "normal", "hybrid", "satellite", "terrain"
+                        case "normal": _mapType = MapType.normal; break;
+                        case "hybrid": _mapType = MapType.hybrid; break;
+                        case "satellite": _mapType = MapType.satellite; break;
+                        case "terrain": _mapType = MapType.terrain; break;
+                      }
+                    });
+                  }
+                ),
               ),
             ),
           ],

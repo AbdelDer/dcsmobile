@@ -40,7 +40,6 @@ class Api {
 
     if (httpResponse.statusCode != 200) {
       String message = responseBody['message'];
-      // print("$message");
       return Response.error(message);
     }
 
@@ -182,7 +181,6 @@ class Api {
   }
 
   static Future<Response> dashboardFirstRow(params) async {
-    // print('dash first row called');
     await connected();
     final prefs = EncryptedSharedPreferences();
     var body;

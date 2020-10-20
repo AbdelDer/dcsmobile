@@ -4,13 +4,33 @@ import 'package:flutter/material.dart';
 import '../../animations/fadeanimation.dart';
 
 class DashboardSecondRow extends StatefulWidget {
+
+  final maxSpeed;
+  final maxDistance;
+  final maxRunningTime;
+
+  DashboardSecondRow({this.maxSpeed, this.maxDistance, this.maxRunningTime});
+
   @override
-  _DashboardSecondRowState createState() => _DashboardSecondRowState();
+  _DashboardSecondRowState createState() => _DashboardSecondRowState(this.maxSpeed, this.maxDistance, this.maxRunningTime);
 }
 
 class _DashboardSecondRowState extends State<DashboardSecondRow> {
   var _indexStack = 0;
   var _visible = [true, false, false];
+
+  final maxSpeed;
+  final maxDistance;
+  final maxRunningTime;
+
+  _DashboardSecondRowState(this.maxSpeed, this.maxDistance, this.maxRunningTime);
+
+  String runningTimeAsString(runningTime) {
+    var d = Duration(minutes: runningTime.toInt());
+    List<String> parts = d.toString().split(':');
+    return '${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}';
+  }
+
   @override
   Widget build(BuildContext context) {
     if (MediaQuery.of(context).size.width < 410) {
@@ -53,8 +73,8 @@ class _DashboardSecondRowState extends State<DashboardSecondRow> {
                           Colors.deepOrange.shade400
                         ],
                         maxSubject: "Kilometrage",
-                        maxValue: "140.25 Km",
-                        model: "ID128"),
+                        maxValue: maxDistance['maxDistance'],
+                        model: maxDistance['vehicleModel']),
                   ),
                   AnimatedOpacity(
                     opacity: _visible[1] ? 1.0 : 0.0,
@@ -65,8 +85,8 @@ class _DashboardSecondRowState extends State<DashboardSecondRow> {
                           Colors.deepOrange.shade500
                         ],
                         maxSubject: "Vitesse",
-                        maxValue: "250 Km/h",
-                        model: "ID128"),
+                        maxValue: maxSpeed['maxSpeed'],
+                        model: maxSpeed['vehicleModel']),
                   ),
                   AnimatedOpacity(
                     opacity: _visible[2] ? 1.0 : 0.0,
@@ -77,8 +97,8 @@ class _DashboardSecondRowState extends State<DashboardSecondRow> {
                           Colors.deepOrange.shade600
                         ],
                         maxSubject: "T. en Marche",
-                        maxValue: "2:50:30",
-                        model: "ID256"),
+                        maxValue: runningTimeAsString(maxRunningTime['maxRunningTime']),
+                        model: maxRunningTime['vehicleModel']),
                   ),
                 ],
               ),
@@ -105,9 +125,7 @@ class _DashboardSecondRowState extends State<DashboardSecondRow> {
             ],
           ));
     } else {
-      return FadeAnimation(
-        2.2,
-        Row(
+      return Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           mainAxisSize: MainAxisSize.max,
@@ -118,22 +136,22 @@ class _DashboardSecondRowState extends State<DashboardSecondRow> {
                   Colors.deepOrange.shade400,
                 ],
                 maxSubject: "Kilometrage",
-                maxValue: "140.25 Km",
-                model: "ID128"),
+                maxValue: maxDistance['maxDistance'],
+                model: maxDistance['vehicleModel']),
             RoundedContainer(colors: [
               Colors.deepOrange.shade400,
               Colors.deepOrange.shade500,
-            ], maxSubject: "Vitesse", maxValue: "250 Km/h", model: "ID128"),
+            ], maxSubject: "Vitesse", maxValue: maxSpeed['maxSpeed'],
+                model: maxSpeed['vehicleModel']),
             RoundedContainer(
                 colors: [
                   Colors.deepOrange.shade500,
                   Colors.deepOrange.shade600,
                 ],
                 maxSubject: "T. en Marche",
-                maxValue: "2:50:30",
-                model: "ID256"),
+                maxValue: maxRunningTime['maxRunningTime'],
+                model: maxRunningTime['vehicleModel']),
           ],
-        ),
       );
     }
   }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:dcsmobile/Api/Api.dart';
@@ -21,6 +22,19 @@ class _DashboardState extends State<Dashboard> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   MediaQueryData mediaQuery;
   bool useMobileLayout;
+  StreamController _streamController;
+  Stream _stream;
+
+  @override
+  void initState() {
+    super.initState();
+    _streamController = new StreamController();
+    _stream = _streamController.stream;
+    _fetchData();
+    Timer.periodic(Duration(seconds: 30), (timer) async {
+      await _fetchData();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,18 +61,16 @@ class _DashboardState extends State<Dashboard> {
         ],
       ),
       drawer: FEDrawer(),
-      body: FutureBuilder(
-        future: _fetchData(),
+      body: StreamBuilder(
+        stream: _stream,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasError) {
-              ApiShowDialog.dialog(
-                  scaffoldKey: _scaffoldKey,
-                  message: '${snapshot.error}',
-                  type: 'error');
-            } else if (snapshot.hasData) {
-              return _content(snapshot.data);
-            }
+          if (snapshot.hasError) {
+            ApiShowDialog.dialog(
+                scaffoldKey: _scaffoldKey,
+                message: '${snapshot.error}',
+                type: 'error');
+          } else if (snapshot.hasData) {
+            return _content(snapshot.data);
           } else if (snapshot.connectionState == ConnectionState.none) {
             ApiShowDialog.dialog(
                 scaffoldKey: _scaffoldKey,
@@ -74,6 +86,7 @@ class _DashboardState extends State<Dashboard> {
   _fetchData() async {
     final prefs = EncryptedSharedPreferences();
     var accountID, userID;
+    var list;
     await prefs.getString("accountID").then((value) {
       accountID = value;
     });
@@ -81,7 +94,6 @@ class _DashboardState extends State<Dashboard> {
       userID = value;
     });
     List params = [accountID, userID];
-    var list;
     await Api.dashboardFirstRow(params).then((_) {
       if (_.message != null) {
         ApiShowDialog.dialog(
@@ -93,7 +105,7 @@ class _DashboardState extends State<Dashboard> {
       ApiShowDialog.dialog(
           scaffoldKey: _scaffoldKey, message: err, type: 'error');
     });
-    return list;
+    _streamController.add(list);
   }
 
   _content(data) {
@@ -108,12 +120,12 @@ class _DashboardState extends State<Dashboard> {
                 Row(
                   children: [
                     DashboardBtn(
-                      quantity: data['all'],
+                      quantity: data['firstRow']['all'],
                       description: 'Tous',
                       color: Colors.blue,
                     ),
                     DashboardBtn(
-                      quantity: data['moving'],
+                      quantity: data['firstRow']['moving'],
                       description: 'En marche',
                       color: Colors.green,
                     ),
@@ -127,12 +139,12 @@ class _DashboardState extends State<Dashboard> {
                 Row(
                   children: [
                     DashboardBtn(
-                      quantity: data['late'],
+                      quantity: data['firstRow']['late'],
                       description: 'En retard',
                       color: Colors.yellow,
                     ),
                     DashboardBtn(
-                      quantity: data['renewal'],
+                      quantity: data['firstRow']['renewal'],
                       description: 'Renouvellement',
                       color: Colors.brown,
                     ),
@@ -192,15 +204,18 @@ class _DashboardState extends State<Dashboard> {
             ),
             child: Column(
               children: <Widget>[
-                DashboardSecondRow(),
+                DashboardSecondRow(
+                    maxSpeed: data['maxSpeed'],
+                    maxDistance: data['maxDistance'],
+                    maxRunningTime: data['maxRunningTime']),
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Row(children: <Widget>[
                     Expanded(
                         child: Divider(
-                          thickness: 2,
-                          color: Colors.orangeAccent,
-                        )),
+                      thickness: 2,
+                      color: Colors.orangeAccent,
+                    )),
                     GestureDetector(
                       child: Container(
                           decoration: BoxDecoration(
@@ -208,7 +223,8 @@ class _DashboardState extends State<Dashboard> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+                            padding:
+                                const EdgeInsets.only(right: 8.0, left: 8.0),
                             child: Text(
                               '+ PLUS DE DETAILS',
                               style: TextStyle(
@@ -225,9 +241,9 @@ class _DashboardState extends State<Dashboard> {
                     ),
                     Expanded(
                         child: Divider(
-                          thickness: 2,
-                          color: Colors.orangeAccent,
-                        )),
+                      thickness: 2,
+                      color: Colors.orangeAccent,
+                    )),
                   ]),
                 ),
                 CustomSwipper(

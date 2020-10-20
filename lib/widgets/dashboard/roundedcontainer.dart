@@ -76,21 +76,21 @@ class _RoundedContainerState extends State<RoundedContainer> {
                   fontWeight: FontWeight.bold),
             ),
             Text(
-              maxSubject,
+              maxSubject ?? 'null',
               style: TextStyle(
                   color: Colors.white,
                   fontSize: _fontSize,
                   fontWeight: FontWeight.bold),
             ),
             Text(
-              maxValue,
+              maxValue ?? 'null',
               style: TextStyle(
                   color: Colors.white,
                   fontSize: _fontSize,
                   fontWeight: FontWeight.bold),
             ),
             Text(
-              model,
+              model ?? 'null',
               style: TextStyle(
                   color: Colors.white,
                   fontSize: _fontSize,
