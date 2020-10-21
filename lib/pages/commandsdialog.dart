@@ -32,9 +32,9 @@ class _CommandsDialogState extends State<CommandsDialog> {
   String _simPhoneNumber;
 
   //in on tap functions we will verify if last we'll disable some buttons
-  bool _last;
+  bool _late;
 
-  _CommandsDialogState(this._vehicleModel, this._simPhoneNumber, this._last);
+  _CommandsDialogState(this._vehicleModel, this._simPhoneNumber, this._late);
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +57,12 @@ class _CommandsDialogState extends State<CommandsDialog> {
             child: RaisedButton(
               padding: const EdgeInsets.symmetric(horizontal: 85),
               child: Text(
-                "Allumer",
+                _late ? "Allumer" : "",
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
                 //change number to _simPhoneNumber
-                await _textDevice(_simPhoneNumber, "turnOn");
+                _late ? await _textDevice(_simPhoneNumber, "turnOn") : null;
               },
               color: Colors.green.shade500,
             ),
@@ -74,11 +74,11 @@ class _CommandsDialogState extends State<CommandsDialog> {
             child: RaisedButton(
               padding: const EdgeInsets.symmetric(horizontal: 85),
               child: Text(
-                "Eteindre",
+                _late ? "Eteindre" : "",
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
-                await _textDevice(_simPhoneNumber, "turnOff");
+                _late ? await _textDevice(_simPhoneNumber, "turnOff") : null;
               },
               color: Colors.green.shade500,
             ),
@@ -122,11 +122,11 @@ class _CommandsDialogState extends State<CommandsDialog> {
             child: RaisedButton(
               padding: const EdgeInsets.symmetric(horizontal: 70),
               child: Text(
-                "KLAXONNER",
+                _late ? "KLAXONNER" : "",
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
-                await _textDevice(_simPhoneNumber, "honk");
+                _late ? await _textDevice(_simPhoneNumber, "honk") : null;
               },
               color: Colors.lightBlueAccent.shade700,
             ),
@@ -138,11 +138,11 @@ class _CommandsDialogState extends State<CommandsDialog> {
             child: RaisedButton(
               padding: const EdgeInsets.symmetric(horizontal: 60),
               child: Text(
-                "SMS LOCATION",
+                _late ? "SMS LOCATION" : "",
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
-                await _textDevice(_simPhoneNumber, "smsLocation");
+                _late ? await _textDevice(_simPhoneNumber, "smsLocation") : null;
               },
               color: Colors.lightBlueAccent.shade700,
             ),

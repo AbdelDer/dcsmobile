@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/pages/HistoryScreen.dart';
-import 'package:dcsmobile/pages/ReportView.dart';
+import 'package:dcsmobile/pages/ReportView(deprecated).dart';
 import 'package:dcsmobile/pages/commandsdialog.dart';
 import 'package:dcsmobile/pages/alarmview.dart';
 import 'package:dcsmobile/pages/reportscreen.dart';
-import 'package:dcsmobile/widgets/latedevicecard.dart';
+import 'package:dcsmobile/widgets/devicecard.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +57,7 @@ class VehicleListViewState extends State {
                 message: '${snapshot.error}',
                 type: 'error');
           } else if (snapshot.hasData) {
-            return LateDeviceCard(snapshot.data, _option, _scaffoldKey);
+            return DeviceCard(snapshot.data, _option, _scaffoldKey);
           }
         } else if (snapshot.connectionState == ConnectionState.none) {
           ApiShowDialog.dialog(
