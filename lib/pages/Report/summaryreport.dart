@@ -221,7 +221,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
                           style: TextStyle(fontSize: _fontSize),
                         ),
                         subtitle: Text(
-                          'XXXXXXXXXXXXX',
+                          snapshot.data.runningTime(),
                           style: TextStyle(
                               fontSize: _fontSize, color: Colors.black),
                         ),
