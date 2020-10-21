@@ -82,7 +82,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
         ApiShowDialog.dialog(
             scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
       });
-      for (EventData ed in response.data) {
+      for (EventData ed in response.responseBody) {
         await Future.delayed(Duration(milliseconds: 1500));
         yield ed;
       }
@@ -93,7 +93,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
         ApiShowDialog.dialog(
             scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
       });
-      yield response.data;
+      yield response.responseBody;
       await Future.delayed(Duration(milliseconds: 1500));
     }
   }

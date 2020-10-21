@@ -179,7 +179,7 @@ class _DeviceChooserState extends State<DeviceChooser> {
             message: search == '' ? _.message : _.message + ' de ce modèle',
             type: 'error');*/
       } else {
-        _streamController.add(_.data);
+        _streamController.add(_.responseBody);
       }
     }).catchError((err) {
       /*ApiShowDialog.dialog(

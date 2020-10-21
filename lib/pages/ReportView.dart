@@ -64,7 +64,7 @@ class _ReportViewState extends State<ReportView> {
       }).catchError((err) {
         ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
       });
-      yield response.data;
+      yield response.responseBody;
       await Future.delayed(Duration(milliseconds: 1000));
     }
   }

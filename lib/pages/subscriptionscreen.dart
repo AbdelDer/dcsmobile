@@ -46,7 +46,7 @@ class SubscriptionScreen extends StatelessWidget {
   Future getDevicesSubscription() async {
     var subscriptionDetails;
     await Api.getDevicesSubscription().then((value) {
-      subscriptionDetails = value.data;
+      subscriptionDetails = value.responseBody;
       // print('${value.data}');
     }).catchError((error) {
       print('error is $error');

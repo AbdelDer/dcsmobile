@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
+import 'package:dcsmobile/Api/Response.dart';
 import 'package:dcsmobile/commons/FEDrawer.dart';
 import 'package:dcsmobile/pages/Utils/VehicleListView.dart';
 import 'package:dcsmobile/pages/commandsdialog.dart';
@@ -86,14 +87,17 @@ class _CommandsScreenState extends State<CommandsScreen>
                     _deviceListViewKey.currentState.setState(() {
                       _deviceListViewKey.currentState.search = "";
                     });
-                  } else {
-                    fetchData("");
-                  }
-                  if (_selectedIndex == 0) {
                     _deviceListViewKey.currentState.setState(() {
                       _deviceListViewKey.currentState.fetchDevices();
                     });
+                  } else {
+                    fetchData("");
                   }
+                  /*if (_selectedIndex == 0) {
+                    _deviceListViewKey.currentState.setState(() {
+                      _deviceListViewKey.currentState.fetchDevices();
+                    });
+                  }*/
                 });
               }
             },
@@ -132,8 +136,11 @@ class _CommandsScreenState extends State<CommandsScreen>
                   stream: _stream,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                      if(snapshot.data.status == Status.ERROR) {
+                        return Center(child: Text(snapshot.data.message, style: TextStyle(fontSize: 20),));
+                      }
                       return ListView.builder(
-                          itemCount: snapshot.data.length,
+                          itemCount: snapshot.data.responseBody.length,
                           itemBuilder: (context, index) {
                             double _modelFontSize = 24;
                             double _addressFontSize = 18;
@@ -148,7 +155,7 @@ class _CommandsScreenState extends State<CommandsScreen>
                                   showDialog(
                                       context: context,
                                       builder: (context) {
-                                        return CommandsDialog(snapshot.data[index].vehicleModel, snapshot.data[index].simPhoneNumber, true);
+                                        return CommandsDialog(snapshot.data.responseBody[index].vehicleModel, snapshot.data.responseBody[index].simPhoneNumber, snapshot.data.responseBody[index].late ?? true);
                                       });
                                 },
                                 leading: Icon(
@@ -158,7 +165,7 @@ class _CommandsScreenState extends State<CommandsScreen>
                                 title: Row(children: <Widget>[
                                   Icon(Icons.directions_car),
                                   Text(
-                                    snapshot.data[index].vehicleModel,
+                                    snapshot.data.responseBody[index].vehicleModel,
                                     style: TextStyle(
                                         fontSize: _modelFontSize,
                                         color: Colors.black),
@@ -169,10 +176,10 @@ class _CommandsScreenState extends State<CommandsScreen>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     FutureBuilder(
-                                      future: snapshot.data[index].address,
+                                      future: snapshot.data.responseBody[index].address,
                                       builder: (context, snapshot) {
                                         return Text(
-                                          '${snapshot.data}',
+                                          '${snapshot.data.responseBody}',
                                           style: TextStyle(
                                               color: Colors.lightBlue,
                                               fontSize: _addressFontSize),
@@ -180,7 +187,7 @@ class _CommandsScreenState extends State<CommandsScreen>
                                       },
                                     ),
                                     Text(
-                                      "${snapshot.data[index].timestampAsString} ${snapshot.data[index].speedKPH} Km/h",
+                                      "${snapshot.data.responseBody[index].timestampAsString} ${snapshot.data.responseBody[index].speedKPH} Km/h",
                                       style:
                                           TextStyle(fontSize: _detailsFontSize),
                                     ),
@@ -196,7 +203,7 @@ class _CommandsScreenState extends State<CommandsScreen>
                     } else if (snapshot.hasError) {
                       return ApiShowDialog.dialog(
                           scaffoldKey: _scaffoldKey,
-                          message: snapshot.data.message,
+                          message: snapshot.data.responseBody.message,
                           type: 'error');
                     } else {
                       return Center(child: CircularProgressIndicator());
@@ -245,7 +252,7 @@ class _CommandsScreenState extends State<CommandsScreen>
 
   fetchData(search) async {
     await Api.late(search).then((r) {
-      _streamController.add(r.data);
+      _streamController.add(r);
     }).catchError((err) {
       ApiShowDialog.dialog(
           scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');

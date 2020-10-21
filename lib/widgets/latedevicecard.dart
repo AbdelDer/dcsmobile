@@ -5,19 +5,19 @@ import 'package:dcsmobile/pages/reportscreen.dart';
 import 'package:dcsmobile/pages/vehicleliveposition.dart';
 import 'package:flutter/material.dart';
 
-class DeviceCard extends StatefulWidget {
+class LateDeviceCard extends StatefulWidget {
   var data;
   String _option;
   final GlobalKey<ScaffoldState> _scaffoldKey;
 
-  DeviceCard(this.data, this._option, this._scaffoldKey);
+  LateDeviceCard(this.data, this._option, this._scaffoldKey);
 
   @override
-  _DeviceCardState createState() =>
-      _DeviceCardState(this.data, this._option, this._scaffoldKey);
+  _LateDeviceCardState createState() =>
+      _LateDeviceCardState(this.data, this._option, this._scaffoldKey);
 }
 
-class _DeviceCardState extends State<DeviceCard> {
+class _LateDeviceCardState extends State<LateDeviceCard> {
   double _modelFontSize = 24;
   double _addressFontSize = 18;
   double _detailsFontSize = 16;
@@ -28,7 +28,7 @@ class _DeviceCardState extends State<DeviceCard> {
   String _option;
   final GlobalKey<ScaffoldState> _scaffoldKey;
 
-  _DeviceCardState(this.data, this._option, this._scaffoldKey);
+  _LateDeviceCardState(this.data, this._option, this._scaffoldKey);
 
   @override
   Widget build(BuildContext context) {

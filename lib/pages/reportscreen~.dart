@@ -55,7 +55,7 @@ class _ReportScreenState extends State<ReportScreen> {
             message: 'this is test msg',
             type: 'error');
       } else {
-        list = _.data;
+        list = _.responseBody;
       }
     }).catchError((err) {
       ApiShowDialog.dialog(

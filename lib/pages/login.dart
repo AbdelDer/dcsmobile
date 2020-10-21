@@ -324,7 +324,7 @@ class _LoginState extends State<Login> {
           _accountController.text, _usernameController.text)
           .then((response) async{
         await encryptedSharedPreferences.setString(
-            "groupID", response.data.groupID);
+            "groupID", response.responseBody.groupID);
       }).catchError((err) => ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: err, type: 'error'));
 
       await encryptedSharedPreferences.setString(

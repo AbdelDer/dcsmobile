@@ -302,7 +302,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
 
     return Api.getSummaryReport(_body).then(
       (value) {
-        return value.data[0];
+        return value.responseBody[0];
       },
     ).catchError(
       (error) => ApiShowDialog.dialog(

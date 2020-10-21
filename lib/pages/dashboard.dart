@@ -99,7 +99,7 @@ class _DashboardState extends State<Dashboard> {
         ApiShowDialog.dialog(
             scaffoldKey: _scaffoldKey, message: '${_.message}', type: 'error');
       } else {
-        list = _.data;
+        list = _.responseBody;
       }
     }).catchError((err) {
       ApiShowDialog.dialog(

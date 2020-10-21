@@ -62,7 +62,7 @@ class _CommandsDialogState extends State<CommandsDialog> {
               ),
               onPressed: () async {
                 //change number to _simPhoneNumber
-                await _textDevice(_simPhoneNumber, "Allumer");
+                await _textDevice(_simPhoneNumber, "turnOn");
               },
               color: Colors.green.shade500,
             ),
@@ -78,7 +78,7 @@ class _CommandsDialogState extends State<CommandsDialog> {
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
-                await _textDevice(_simPhoneNumber, "Eteindre");
+                await _textDevice(_simPhoneNumber, "turnOff");
               },
               color: Colors.green.shade500,
             ),
@@ -94,7 +94,7 @@ class _CommandsDialogState extends State<CommandsDialog> {
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
-                await _textDevice(_simPhoneNumber, "DÉBLOQUER");
+                await _textDevice(_simPhoneNumber, "unblock");
               },
               color: Colors.red.shade500,
             ),
@@ -110,7 +110,7 @@ class _CommandsDialogState extends State<CommandsDialog> {
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
-                await _textDevice(_simPhoneNumber, "RÉINITIALISATION DU FLUSH");
+                await _textDevice(_simPhoneNumber, "flush");
               },
               color: Colors.lightBlueAccent.shade700,
             ),
@@ -126,7 +126,7 @@ class _CommandsDialogState extends State<CommandsDialog> {
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
-                await _textDevice(_simPhoneNumber, "KLAXONNER");
+                await _textDevice(_simPhoneNumber, "honk");
               },
               color: Colors.lightBlueAccent.shade700,
             ),
@@ -142,7 +142,7 @@ class _CommandsDialogState extends State<CommandsDialog> {
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
-                await _textDevice(_simPhoneNumber, "SMS LOCATION");
+                await _textDevice(_simPhoneNumber, "smsLocation");
               },
               color: Colors.lightBlueAccent.shade700,
             ),
@@ -152,7 +152,22 @@ class _CommandsDialogState extends State<CommandsDialog> {
     );
   }
 
-  _textDevice(phoneNumber, body) async {
+  _textDevice(phoneNumber, command) async {
+    /*
+      here you can check the operator of the simphonenumber
+      and change the body value of APN AND Login based on the operator
+    */
+    String body = "";
+
+    switch(command) {
+      case 'turnOn': body = "lex trk setdigout 00";break;
+      case 'turnOff': body = "lex trk setdigout 10";break;
+      case 'unblock': body = "lex trk cpureset";break;
+      case 'flush': body = "lex trk flush 359633101511090,internet1.meditel.ma,MEDINET,MEDINET,145.239.67.90,5027,0";break;
+      case 'honk': body = "lex trk setdigout 01 0 2";break;
+      case 'smsLocation': body = "lex trk ggps";break;
+    }
+
     //if body contains space change it with %20
     if (Platform.isAndroid) {
       var uri = 'sms:$phoneNumber?body=$body';

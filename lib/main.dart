@@ -1,9 +1,7 @@
-import 'package:dcsmobile/pages/Report/summaryreport.dart';
 import 'package:dcsmobile/pages/commandsscreen.dart';
 import 'package:dcsmobile/pages/helpscreen.dart';
 import 'package:dcsmobile/pages/notificationsview.dart';
 import 'package:dcsmobile/pages/reportscreen.dart';
-import 'package:dcsmobile/widgets/devicechooser.dart';
 import 'package:flutter/material.dart';
 import 'package:dcsmobile/pages/Position.dart';
 import 'package:dcsmobile/pages/dashboard.dart';

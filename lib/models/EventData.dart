@@ -12,6 +12,7 @@ class EventData {
   double _altitude;
   double _speedKPH;
   String _simPhoneNumber;
+  bool _late;
 
   String get deviceID => _deviceID;
 
@@ -28,6 +29,8 @@ class EventData {
   double get speedKPH => _speedKPH;
 
   String get simPhoneNumber => _simPhoneNumber;
+
+  bool get late => _late;
 
   String get timestampAsString {
     final date =
@@ -54,7 +57,8 @@ class EventData {
       longitude,
       altitude,
       speedKPH,
-      simPhoneNumber})
+      simPhoneNumber,
+      late})
       : _deviceID = deviceID,
         _vehicleModel = vehicleModel,
         _timestamp = timestamp,
@@ -62,7 +66,8 @@ class EventData {
         _longitude = longitude,
         _altitude = altitude,
         _speedKPH = speedKPH,
-        _simPhoneNumber = simPhoneNumber;
+        _simPhoneNumber = simPhoneNumber,
+        _late = late;
 
   factory EventData.fromJson(Map<String, dynamic> json) {
     return EventData(
@@ -73,6 +78,7 @@ class EventData {
         latitude: json['latitude'],
         altitude: json['altitude'],
         speedKPH: json['speedKPH'],
-        simPhoneNumber: json['simPhoneNumber']);
+        simPhoneNumber: json['simPhoneNumber'],
+        late: json['late']);
   }
 }
