@@ -57,7 +57,7 @@ class VehicleListViewState extends State {
                 message: '${snapshot.error}',
                 type: 'error');
           } else if (snapshot.hasData) {
-            return DeviceCard(snapshot.data, _option, _scaffoldKey);
+            return SingleChildScrollView(child: DeviceCard(snapshot.data, _option, _scaffoldKey));
           }
         } else if (snapshot.connectionState == ConnectionState.none) {
           ApiShowDialog.dialog(

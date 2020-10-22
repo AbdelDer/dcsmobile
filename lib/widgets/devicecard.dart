@@ -60,6 +60,7 @@ class _DeviceCardState extends State<DeviceCard> {
         ListView.builder(
             shrinkWrap: true,
             itemCount: data.length,
+            physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               return Card(
                 color: _all ? Colors.blue.shade100 : Colors.white,
@@ -103,9 +104,18 @@ class _DeviceCardState extends State<DeviceCard> {
                           });
                     }
                   },
-                  leading: Icon(
-                    Icons.place,
-                    color: Colors.black,
+                  leading: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+
+                    children: [
+                      Image.asset(
+                        data[index].iconPath(),
+                        width: 30,
+                      ),
+                      Text('time')
+                    ],
                   ),
                   title: Row(children: <Widget>[
                     Icon(Icons.directions_car),
