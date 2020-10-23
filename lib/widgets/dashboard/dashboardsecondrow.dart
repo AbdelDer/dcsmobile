@@ -26,7 +26,7 @@ class _DashboardSecondRowState extends State<DashboardSecondRow> {
   _DashboardSecondRowState(this.maxSpeed, this.maxDistance, this.maxRunningTime);
 
   String runningTimeAsString(runningTime) {
-    var d = Duration(minutes: runningTime.toInt());
+    var d = Duration(minutes: runningTime?.toInt());
     List<String> parts = d.toString().split(':');
     return '${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}';
   }

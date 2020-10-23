@@ -106,15 +106,14 @@ class _DeviceCardState extends State<DeviceCard> {
                   },
                   leading: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Image.asset(
                         data[index].iconPath(),
                         width: 30,
                       ),
-                      Text('time')
+                      Text(data[index].activityTime(), style: TextStyle(fontSize: 15),),
                     ],
                   ),
                   title: Row(children: <Widget>[
@@ -141,7 +140,7 @@ class _DeviceCardState extends State<DeviceCard> {
                         },
                       ),
                       Text(
-                        "${data[index].timestampAsString} ${data[index].speedKPH} Km/h",
+                        "${data[index].timestampAsString} ${data[index].distanceKM} Km/J",
                         style: TextStyle(fontSize: _detailsFontSize),
                       ),
                     ],
