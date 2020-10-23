@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/commons/FEDrawer.dart';
+import 'package:dcsmobile/pages/reportscreen.dart';
 import 'package:dcsmobile/widgets/dashboard/customswipper.dart';
 import 'package:dcsmobile/widgets/dashboardbtn.dart';
 import 'package:flutter/cupertino.dart';
@@ -204,10 +205,10 @@ class _DashboardState extends State<Dashboard> {
             ),
             child: Column(
               children: <Widget>[
-                DashboardSecondRow(
-                    maxSpeed: data['maxSpeed'],
-                    maxDistance: data['maxDistance'],
-                    maxRunningTime: data['maxRunningTime']),
+                // DashboardSecondRow(
+                //     maxSpeed: data['maxSpeed'],
+                //     maxDistance: data['maxDistance'],
+                //     maxRunningTime: data['maxRunningTime']),
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Row(children: <Widget>[
@@ -235,7 +236,7 @@ class _DashboardState extends State<Dashboard> {
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Position("Tous", "Report"),
+                          builder: (context) => ReportScreen(),
                         ),
                       ),
                     ),

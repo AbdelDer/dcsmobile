@@ -57,12 +57,12 @@ class _CommandsDialogState extends State<CommandsDialog> {
             child: RaisedButton(
               padding: const EdgeInsets.symmetric(horizontal: 85),
               child: Text(
-                _late ? "Allumer" : "",
+                _late ? "" : "Allumer",
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
                 //change number to _simPhoneNumber
-                _late ? await _textDevice(_simPhoneNumber, "turnOn") : null;
+                _late ? null : await _textDevice(_simPhoneNumber, "turnOn");
               },
               color: Colors.green.shade500,
             ),
@@ -74,11 +74,11 @@ class _CommandsDialogState extends State<CommandsDialog> {
             child: RaisedButton(
               padding: const EdgeInsets.symmetric(horizontal: 85),
               child: Text(
-                _late ? "Eteindre" : "",
+                _late ? "" : "Eteindre",
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
-                _late ? await _textDevice(_simPhoneNumber, "turnOff") : null;
+                _late ? null : await _textDevice(_simPhoneNumber, "turnOff");
               },
               color: Colors.green.shade500,
             ),
@@ -122,11 +122,11 @@ class _CommandsDialogState extends State<CommandsDialog> {
             child: RaisedButton(
               padding: const EdgeInsets.symmetric(horizontal: 70),
               child: Text(
-                _late ? "KLAXONNER" : "",
+                _late ? "" : "KLAXONNER",
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
-                _late ? await _textDevice(_simPhoneNumber, "honk") : null;
+                _late ? null : await _textDevice(_simPhoneNumber, "honk");
               },
               color: Colors.lightBlueAccent.shade700,
             ),
@@ -138,11 +138,11 @@ class _CommandsDialogState extends State<CommandsDialog> {
             child: RaisedButton(
               padding: const EdgeInsets.symmetric(horizontal: 60),
               child: Text(
-                _late ? "SMS LOCATION" : "",
+                _late ? "" : "SMS LOCATION",
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
-                _late ? await _textDevice(_simPhoneNumber, "smsLocation") : null;
+                _late ? null : await _textDevice(_simPhoneNumber, "smsLocation");
               },
               color: Colors.lightBlueAccent.shade700,
             ),
