@@ -239,7 +239,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
                           style: TextStyle(fontSize: _fontSize),
                         ),
                         subtitle: Text(
-                          'XXXXXXXXXXXXX',
+                          '${snapshot.data.stops}',
                           style: TextStyle(
                               fontSize: _fontSize, color: Colors.black),
                         ),
@@ -257,7 +257,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
                           style: TextStyle(fontSize: _fontSize),
                         ),
                         subtitle: Text(
-                          'XXXXXXXXXXXXX',
+                          '${snapshot.data.parkingTimes}',
                           style: TextStyle(
                               fontSize: _fontSize, color: Colors.black),
                         ),

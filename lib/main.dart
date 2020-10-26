@@ -12,7 +12,7 @@ void main() => runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Tracking App",
-      initialRoute: '/position',
+      initialRoute: '/report',
       theme: ThemeData(
           primaryColor: Colors.deepOrange,
           accentColor: Colors.deepOrange,

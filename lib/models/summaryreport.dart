@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 
 class SummaryReport {
   double _speedAvg;
+  int _parkingTimes;
+  int _stops;
   double _odometerStart;
   double _odometerEnd;
   double _distance;
@@ -21,15 +23,21 @@ class SummaryReport {
 
   double get speedAvg => _speedAvg;
 
+  int get parkingTimes => _parkingTimes;
+
+  int get stops => _stops;
+
   String runningTime() {
     return '${_runningTimeInMinutes.inHours}:${_runningTimeInMinutes.inMinutes.remainder(60)}';
   }
 
-  SummaryReport(this._speedAvg, this._odometerStart, this._odometerEnd,
+  SummaryReport(this._parkingTimes, this._stops, this._speedAvg, this._odometerStart, this._odometerEnd,
       this._distance, this._speedMax, this._runningTimeInMinutes);
 
   factory SummaryReport.fromJson(Map<String, dynamic> json) {
     return SummaryReport(
+      json['_parkingTimes'],
+      json['stops'],
       json['speedAvg'],
       json['odometerStart'],
       json['odometerEnd'],
