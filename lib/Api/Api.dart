@@ -323,6 +323,24 @@ class Api {
         responseBody.map((sumreport) => SummaryReport.fromJson(sumreport)).toList());
   }
 
+  static Future<Response> getSpeedReport(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/report/speed', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      return Response.error(responseBody['message']);
+    }
+
+    return Response.completed(responseBody
+        .map((eventData) => EventData.fromJson(eventData))
+        .toList());
+  }
+
   static connected() async {
     try {
       final result = await InternetAddress.lookup('google.com');

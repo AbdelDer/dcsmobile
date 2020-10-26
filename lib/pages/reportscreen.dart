@@ -4,6 +4,7 @@ import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/commons/FEDrawer.dart';
 import 'package:dcsmobile/pages/Report/summaryreport.dart';
+import 'package:dcsmobile/pages/speedreportscreen.dart';
 import 'package:dcsmobile/widgets/devicechooser.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
@@ -241,34 +242,69 @@ class ReportScreenState extends State<ReportScreen> {
                             .difference(_pickedDateTimeStart)
                             .inMilliseconds >
                         0) {
-                      if(_selectedType == "Rapport sommaire") {
+                      if (_selectedType == "Rapport sommaire") {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                SummaryReportScreen(_deviceID, _vehicleModel, _pickedDateTimeStart, _pickedDateTimeEnd),
+                            builder: (context) => SummaryReportScreen(
+                                _deviceID,
+                                _vehicleModel,
+                                _pickedDateTimeStart,
+                                _pickedDateTimeEnd),
                           ),
                         );
-                      } else if(_selectedType == "Rapport de vitesse") {
-
+                      } else if (_selectedType == "Rapport de vitesse") {
+                        TextEditingController _controller =
+                            TextEditingController();
+                        showDialog(
+                            context: this.context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text(
+                                  'vitesse',
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                                content: TextFormField(
+                                  controller: _controller,
+                                  decoration: InputDecoration(
+                                    labelText: 'vitesse',
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                      child: Text('ok'),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SpeedReportScreen(
+                                                    _deviceID,
+                                                    double.parse(_controller.text),
+                                                    _vehicleModel),
+                                          ),
+                                        );
+                                      })
+                                ],
+                              );
+                            });
                       } else {
                         ApiShowDialog.dialog(
                             scaffoldKey: _scaffoldKey,
                             message:
-                            'veuillez chosir soit rapport de vitesse soit rapport sommaire',
+                                'veuillez chosir soit rapport de vitesse soit rapport sommaire',
                             type: 'error');
                       }
                     } else if (_deviceID == "choisir véhicule(s)") {
                       ApiShowDialog.dialog(
                           scaffoldKey: _scaffoldKey,
-                          message:
-                          'veuillez chosir un ou plusieurs véhicules',
+                          message: 'veuillez chosir un ou plusieurs véhicules',
                           type: 'error');
                     } else if (_selectedType == null) {
                       ApiShowDialog.dialog(
                           scaffoldKey: _scaffoldKey,
-                          message:
-                          'veuillez chosir un type de rapport',
+                          message: 'veuillez chosir un type de rapport',
                           type: 'error');
                     } else {
                       ApiShowDialog.dialog(

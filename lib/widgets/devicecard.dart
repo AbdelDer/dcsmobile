@@ -22,8 +22,6 @@ class _DeviceCardState extends State<DeviceCard> {
   double _addressFontSize = 18;
   double _detailsFontSize = 16;
 
-  bool _all = false;
-
   var data;
   String _option;
   final GlobalKey<ScaffoldState> _scaffoldKey;
@@ -34,36 +32,13 @@ class _DeviceCardState extends State<DeviceCard> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _option == "Report"
-            ? SwitchListTile(
-                activeColor: Colors.orange,
-                title: const Text('Tous les véhicules'),
-                value: _all,
-                onChanged: (bool value) {
-                  setState(() {
-                    //change value
-                    _all = !_all;
-                  });
-                  if (_all) {
-                    // showDialog(
-                    //     context: context,
-                    //     builder: (context) {
-                    //       return ReportScreen();
-                    //     });
-                  }
-                },
-              )
-            : SizedBox(
-                height: 0,
-                width: 0,
-              ),
         ListView.builder(
             shrinkWrap: true,
             itemCount: data.length,
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               return Card(
-                color: _all ? Colors.blue.shade100 : Colors.white,
+                color: Colors.white,
                 elevation: 2,
                 child: ExpansionTile(
                   initiallyExpanded: false,
@@ -72,13 +47,7 @@ class _DeviceCardState extends State<DeviceCard> {
                       : [],
                   backgroundColor: Colors.transparent,
                   onExpansionChanged: (val) async {
-                    if (_option == "Report") {
-                      // showDialog(
-                      //     context: context,
-                      //     builder: (context) {
-                      //       return ReportScreen();
-                      //     });
-                    } else if (_option == "Commands") {
+                    if (_option == "Commands") {
                       showDialog(
                           context: context,
                           builder: (context) {
