@@ -12,7 +12,7 @@ void main() => runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Tracking App",
-      initialRoute: '/dashboard',
+      initialRoute: '/position',
       theme: ThemeData(
           primaryColor: Colors.deepOrange,
           accentColor: Colors.deepOrange,
@@ -29,7 +29,7 @@ void main() => runApp(
         '/history': (context) => Position("Tous", "History"),
         '/introduction': (context) => IntroductionPage(),
         '/dashboard': (context) => Dashboard(),
-        '/position': (context) => Position("Tous", ""),
+        '/position': (context) => Position("Tous", "Live"),
         '/alarm': (context) => Position("Tous", "Alarms"),
         '/notifications': (context) => NotificationsView(),
         '/help': (context) => HelpScreen("Assistance"),

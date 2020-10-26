@@ -42,16 +42,25 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
   Position _lastPosition;
   Marker _marker;
   double _speedKPH = 0;
+  double _odometer = 0;
   final double _warningSpeed = 100;
   gdesy.Geodesy _geodesy = gdesy.Geodesy();
   MapType _mapType = MapType.normal;
   List<String> _choices = ["normal", "hybrid", "satellite", "terrain"];
+  bool _first = true;
 
   _VehicleLivePositionState(this._deviceID, this._option);
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    //TODO: remove the line below
+    _streamSubscription.cancel();
   }
 
   double _getMyBearing(Position lastPosition, Position currentPosition) {
@@ -67,35 +76,34 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
     return 180 + brng;
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _streamSubscription.cancel();
+  _positionDetails() async {
+    if (_option == "History") {
+      Timer.run(() async {
+        await Api.getHistory(this._deviceID).then((r) async {
+          for (EventData ed in r.responseBody) {
+            await Future.delayed(Duration(milliseconds: 1500));
+            _setData(ed);
+            // yield ed;
+          }
+        }).catchError((err) {
+          ApiShowDialog.dialog(
+              scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
+        });
+      });
+    } else if (_option == "Live") {
+        Timer.periodic(Duration(seconds: 60), (timer) async {
+          await _getActualPosition();
+        });
+    }
   }
 
-  Stream<EventData> _eventDataStream(deviceID) async* {
-    var response;
-    if (_option == "History") {
-      await Api.getHistory(deviceID).then((r) {
-        response = r;
-      }).catchError((err) {
-        ApiShowDialog.dialog(
-            scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
-      });
-      for (EventData ed in response.responseBody) {
-        await Future.delayed(Duration(milliseconds: 1500));
-        yield ed;
-      }
-    } else if (_option == "Live") {
-      await Api.getActualPosition(deviceID).then((r) {
-        response = r;
-      }).catchError((err) {
-        ApiShowDialog.dialog(
-            scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
-      });
-      yield response.responseBody;
-      await Future.delayed(Duration(milliseconds: 1500));
-    }
+  _getActualPosition() async {
+    await Api.getActualPosition(this._deviceID).then((r) {
+      _setData(r.responseBody);
+    }).catchError((err) {
+      ApiShowDialog.dialog(
+          scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
+    });
   }
 
   _loadCarPin() async {
@@ -132,30 +140,42 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
               onMapCreated: (GoogleMapController googleMapController) {
                 _googleMapController = googleMapController;
                 _loadCarPin();
-                _streamSubscription =
-                    _eventDataStream(_deviceID).listen((eventData) {
-                  _setData(eventData);
-                });
+                _option == 'Live' ? _getActualPosition() : null;
+                _positionDetails();
+                // _streamSubscription =
+                //     _eventDataStream(_deviceID).listen((eventData) {
+                //   _setData(eventData);
+                // });
               },
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                width: 200,
-                height: 200,
-                child: Speedometer(
-                  size: 250,
-                  minValue: 0,
-                  maxValue: 220,
-                  currentValue: _speedKPH,
-                  displayNumericStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: 220,
+                  height: 220,
+                  child: Speedometer(
+                    size: 220,
+                    minValue: 0,
+                    maxValue: 220,
+                    currentValue: _speedKPH,
+                    displayNumericStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        backgroundColor: Colors.white,
+                        color: _speedKPH < _warningSpeed
+                            ? Colors.lightBlueAccent
+                            : Colors.red),
+                    warningValue: _warningSpeed,
+                    displayText: '${_odometer.toStringAsFixed(2)}',
+                    displayTextStyle: TextStyle(
                       fontSize: 20,
-                      color: _speedKPH < _warningSpeed
-                          ? Colors.lightBlueAccent
-                          : Colors.red),
-                  warningValue: _warningSpeed,
-                  displayText: 'speed',
+                      backgroundColor: Colors.white,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -164,29 +184,40 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
               child: Align(
                 alignment: Alignment.topRight,
                 child: PopupMenuButton(
-                  icon: Icon(Icons.more_vert, color: Colors.deepOrange.shade700, size: 35,),
-                  color: Colors.white,
-                  tooltip: 'map style',
-                  itemBuilder: (BuildContext context) {
-                    return _choices.map((choice) {
-                      return PopupMenuItem<String>(
-                        value: choice,
-                        child: Text(choice),
-                      );
-                    }).toList();
-                  },
-                  onSelected: (choice) {
-                    setState(() {
-                      switch(choice) {
-                      // "normal", "hybrid", "satellite", "terrain"
-                        case "normal": _mapType = MapType.normal; break;
-                        case "hybrid": _mapType = MapType.hybrid; break;
-                        case "satellite": _mapType = MapType.satellite; break;
-                        case "terrain": _mapType = MapType.terrain; break;
-                      }
-                    });
-                  }
-                ),
+                    icon: Icon(
+                      Icons.more_vert,
+                      color: Colors.deepOrange.shade700,
+                      size: 35,
+                    ),
+                    color: Colors.white,
+                    tooltip: 'map style',
+                    itemBuilder: (BuildContext context) {
+                      return _choices.map((choice) {
+                        return PopupMenuItem<String>(
+                          value: choice,
+                          child: Text(choice),
+                        );
+                      }).toList();
+                    },
+                    onSelected: (choice) {
+                      setState(() {
+                        switch (choice) {
+                          // "normal", "hybrid", "satellite", "terrain"
+                          case "normal":
+                            _mapType = MapType.normal;
+                            break;
+                          case "hybrid":
+                            _mapType = MapType.hybrid;
+                            break;
+                          case "satellite":
+                            _mapType = MapType.satellite;
+                            break;
+                          case "terrain":
+                            _mapType = MapType.terrain;
+                            break;
+                        }
+                      });
+                    }),
               ),
             ),
           ],
@@ -204,32 +235,39 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
         polylineId: PolylineId("custom"),
         points: _route,
         color: Colors.deepOrangeAccent,
-        width: 4);
+        width: 2);
     final infoWindow = InfoWindow(
         snippet: "lat: ${data.latitude}, lon: ${data.longitude}",
         title: "Speed: ${data.speedKPH}");
 
     if (_marker == null) {
-      if (_option == "Live") {
-        _marker = Marker(markerId: markerID, rotation: 0, position: position);
-      } else {
-        _marker = Marker(
-            markerId: markerID,
-            rotation: 0,
-            position: position,
-            visible: false);
-      }
+      _marker = Marker(
+          markerId: markerID,
+          rotation: 0,
+          position: position,
+          infoWindow: infoWindow);
     } else {
-      final _currentPosititon =
+      final _currentPosition =
           Position(longitude: data.longitude, latitude: data.latitude);
-      final rotation = _getMyBearing(_lastPosition, _currentPosititon);
-      //final rotation = _geodesy.finalBearingBetweenTwoGeoPoints(gdesy.LatLng(_lastPosition.latitude, _lastPosition.longitude), gdesy.LatLng(_currentPosititon.latitude, _currentPosititon.longitude));
-      _marker = _marker.copyWith(
-          positionParam: LatLng(data.latitude, data.longitude),
-          rotationParam: rotation,
-          iconParam: bitmapCar,
-          infoWindowParam: infoWindow,
-          visibleParam: true);
+      final _rotation = _getMyBearing(_lastPosition, _currentPosition);
+      //final rotation = _geodesy.finalBearingBetweenTwoGeoPoints(gdesy.LatLng(_lastPosition.latitude, _lastPosition.longitude), gdesy.LatLng(_currentPosition.latitude, _currentPosition.longitude));
+      // _marker = _marker.copyWith(
+      //     positionParam: LatLng(data.latitude, data.longitude),
+      //     rotationParam: rotation,
+      //     iconParam: bitmapCar,
+      //     infoWindowParam: infoWindow,
+      //     visibleParam: true);
+      _markers[MarkerId("${_markers.length - 1}")] =
+          _markers[MarkerId("${_markers.length - 1}")].copyWith(
+              iconParam: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueRed),
+              rotationParam: 0);
+      _marker = Marker(
+          markerId: markerID,
+          rotation: _rotation,
+          position: position,
+          icon: bitmapCar,
+          infoWindow: infoWindow);
     }
 
     _lastPosition =
@@ -238,9 +276,10 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
     setState(() {
       _markers[markerID] = _marker;
       _speedKPH = data.speedKPH;
+      _odometer = data.odometerKM;
       _polylines.add(customPolyline);
     });
     _googleMapController
-        ?.animateCamera(CameraUpdate.newLatLngZoom(position, 15));
+        ?.animateCamera(CameraUpdate.newLatLngZoom(position, 17));
   }
 }

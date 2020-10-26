@@ -13,6 +13,7 @@ class EventData {
   double _heading;
   double _speedKPH;
   double _distanceKM;
+  double _odometerKM;
   String _simPhoneNumber;
   String _activityTime;
   bool _late;
@@ -35,6 +36,8 @@ class EventData {
   double get speedKPH => _speedKPH;
 
   double get distanceKM => _distanceKM;
+
+  double get odometerKM => _odometerKM;
 
   String get simPhoneNumber => _simPhoneNumber;
 
@@ -161,6 +164,7 @@ class EventData {
       heading,
       speedKPH,
       distanceKM,
+      odometerKM,
       simPhoneNumber,
       activityTime,
       late,
@@ -174,6 +178,7 @@ class EventData {
         _heading = heading ?? 0,
         _speedKPH = speedKPH,
         _distanceKM = distanceKM,
+        _odometerKM = odometerKM,
         _simPhoneNumber = simPhoneNumber,
         _activityTime = activityTime,
         _late = late,
@@ -190,6 +195,7 @@ class EventData {
         heading: json['heading'],
         speedKPH: json['speedKPH'],
         distanceKM: json['distanceKM'],
+        odometerKM: json['odometerKM'],
         simPhoneNumber: json['simPhoneNumber'],
         activityTime: json['activity_time'],
         late: json['late'],

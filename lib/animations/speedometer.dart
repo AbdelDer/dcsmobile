@@ -1,5 +1,3 @@
-library flutter_speedometer;
-
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
@@ -158,9 +156,9 @@ class _SpeedometerState extends State<Speedometer> {
                   ),
                 ),
                 Container(
-                  alignment: Alignment.bottomCenter,
+                  alignment: Alignment.center,
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    padding: EdgeInsets.fromLTRB(0, 100, 0, 0),
                     child: Text(
                       widget.displayText,
                       style: widget.displayTextStyle,
