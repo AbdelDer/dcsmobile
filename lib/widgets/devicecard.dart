@@ -1,5 +1,5 @@
 import 'package:dcsmobile/pages/HistoryScreen.dart';
-import 'package:dcsmobile/pages/alarmview.dart';
+import 'package:dcsmobile/pages/alarmscreen.dart';
 import 'package:dcsmobile/pages/commandsdialog.dart';
 import 'package:dcsmobile/pages/reportscreen.dart';
 import 'package:dcsmobile/pages/vehicleliveposition.dart';
@@ -67,8 +67,7 @@ class _DeviceCardState extends State<DeviceCard> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => VehicleLivePosition(
-                            deviceID: data[index].deviceID, option: _option),
+                        builder: (context) => AlarmScreen(data[index].vehicleModel, data[index].deviceID),
                       ),
                     );
                   }

@@ -3,15 +3,38 @@ class Alarm {
   String _userID;
   String _deviceID;
   double _maxSpeed;
-  num _startUp;
-  num _battery;
-  num _disconnect;
-  num _bonnet;
-  num _towing;
-  num _crash;
-  num _driver;
+  bool _startUp;
+  bool _battery;
+  bool _disconnect;
+  bool _bonnet;
+  bool _towing;
+  bool _crash;
+  bool _driver;
   double _minTemp;
   double _maxTemp;
+
+  Alarm.byDefault(
+      {accountID,
+        userID,
+        deviceID})
+      : this._accountID = accountID,
+        this._userID = userID,
+        this._deviceID = deviceID,
+        this._startUp = false,
+        this._battery = false,
+        this._disconnect = false,
+        this._bonnet = false,
+        this._towing = false,
+        this._crash = false,
+        this._driver = false;
+
+  Alarm.id(
+      {accountID,
+        userID,
+        deviceID})
+      : this._accountID = accountID,
+        this._userID = userID ?? "",
+        this._deviceID = deviceID;
 
   Alarm(
       {accountID,
@@ -79,19 +102,19 @@ class Alarm {
 
   double get minTemp => _minTemp;
 
-  num get driver => _driver;
+  bool get driver => _driver;
 
-  num get crash => _crash;
+  bool get crash => _crash;
 
-  num get towing => _towing;
+  bool get towing => _towing;
 
-  num get bonnet => _bonnet;
+  bool get bonnet => _bonnet;
 
-  num get disconnect => _disconnect;
+  bool get disconnect => _disconnect;
 
-  num get battery => _battery;
+  bool get battery => _battery;
 
-  num get startUp => _startUp;
+  bool get startUp => _startUp;
 
   double get maxSpeed => _maxSpeed;
 
@@ -100,4 +123,56 @@ class Alarm {
   String get userID => _userID;
 
   String get accountID => _accountID;
+
+  set maxTemp(double value) {
+    _maxTemp = value;
+  }
+
+  set minTemp(double value) {
+    _minTemp = value;
+  }
+
+  set driver(bool value) {
+    _driver = value;
+  }
+
+  set crash(bool value) {
+    _crash = value;
+  }
+
+  set towing(bool value) {
+    _towing = value;
+  }
+
+  set bonnet(bool value) {
+    _bonnet = value;
+  }
+
+  set disconnect(bool value) {
+    _disconnect = value;
+  }
+
+  set battery(bool value) {
+    _battery = value;
+  }
+
+  set startUp(bool value) {
+    _startUp = value;
+  }
+
+  set maxSpeed(double value) {
+    _maxSpeed = value;
+  }
+
+  set deviceID(String value) {
+    _deviceID = value;
+  }
+
+  set userID(String value) {
+    _userID = value;
+  }
+
+  set accountID(String value) {
+    _accountID = value;
+  }
 }

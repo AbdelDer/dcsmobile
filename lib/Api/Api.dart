@@ -357,8 +357,7 @@ class Api {
     }
 
     return Response.completed(responseBody
-        .map((alarm) => Alarm.fromJson(alarm))
-        .toList());
+        .map((alarm) => Alarm.fromJson(alarm)));
   }
 
   static connected() async {
