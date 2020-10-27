@@ -8,6 +8,7 @@ import 'package:dcsmobile/models/Group.dart';
 import 'package:dcsmobile/models/Report.dart';
 import 'package:dcsmobile/models/Subscription.dart';
 import 'package:dcsmobile/models/User.dart';
+import 'package:dcsmobile/models/alarm.dart';
 import 'package:dcsmobile/models/summaryreport.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 
@@ -16,7 +17,7 @@ import 'HttpCustom.dart';
 class Api {
   static final httpClient = HttpClient();
   // static final baseUrl = 'http://91.234.195.124:9090/api';
-  static final baseUrl = 'http://192.168.1.34:9090/api';
+  static final baseUrl = 'http://192.168.1.37:9090/api';
 
   static Future<Response> login(params) async {
     await connected();
@@ -338,6 +339,25 @@ class Api {
 
     return Response.completed(responseBody
         .map((eventData) => EventData.fromJson(eventData))
+        .toList());
+  }
+
+  static Future<Response> getDeviceAlarmSettings(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/find/alarm', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      return Response.error(responseBody['message']);
+    }
+
+    return Response.completed(responseBody
+        .map((alarm) => Alarm.fromJson(alarm))
         .toList());
   }
 
