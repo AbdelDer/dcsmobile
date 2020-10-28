@@ -7,6 +7,7 @@ import 'package:dcsmobile/commons/FEDrawer.dart';
 import 'package:dcsmobile/models/alarm.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AlarmScreen extends StatefulWidget {
@@ -84,41 +85,52 @@ class _AlarmScreenState extends State<AlarmScreen> {
               return SingleChildScrollView(
                 child: Column(
                   children: [
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(color: Colors.grey[200]))),
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        controller: _speedController,
-                        decoration: InputDecoration(
-                            labelText: "speed",
-                            errorStyle: TextStyle(
-                              color: Colors.red,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            labelStyle: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                            ),
-                            hintText: "speed",
-                            hintStyle: TextStyle(color: Colors.grey),
-                            border: InputBorder.none),
-                        onChanged: (value) {
-                          if(value.contains(',')) {
-                            setState(() {
-                              _speedController.value = TextEditingValue(text: value.replaceAll(',', ''));
-                              _speedController.selection = TextSelection.fromPosition(TextPosition(offset: _speedController.text.length));
-                            });
-                          }
-                          _formKey.currentState.validate();
-                        },
-                        // validator: (String value) {},
+                    ListTile(
+                      leading: Icon(
+                        Icons.directions_car,
+                        color: Colors.black,
+                        size: 40,
+                      ),
+                      title: Text(
+                        "Device",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      trailing: Text(
+                        _deviceID,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      leading: Image.asset('assets/alarm/speed.png'),
+                      title: Text(
+                        "Speed",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      trailing: Container(
+                        width: 80,
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(color: Colors.grey[200]))),
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          controller: _speedController,
+                          //this will allow the user to insert only numbers with "."
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
+                          ],
+                          // validator: (String value) {},
+                        ),
                       ),
                     ),
                     SwitchListTile(
+                      secondary: Image.asset('assets/alarm/startup.png'),
                       activeColor: Colors.deepOrangeAccent,
                       value: alarm.startUp,
                       onChanged: (bool value) {
@@ -136,6 +148,8 @@ class _AlarmScreenState extends State<AlarmScreen> {
                       ),
                     ),
                     SwitchListTile(
+                      secondary:
+                          Image.asset('assets/alarm/battery&disconnect.png'),
                       activeColor: Colors.deepOrangeAccent,
                       value: alarm.battery,
                       onChanged: (bool newValue) {
@@ -144,7 +158,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                         });
                       },
                       title: Text(
-                        'Me notifier si la véhicule a demarré',
+                        'Battery',
                         style: GoogleFonts.roboto(
                           fontSize: 17,
                           color: Colors.black,
@@ -153,6 +167,8 @@ class _AlarmScreenState extends State<AlarmScreen> {
                       ),
                     ),
                     SwitchListTile(
+                      secondary:
+                          Image.asset('assets/alarm/battery&disconnect.png'),
                       activeColor: Colors.deepOrangeAccent,
                       value: alarm.disconnect,
                       onChanged: (bool newValue) {
@@ -161,7 +177,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                         });
                       },
                       title: Text(
-                        'Me notifier si la véhicule a demarré',
+                        'Disconnect',
                         style: GoogleFonts.roboto(
                           fontSize: 17,
                           color: Colors.black,
@@ -170,6 +186,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                       ),
                     ),
                     SwitchListTile(
+                      secondary: Image.asset('assets/alarm/bonnet.png'),
                       activeColor: Colors.deepOrangeAccent,
                       value: alarm.bonnet,
                       onChanged: (bool newValue) {
@@ -178,7 +195,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                         });
                       },
                       title: Text(
-                        'Me notifier si la véhicule a demarré',
+                        'Bonnet',
                         style: GoogleFonts.roboto(
                           fontSize: 17,
                           color: Colors.black,
@@ -187,6 +204,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                       ),
                     ),
                     SwitchListTile(
+                      secondary: Image.asset('assets/alarm/towing.png'),
                       activeColor: Colors.deepOrangeAccent,
                       value: alarm.towing,
                       onChanged: (bool newValue) {
@@ -195,7 +213,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                         });
                       },
                       title: Text(
-                        'Me notifier si la véhicule a demarré',
+                        'Towing',
                         style: GoogleFonts.roboto(
                           fontSize: 17,
                           color: Colors.black,
@@ -204,6 +222,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                       ),
                     ),
                     SwitchListTile(
+                      secondary: Image.asset('assets/alarm/crash.png'),
                       activeColor: Colors.deepOrangeAccent,
                       value: alarm.crash,
                       onChanged: (bool newValue) {
@@ -212,7 +231,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                         });
                       },
                       title: Text(
-                        'Me notifier si la véhicule a demarré',
+                        'Crash',
                         style: GoogleFonts.roboto(
                           fontSize: 17,
                           color: Colors.black,
@@ -221,6 +240,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                       ),
                     ),
                     SwitchListTile(
+                      secondary: Image.asset('assets/alarm/driver.png'),
                       activeColor: Colors.deepOrangeAccent,
                       value: alarm.driver,
                       onChanged: (bool newValue) {
@@ -229,7 +249,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                         });
                       },
                       title: Text(
-                        'Me notifier si la véhicule a demarré',
+                        'Driver',
                         style: GoogleFonts.roboto(
                           fontSize: 17,
                           color: Colors.black,
@@ -237,73 +257,80 @@ class _AlarmScreenState extends State<AlarmScreen> {
                         ),
                       ),
                     ),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(color: Colors.grey[200]))),
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        controller: _tempMinController,
-                        decoration: InputDecoration(
-                            labelText: "tempmin",
-                            errorStyle: TextStyle(
-                              color: Colors.red,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            labelStyle: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                            ),
-                            hintText: "tempmin",
-                            hintStyle: TextStyle(color: Colors.grey),
-                            border: InputBorder.none),
-                        onChanged: (value) {
-                          if(value.contains(',')) {
-                            setState(() {
-                              _speedController.value = TextEditingValue(text: value.replaceAll(',', ''));
-                              _speedController.selection = TextSelection.fromPosition(TextPosition(offset: _speedController.text.length));
-                            });
-                          }
-                          _formKey.currentState.validate();
-                        },
-                        // validator: (String value) {},
+                    ListTile(
+                      leading: Image.asset('assets/alarm/temp.png'),
+                      title: Text(
+                        "Temperature Min",
+                        style: GoogleFonts.roboto(
+                          fontSize: 17,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      trailing: Container(
+                        width: 80,
+                        height: 50,
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(color: Colors.grey[200]))),
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          controller: _tempMinController,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
+                          ],
+                          // validator: (String value) {},
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      leading: Image.asset('assets/alarm/temp.png'),
+                      title: Text(
+                        "Temperature Max",
+                        style: GoogleFonts.roboto(
+                          fontSize: 17,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      trailing: Container(
+                        width: 80,
+                        height: 50,
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(color: Colors.grey[200]))),
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          controller: _tempMaxController,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
+                          ],
+                          // validator: (String value) {},
+                        ),
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(color: Colors.grey[200]))),
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        controller: _tempMaxController,
-                        initialValue: alarm.maxTemp?.toString() ?? '',
-                        decoration: InputDecoration(
-                            labelText: "tempmax",
-                            errorStyle: TextStyle(
-                              color: Colors.red,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                      width: 120,
+                      child: IconButton(
+                        icon: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Image.asset('assets/alarm/save.png'),
+                            Text(
+                              'Save',
+                              style: GoogleFonts.roboto(
+                                fontSize: 17,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            labelStyle: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                            ),
-                            hintText: "tempmax",
-                            hintStyle: TextStyle(color: Colors.grey),
-                            border: InputBorder.none),
-                        onChanged: (value) {
-                          if(value.contains(',')) {
-                            setState(() {
-                              _speedController.value = TextEditingValue(text: value.replaceAll(',', ''));
-                              _speedController.selection = TextSelection.fromPosition(TextPosition(offset: _speedController.text.length));
-                            });
-                          }
-                          _formKey.currentState.validate();
-                        },
-                        // validator: (String value) {},
+                          ],
+                        ),
+                        onPressed: () async => await _verifyAndSubmit(context),
                       ),
                     ),
                   ],
@@ -344,12 +371,13 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
       var alarmJson =
           Alarm.id(accountID: _accountID, userID: _userID, deviceID: _deviceID)
-              .toJson();
+              .toJsonID();
 
       return Api.getDeviceAlarmSettings(jsonEncode(alarmJson)).then(
         (value) {
           alarm = value.responseBody;
           _queryResponse = value;
+          _initFormFields();
           return _queryResponse;
         },
       ).catchError(
@@ -359,6 +387,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
             _create = true;
             alarm = Alarm.byDefault(
                 accountID: _accountID, userID: _userID, deviceID: _deviceID);
+            _initFormFields();
             _queryResponse = Response.completed(alarm);
             return _queryResponse;
           } else {
@@ -371,5 +400,106 @@ class _AlarmScreenState extends State<AlarmScreen> {
       );
     }
     return _queryResponse;
+  }
+
+  void _verifyAndSubmit(context) async {
+    if (_speedController.text != "" &&
+        (double.parse(_speedController.text) <= 0 ||
+            double.parse(_speedController.text) > 140)) {
+      showBottomSheet(
+          context: context,
+          builder: (context) => Container(
+                color: Colors.deepOrange,
+                child: Center(
+                    child: Text(
+                  'entrez une valeur supérieure à 0 et inférieure à 140',
+                  style: TextStyle(
+                      fontSize: 17,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                )),
+                height: 50,
+                width: double.infinity,
+              ));
+      await Future.delayed(Duration(seconds: 1));
+      Navigator.pop(context);
+    } else {
+      alarm.maxSpeed = _speedController.value.text != ""
+          ? double.parse(_speedController.value.text)
+          : null;
+      alarm.maxTemp = _tempMaxController.value.text != ""
+          ? double.parse(_tempMaxController.value.text)
+          : null;
+      alarm.minTemp = _tempMinController.value.text != ""
+          ? double.parse(_tempMinController.value.text)
+          : null;
+      if(_create) {
+        await Api.saveDeviceAlarmSettings(jsonEncode(alarm.toJson())).then((value) async{
+          _successDialog();
+          await Future.delayed(Duration(seconds: 1), () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          });
+        }).catchError((error) {
+          ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: error, type: 'error');
+        });
+      } else {
+        await Api.updateDeviceAlarmSettings(jsonEncode(alarm.toJson())).then((value) async{
+          if(value.status == Status.ERROR) {
+            ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: value.message, type: 'info');
+          } else {
+            _successDialog();
+            await Future.delayed(Duration(seconds: 1), () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            });
+          }
+        }).catchError((error) {
+          ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: error, type: 'error');
+        });
+      }
+    }
+  }
+
+  void _initFormFields() {
+    setState(() {
+      _speedController.value = TextEditingValue(text: alarm.maxSpeed?.toString());
+      _tempMinController.value = TextEditingValue(text: alarm.minTemp?.toString() ?? '');
+      _tempMaxController.value = TextEditingValue(text: alarm.maxTemp?.toString() ?? '');
+    });
+  }
+
+  _successDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Opacity(
+              opacity: .8,
+              child: Center(
+                child: Container(
+                  height: 100,
+                  width: 200,
+                  // color: Colors.white,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  margin: EdgeInsets.symmetric(horizontal: 50),
+                  child: Center(
+                      child: Text(
+                        'Succès',
+                        style: TextStyle(
+                            fontSize: 17,
+                            color: Colors.green,
+                            decoration: TextDecoration.none,
+                            fontWeight: FontWeight.bold),
+                      )),
+                ),
+              ),
+            ),
+          );
+        });
   }
 }

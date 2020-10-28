@@ -16,4 +16,14 @@ class HttpCustom {
       body: body,
     );
   }
+
+  Future<Response> put() async {
+    return await http.put(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: body,
+    );
+  }
 }

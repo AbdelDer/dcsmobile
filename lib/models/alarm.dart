@@ -13,10 +13,7 @@ class Alarm {
   double _minTemp;
   double _maxTemp;
 
-  Alarm.byDefault(
-      {accountID,
-        userID,
-        deviceID})
+  Alarm.byDefault({accountID, userID, deviceID})
       : this._accountID = accountID,
         this._userID = userID,
         this._deviceID = deviceID,
@@ -28,10 +25,7 @@ class Alarm {
         this._crash = false,
         this._driver = false;
 
-  Alarm.id(
-      {accountID,
-        userID,
-        deviceID})
+  Alarm.id({accountID, userID, deviceID})
       : this._accountID = accountID,
         this._userID = userID ?? "",
         this._deviceID = deviceID;
@@ -81,8 +75,25 @@ class Alarm {
         towing: json['towing']);
   }
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
+        "alarmID": {
+          "accountID": _accountID,
+          "userID": _userID ?? "",
+          "deviceID": _deviceID
+        },
+        "maxSpeed": _maxSpeed,
+        "startUp": _startUp,
+        "battery": _battery,
+        "disconnect": _disconnect,
+        "bonnet": _bonnet,
+        "towing": _towing,
+        "crash": _crash,
+        "driver": _driver,
+        "minTemp": _minTemp,
+        "maxTemp": _maxTemp
+      };
+
+  Map<String, dynamic> toJsonID() => {
         "accountID": _accountID,
         "userID": _userID ?? "",
         "deviceID": _deviceID,

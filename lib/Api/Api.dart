@@ -359,9 +359,48 @@ class Api {
       return Response.error(responseBody['message']);
     }
 
+    // return Response.completed(
+    //     responseBody.map((alarm) => Alarm.fromJson(alarm)));
+    print(responseBody);
+    return Response.completed(Alarm.fromJson(responseBody));
+  }
+
+  static Future<Response> saveDeviceAlarmSettings(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/add/alarm', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if(httpResponse.statusCode != 201) {
+      return Response.error(responseBody['message']);
+    }
+
     return Response.completed(
         responseBody.map((alarm) => Alarm.fromJson(alarm)));
-    // return Response.completed(Alarm.fromJson(responseBody));
+  }
+
+  static Future<Response> updateDeviceAlarmSettings(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/update/alarm', body: body);
+
+    final httpResponse = await httpCustom
+        .put()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if(httpResponse.statusCode != 200) {
+      if(responseBody['message'] == null || responseBody['message'] == "") {
+        return Response.error('Réssayer plus tard');
+      } else {
+        return Response.error(responseBody['message']);
+      }
+    }
+    return Response.completed(Alarm.fromJson(responseBody));
   }
 
   static connected() async {

@@ -10,7 +10,7 @@ class ApiShowDialog{
      return showDialog(
           context: scaffoldKey.currentContext,
           builder: (__) => CupertinoAlertDialog(
-            title: Text('erreur', style: TextStyle(color: type =='error' ? Colors.red : Colors.blue),),
+            title: Text(type, style: TextStyle(color: type =='error' ? Colors.red : Colors.blue),),
             content: Text(message.toString()),
             actions: <Widget>[
               CupertinoDialogAction(child: Text('ok'),onPressed: () => Navigator.of(__).pop(),)
@@ -20,7 +20,7 @@ class ApiShowDialog{
       return showDialog(
           context: scaffoldKey.currentContext,
           builder: (__) => AlertDialog(
-            title: Text('erreur', style: TextStyle(color: type =='error' ? Colors.red : Colors.blue),),
+            title: Text(type, style: TextStyle(color: type =='error' ? Colors.red : Colors.blue),),
             content: Text(message.toString()),
             actions: <Widget>[
               FlatButton(child: Text('ok'),onPressed: () => Navigator.of(__).pop(),)
