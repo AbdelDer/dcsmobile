@@ -96,17 +96,7 @@ class Alarm {
   Map<String, dynamic> toJsonID() => {
         "accountID": _accountID,
         "userID": _userID ?? "",
-        "deviceID": _deviceID,
-        "maxSpeed": _maxSpeed,
-        "startUp": _startUp,
-        "battery": _battery,
-        "disconnect": _disconnect,
-        "bonnet": _bonnet,
-        "towing": _towing,
-        "crash": _crash,
-        "driver": _driver,
-        "minTemp": _minTemp,
-        "maxTemp": _maxTemp
+        "deviceID": _deviceID
       };
 
   double get maxTemp => _maxTemp;
