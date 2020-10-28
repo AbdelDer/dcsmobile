@@ -16,6 +16,7 @@ import 'HttpCustom.dart';
 
 class Api {
   static final httpClient = HttpClient();
+
   // static final baseUrl = 'http://91.234.195.124:9090/api';
   static final baseUrl = 'http://192.168.1.37:9090/api';
 
@@ -307,7 +308,6 @@ class Api {
   }
 
   static Future<Response> getSummaryReport(body) async {
-
     await connected();
     var httpCustom = HttpCustom(url: '$baseUrl/report/summary', body: body);
 
@@ -320,8 +320,9 @@ class Api {
       return Response.error(responseBody['message']);
     }
 
-    return Response.completed(
-        responseBody.map((sumreport) => SummaryReport.fromJson(sumreport)).toList());
+    return Response.completed(responseBody
+        .map((sumreport) => SummaryReport.fromJson(sumreport))
+        .toList());
   }
 
   static Future<Response> getSpeedReport(body) async {
@@ -352,12 +353,15 @@ class Api {
 
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
-    if (httpResponse.statusCode != 200) {
+    if (httpResponse.statusCode == 404) {
+      throw ('404');
+    } else if(httpResponse.statusCode != 200) {
       return Response.error(responseBody['message']);
     }
 
-    return Response.completed(responseBody
-        .map((alarm) => Alarm.fromJson(alarm)));
+    return Response.completed(
+        responseBody.map((alarm) => Alarm.fromJson(alarm)));
+    // return Response.completed(Alarm.fromJson(responseBody));
   }
 
   static connected() async {
