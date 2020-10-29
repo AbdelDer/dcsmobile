@@ -241,7 +241,7 @@ class ReportScreenState extends State<ReportScreen> {
                     if (_pickedDateTimeEnd
                             .difference(_pickedDateTimeStart)
                             .inMilliseconds >
-                        0) {
+                        0 && _deviceID != "choisir véhicule(s)" && _selectedType != null) {
                       if (_selectedType == "Rapport sommaire") {
                         Navigator.push(
                           context,
@@ -253,7 +253,8 @@ class ReportScreenState extends State<ReportScreen> {
                                 _pickedDateTimeEnd),
                           ),
                         );
-                      } else if (_selectedType == "Rapport de vitesse") {
+                      }
+                      else if (_selectedType == "Rapport de vitesse") {
                         TextEditingController _controller =
                             TextEditingController();
                         showDialog(
@@ -274,6 +275,7 @@ class ReportScreenState extends State<ReportScreen> {
                                   TextButton(
                                       child: Text('ok'),
                                       onPressed: () {
+                                        double _speed = double.parse(_controller.text);
                                         Navigator.pop(context);
                                         Navigator.push(
                                           context,
@@ -281,7 +283,7 @@ class ReportScreenState extends State<ReportScreen> {
                                             builder: (context) =>
                                                 SpeedReportScreen(
                                                     _deviceID,
-                                                    double.parse(_controller.text),
+                                                    _speed,
                                                     _vehicleModel),
                                           ),
                                         );
@@ -289,7 +291,8 @@ class ReportScreenState extends State<ReportScreen> {
                                 ],
                               );
                             });
-                      } else {
+                      }
+                      else {
                         ApiShowDialog.dialog(
                             scaffoldKey: _scaffoldKey,
                             message:

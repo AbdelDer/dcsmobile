@@ -110,7 +110,7 @@ class Api {
       body = jsonEncode({
         "accountID": params[0],
         "userID": params[1] ?? '',
-        "groupID": await prefs.getString("groupID"),
+        // "groupID": await prefs.getString("groupID"),
         "search": params[3]
       });
       switch (params[2]) {
@@ -161,7 +161,7 @@ class Api {
     body = jsonEncode({
       "accountID": await prefs.getString("accountID"),
       "userID": await prefs.getString("userID") ?? '',
-      "groupID": await prefs.getString("groupID") ?? '',
+      // "groupID": await prefs.getString("groupID") ?? '',
       "search": search
     });
 
@@ -193,7 +193,7 @@ class Api {
       body = jsonEncode({
         'accountID': params[0],
         'userID': params[1],
-        'groupID': await prefs.getString("groupID")
+        // 'groupID': await prefs.getString("groupID")
       });
       httpCustom = HttpCustom(url: '$baseUrl/user/vehicles', body: body);
     }
@@ -287,8 +287,8 @@ class Api {
     } else {
       body = jsonEncode({
         "accountID": await prefs.getString("accountID"),
-        "userID": await prefs.getString("userID"),
-        "groupID": await prefs.getString("groupID"),
+        "userID": await prefs.getString("userID")
+        // "groupID": await prefs.getString("groupID"),
       });
 
       httpCustom = HttpCustom(url: '$baseUrl/user/subscription', body: body);

@@ -492,7 +492,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                         'Succès',
                         style: TextStyle(
                             fontSize: 17,
-                            color: Colors.green,
+                            color: Colors.green.shade300,
                             decoration: TextDecoration.none,
                             fontWeight: FontWeight.bold),
                       )),

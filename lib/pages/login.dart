@@ -320,12 +320,12 @@ class _LoginState extends State<Login> {
 //    await encryptedSharedPreferences.clear();
     if (_usernameController.text != '') {
       //here we do Api query to get groupid of user because we need it in all other pages
-      await Api.userGroup(
-          _accountController.text, _usernameController.text)
-          .then((response) async{
-        await encryptedSharedPreferences.setString(
-            "groupID", response.responseBody.groupID);
-      }).catchError((err) => ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: err, type: 'error'));
+      // await Api.userGroup(
+      //     _accountController.text, _usernameController.text)
+      //     .then((response) async{
+      //   await encryptedSharedPreferences.setString(
+      //       "groupID", response.responseBody.groupID);
+      // }).catchError((err) => ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: err, type: 'error'));
 
       await encryptedSharedPreferences.setString(
           "userID", _usernameController.text);

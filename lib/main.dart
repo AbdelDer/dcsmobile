@@ -12,14 +12,10 @@ void main() => runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Tracking App",
-      initialRoute: '/alarm',
+      initialRoute: '/report',
       theme: ThemeData(
           primaryColor: Colors.deepOrange,
           accentColor: Colors.deepOrange,
-          // cardColor: Colors.orange,
-          // backgroundColor: Colors.orange,
-          // highlightColor: Colors.orange,
-          // splashColor: Colors.orange
       ),
       routes: {
         // When navigating to the "/" rou

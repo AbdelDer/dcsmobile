@@ -4,6 +4,7 @@ import 'package:dcsmobile/pages/commandsdialog.dart';
 import 'package:dcsmobile/pages/reportscreen.dart';
 import 'package:dcsmobile/pages/vehicleliveposition.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class DeviceCard extends StatefulWidget {
   var data;
@@ -19,8 +20,8 @@ class DeviceCard extends StatefulWidget {
 
 class _DeviceCardState extends State<DeviceCard> {
   double _modelFontSize = 24;
-  double _addressFontSize = 18;
-  double _detailsFontSize = 16;
+  double _addressFontSize = 17;
+  double _detailsFontSize = 15;
 
   var data;
   String _option;
@@ -37,53 +38,72 @@ class _DeviceCardState extends State<DeviceCard> {
             itemCount: data.length,
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  if (_option == "Commands") {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return CommandsDialog(data[index].vehicleModel,
-                              data[index].simPhoneNumber, false);
-                        });
-                  } else if (_option == "Live") {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => VehicleLivePosition(
-                            deviceID: data[index].deviceID, option: _option),
-                      ),
-                    );
-                  } else if (_option == "History") {
-                    showDialog(
-                      // isScrollControlled: true,
-                      //   backgroundColor: Colors.transparent,
-                        context: context,
-                        builder: (context) {
-                          return HistoryScreen(data[index].deviceID,
-                              data[index].vehicleModel, _option);
-                        });
-                  } else if (_option == "Alarms") {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AlarmScreen(data[index].vehicleModel, data[index].deviceID),
-                      ),
-                    );
-                  }
-                },
-                child: Card(
+              return Card(
                   color: Colors.white,
                   elevation: 2,
-                  child: ListTile(
-                    // initiallyExpanded: false,
-                    // children: _option == "Alarms"
-                    //     ? <Widget>[AlarmView(_scaffoldKey, data[index].deviceID)]
-                    //     : [],
-                    // backgroundColor: Colors.transparent,
-                    // onExpansionChanged: (val) async {
-                    //
-                    // },
+                  child: ExpansionTile(
+                    initiallyExpanded: false,
+                    children: _option == "speedReport"
+                        ? <Widget>[
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: 200,
+                              child: GoogleMap(
+                                initialCameraPosition: CameraPosition(
+                                    target: LatLng(data[index].latitude,
+                                        data[index].longitude), zoom: 17),
+                                zoomControlsEnabled: false,
+                                markers: Set.of([
+                                  Marker(
+                                      markerId: MarkerId('${data[index].timestamp}'),
+                                      position: LatLng(data[index].latitude,
+                                          data[index].longitude), infoWindow: InfoWindow(
+                                      snippet: "lat: ${data[index].latitude}, lon: ${data[index].longitude}",
+                                      title: "Speed: ${data[index].speedKPH}"))
+                                ]),
+                                mapType: MapType.hybrid,
+                                onMapCreated:
+                                    (GoogleMapController googleMapController) {},
+                              ),
+                            )
+                          ]
+                        : [],
+                    backgroundColor: Colors.transparent,
+                    onExpansionChanged: (val) async {
+                      if (_option == "Commands") {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return CommandsDialog(data[index].vehicleModel,
+                                  data[index].simPhoneNumber, false);
+                            });
+                      } else if (_option == "Live") {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => VehicleLivePosition(
+                                deviceID: data[index].deviceID, option: _option),
+                          ),
+                        );
+                      } else if (_option == "History") {
+                        showDialog(
+                          // isScrollControlled: true,
+                          //   backgroundColor: Colors.transparent,
+                            context: context,
+                            builder: (context) {
+                              return HistoryScreen(data[index].deviceID,
+                                  data[index].vehicleModel, _option);
+                            });
+                      } else if (_option == "Alarms") {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AlarmScreen(
+                                data[index].vehicleModel, data[index].deviceID),
+                          ),
+                        );
+                      }
+                    },
                     leading: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       mainAxisSize: MainAxisSize.min,
@@ -93,7 +113,10 @@ class _DeviceCardState extends State<DeviceCard> {
                           data[index].iconPath(),
                           width: 30,
                         ),
-                        Text(data[index].activityTime(), style: TextStyle(fontSize: 15),),
+                        Text(
+                          data[index].activityTime(),
+                          style: TextStyle(fontSize: 15),
+                        ),
                       ],
                     ),
                     title: Row(children: <Widget>[
@@ -130,8 +153,7 @@ class _DeviceCardState extends State<DeviceCard> {
                       color: Colors.black,
                     ),
                   ),
-                ),
-              );
+                );
             }),
       ],
     );

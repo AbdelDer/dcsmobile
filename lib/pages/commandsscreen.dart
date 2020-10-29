@@ -179,7 +179,7 @@ class _CommandsScreenState extends State<CommandsScreen>
                                       future: snapshot.data.responseBody[index].address,
                                       builder: (context, snapshot) {
                                         return Text(
-                                          '${snapshot.data.responseBody}',
+                                          '${snapshot.data}',
                                           style: TextStyle(
                                               color: Colors.lightBlue,
                                               fontSize: _addressFontSize),
