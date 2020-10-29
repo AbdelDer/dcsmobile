@@ -48,6 +48,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
   MapType _mapType = MapType.normal;
   List<String> _choices = ["normal", "hybrid", "satellite", "terrain"];
   bool _first = true;
+  Timer _timer;
 
   _VehicleLivePositionState(this._deviceID, this._option);
 
@@ -59,7 +60,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
   @override
   void dispose() {
     super.dispose();
-    //TODO: remove the line below
+    _timer?.cancel();
     _streamSubscription.cancel();
   }
 
@@ -91,7 +92,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
         });
       });
     } else if (_option == "Live") {
-        Timer.periodic(Duration(seconds: 60), (timer) async {
+        _timer = Timer.periodic(Duration(seconds: 60), (timer) async {
           await _getActualPosition();
         });
     }

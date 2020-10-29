@@ -25,6 +25,7 @@ class _DashboardState extends State<Dashboard> {
   bool useMobileLayout;
   StreamController _streamController;
   Stream _stream;
+  Timer _timer;
 
   @override
   void initState() {
@@ -32,9 +33,16 @@ class _DashboardState extends State<Dashboard> {
     _streamController = new StreamController();
     _stream = _streamController.stream;
     _fetchData();
-    Timer.periodic(Duration(seconds: 30), (timer) async {
+    _timer = Timer.periodic(Duration(seconds: 30), (timer) async {
       await _fetchData();
     });
+  }
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    _timer.cancel();
   }
 
   @override
