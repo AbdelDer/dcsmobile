@@ -142,7 +142,10 @@ class _DeviceCardState extends State<DeviceCard> {
                             );
                           },
                         ),
-                        Text(
+                        _option == "speedReport" ? Text(
+                          "${data[index].timestampAsString} ${data[index].speedKPH} Km/h",
+                          style: TextStyle(fontSize: _detailsFontSize),
+                        ) : Text(
                           "${data[index].timestampAsString} ${data[index].distanceKM} Km/J",
                           style: TextStyle(fontSize: _detailsFontSize),
                         ),
