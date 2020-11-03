@@ -49,6 +49,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
   List<String> _choices = ["normal", "hybrid", "satellite", "terrain"];
   bool _first = true;
   Timer _timer;
+  double _dialogTextSize = 16;
 
   _VehicleLivePositionState(this._deviceID, this._option);
 
@@ -92,9 +93,9 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
         });
       });
     } else if (_option == "Live") {
-        _timer = Timer.periodic(Duration(seconds: 60), (timer) async {
-          await _getActualPosition();
-        });
+      _timer = Timer.periodic(Duration(seconds: 60), (timer) async {
+        await _getActualPosition();
+      });
     }
   }
 
@@ -171,11 +172,10 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                     warningValue: _warningSpeed,
                     displayText: '${_odometer.toStringAsFixed(2)}',
                     displayTextStyle: TextStyle(
-                      fontSize: 20,
-                      backgroundColor: Colors.white,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold
-                    ),
+                        fontSize: 20,
+                        backgroundColor: Colors.white,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -238,8 +238,212 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
         color: Colors.deepOrangeAccent,
         width: 2);
     final infoWindow = InfoWindow(
-        snippet: "lat: ${data.latitude}, lon: ${data.longitude}",
-        title: "Speed: ${data.speedKPH}");
+        snippet: "Speed: ${data.speedKPH} Km/h",
+        title: "${data.vehicleModel}",
+        onTap: () {
+          showDialog(
+              context: _scaffoldKey.currentContext,
+              builder: (context) {
+                return Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height / 2,
+                    width: MediaQuery.of(context).size.width / 1.5,
+                    color: Colors.white,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4.0),
+                            child: Center(
+                              child: Text(
+                                "${data.vehicleModel}",
+                                style: TextStyle(
+                                    fontSize: _dialogTextSize,
+                                    decoration: TextDecoration.none, color: Colors.deepOrange),
+                              ),
+                            ),
+                          ),
+                          Divider(
+                            thickness: 3,
+                            color: Colors.black,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "speed: ",
+                                style: TextStyle(
+                                    fontSize: _dialogTextSize,
+                                    decoration: TextDecoration.none, color: Colors.black),
+                              ),
+                              Text(
+                                "${data.speedKPH} km/h",
+                                style: TextStyle(
+                                    fontSize: _dialogTextSize,
+                                    decoration: TextDecoration.none, color: Colors.deepOrange),
+                              ),
+                            ],
+                          ),
+                          Divider(
+                            thickness: 1,
+                            color: Colors.black,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "time: ",
+                                style: TextStyle(
+                                    fontSize: _dialogTextSize,
+                                    decoration: TextDecoration.none, color: Colors.black),
+                              ),
+                              Text(
+                                data.timestampAsString,
+                                style: TextStyle(
+                                    fontSize: _dialogTextSize,
+                                    decoration: TextDecoration.none, color: Colors.deepOrange),
+                              ),
+                            ],
+                          ),
+                          Divider(
+                            thickness: 1,
+                            color: Colors.black,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "latitude: ",
+                                style: TextStyle(
+                                    fontSize: _dialogTextSize,
+                                    decoration: TextDecoration.none, color: Colors.black),
+                              ),
+                              Text(
+                                "${data.latitude}",
+                                style: TextStyle(
+                                    fontSize: _dialogTextSize,
+                                    decoration: TextDecoration.none, color: Colors.deepOrange),
+                              ),
+                            ],
+                          ),
+                          Divider(
+                            thickness: 1,
+                            color: Colors.black,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "longitude: ",
+                                style: TextStyle(
+                                    fontSize: _dialogTextSize,
+                                    decoration: TextDecoration.none, color: Colors.black),
+                              ),
+                              Text(
+                                "${data.longitude}",
+                                style: TextStyle(
+                                    fontSize: _dialogTextSize,
+                                    decoration: TextDecoration.none, color: Colors.deepOrange),
+                              ),
+                            ],
+                          ),
+                          Divider(
+                            thickness: 1,
+                            color: Colors.black,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "oil level: ",
+                                style: TextStyle(
+                                    fontSize: _dialogTextSize,
+                                    decoration: TextDecoration.none, color: Colors.black),
+                              ),
+                              Text(
+                                "${data.oilLevel} L",
+                                style: TextStyle(
+                                    fontSize: _dialogTextSize,
+                                    decoration: TextDecoration.none, color: Colors.deepOrange),
+                              ),
+                            ],
+                          ),
+                          Divider(
+                            thickness: 1,
+                            color: Colors.black,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "status: ",
+                                style: TextStyle(
+                                    fontSize: _dialogTextSize,
+                                    decoration: TextDecoration.none, color: Colors.black),
+                              ),
+                              Text("en marche", style: TextStyle(fontSize: _dialogTextSize, decoration: TextDecoration.none, color: Colors.deepOrange),),
+                            ],
+                          ),
+                          Divider(
+                            thickness: 1,
+                            color: Colors.black,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "battery: ",
+                                style: TextStyle(
+                                    fontSize: _dialogTextSize,
+                                    decoration: TextDecoration.none, color: Colors.black),
+                              ),
+                              Text(
+                                "${data.batteryVolts} V",
+                                style: TextStyle(
+                                    fontSize: _dialogTextSize,
+                                    decoration: TextDecoration.none, color: Colors.deepOrange),
+                              ),
+                            ],
+                          ),
+                          Divider(
+                            thickness: 1,
+                            color: Colors.black,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "engine temp: ",
+                                style: TextStyle(
+                                    fontSize: _dialogTextSize,
+                                    decoration: TextDecoration.none, color: Colors.black),
+                              ),
+                              Text(
+                                "${data.engineTemp} °C",
+                                style: TextStyle(
+                                    fontSize: _dialogTextSize,
+                                    decoration: TextDecoration.none, color: Colors.deepOrange),
+                              ),
+                            ],
+                          ),
+                          Divider(
+                            thickness: 1,
+                            color: Colors.black,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "Signal: ",
+                                style: TextStyle(
+                                    fontSize: _dialogTextSize,
+                                    decoration: TextDecoration.none, color: Colors.black),
+                              ),
+                              Icon(
+                                Icons.signal_wifi_4_bar_outlined,
+                                color: Colors.deepOrange,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              });
+        });
 
     if (_marker == null) {
       _marker = Marker(

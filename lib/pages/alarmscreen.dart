@@ -384,11 +384,13 @@ class _AlarmScreenState extends State<AlarmScreen> {
         (error) {
           //here if the table does not contain any record we will create an alarm instance with default values
           if (error == '404') {
+            print('404');
             _create = true;
             alarm = Alarm.byDefault(
                 accountID: _accountID, userID: _userID, deviceID: _deviceID);
-            _initFormFields();
+            // _initFormFields();
             _queryResponse = Response.completed(alarm);
+            print(_queryResponse);
             return _queryResponse;
           } else {
             //if we encounter another problem, for example the user doesn't have internet we'll open dialog
@@ -463,7 +465,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
   void _initFormFields() {
     setState(() {
-      _speedController.value = TextEditingValue(text: alarm.maxSpeed?.toString());
+      _speedController.value = TextEditingValue(text: alarm.maxSpeed?.toString() ?? '');
       _tempMinController.value = TextEditingValue(text: alarm.minTemp?.toString() ?? '');
       _tempMaxController.value = TextEditingValue(text: alarm.maxTemp?.toString() ?? '');
     });

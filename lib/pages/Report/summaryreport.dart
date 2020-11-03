@@ -82,185 +82,175 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
               return Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  textDirection: TextDirection.ltr,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  // mainAxisAlignment: MainAxisAlignment.start,
+                  // mainAxisSize: MainAxisSize.max,
+                  // textDirection: TextDirection.ltr,
+                  // crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      color: _cardColor,
-                      child: ListTile(
-                        title: Text(
-                          'FROM: ${_pickedDateTimeStart.year}-${_pickedDateTimeStart.month}-${_pickedDateTimeStart.day} ${_pickedDateTimeStart.hour}:${_pickedDateTimeStart.minute}',
-                          style: TextStyle(fontSize: _fontSize),
-                        ),
-                        subtitle: Text(
-                          'TO: ${_pickedDateTimeEnd.year}-${_pickedDateTimeEnd.month}-${_pickedDateTimeEnd.day} ${_pickedDateTimeEnd.hour}:${_pickedDateTimeEnd.minute}',
-                          style: TextStyle(
-                              fontSize: _fontSize, color: Colors.black),
-                        ),
+                    ListTile(
+                      leading: Image.asset('assets/report/calendar.png'),
+                      tileColor: _cardColor,
+                      title: Text(
+                        'FROM: ${_pickedDateTimeStart.year}-${_pickedDateTimeStart.month}-${_pickedDateTimeStart.day} ${_pickedDateTimeStart.hour}:${_pickedDateTimeStart.minute}',
+                        style: TextStyle(fontSize: _fontSize),
+                      ),
+                      subtitle: Text(
+                        'TO: ${_pickedDateTimeEnd.year}-${_pickedDateTimeEnd.month}-${_pickedDateTimeEnd.day} ${_pickedDateTimeEnd.hour}:${_pickedDateTimeEnd.minute}',
+                        style:
+                            TextStyle(fontSize: _fontSize, color: Colors.black),
                       ),
                     ),
                     Divider(
                       thickness: 1,
                       color: Colors.black,
                     ),
-                    Container(
-                      color: _cardColor,
-                      child: ListTile(
-                        title: Text(
-                          'Device',
-                          style: TextStyle(fontSize: _fontSize),
-                        ),
-                        subtitle: Text(
-                          _vehicleModel,
-                          style: TextStyle(
-                              fontSize: _fontSize, color: Colors.black),
-                        ),
+                    ListTile(
+                      tileColor: _cardColor,
+                      leading: Image.asset('assets/report/car.png'),
+                      title: Text(
+                        'Device',
+                        style: TextStyle(fontSize: _fontSize),
+                      ),
+                      subtitle: Text(
+                        _vehicleModel,
+                        style:
+                            TextStyle(fontSize: _fontSize, color: Colors.black),
                       ),
                     ),
                     Divider(
                       thickness: 1,
                       color: Colors.black,
                     ),
-                    Container(
-                      color: _cardColor,
-                      child: ListTile(
-                        title: Text(
-                          'ODOMETER START',
-                          style: TextStyle(fontSize: _fontSize),
-                        ),
-                        subtitle: Text(
-                          snapshot.data.odometerStart.toString(),
-                          style: TextStyle(
-                              fontSize: _fontSize, color: Colors.black),
-                        ),
+                    ListTile(
+                      tileColor: _cardColor,
+                      leading: Image.asset('assets/report/odometer.png'),
+                      title: Text(
+                        'ODOMETER START',
+                        style: TextStyle(fontSize: _fontSize),
+                      ),
+                      subtitle: Text(
+                        snapshot.data.odometerStart.toString(),
+                        style:
+                            TextStyle(fontSize: _fontSize, color: Colors.black),
                       ),
                     ),
                     Divider(
                       thickness: 1,
                       color: Colors.black,
                     ),
-                    Container(
-                      color: _cardColor,
-                      child: ListTile(
-                        title: Text(
-                          'ODOMETER END',
-                          style: TextStyle(fontSize: _fontSize),
-                        ),
-                        subtitle: Text(
-                          snapshot.data.odometerEnd.toString(),
-                          style: TextStyle(
-                              fontSize: _fontSize, color: Colors.black),
-                        ),
+                    ListTile(
+                      tileColor: _cardColor,
+                      leading: Image.asset('assets/report/odometer.png'),
+                      title: Text(
+                        'ODOMETER END',
+                        style: TextStyle(fontSize: _fontSize),
+                      ),
+                      subtitle: Text(
+                        snapshot.data.odometerEnd.toString(),
+                        style:
+                            TextStyle(fontSize: _fontSize, color: Colors.black),
                       ),
                     ),
                     Divider(
                       thickness: 1,
                       color: Colors.black,
                     ),
-                    Container(
-                      color: _cardColor,
-                      child: ListTile(
-                        title: Text(
-                          'DISTANCE',
-                          style: TextStyle(fontSize: _fontSize),
-                        ),
-                        subtitle: Text(
-                          snapshot.data.distance.toString(),
-                          style: TextStyle(
-                              fontSize: _fontSize, color: Colors.black),
-                        ),
+                    ListTile(
+                      tileColor: _cardColor,
+                      leading: Image.asset('assets/report/car.png'),
+                      title: Text(
+                        'DISTANCE',
+                        style: TextStyle(fontSize: _fontSize),
+                      ),
+                      subtitle: Text(
+                        snapshot.data.distance.toString(),
+                        style:
+                            TextStyle(fontSize: _fontSize, color: Colors.black),
                       ),
                     ),
                     Divider(
                       thickness: 1,
                       color: Colors.black,
                     ),
-                    Container(
-                      color: _cardColor,
-                      child: ListTile(
-                        title: Text(
-                          'SPEED MAX',
-                          style: TextStyle(fontSize: _fontSize),
-                        ),
-                        subtitle: Text(
-                          snapshot.data.speedMax.toString(),
-                          style: TextStyle(
-                              fontSize: _fontSize, color: Colors.black),
-                        ),
+                    ListTile(
+                      tileColor: _cardColor,
+                      leading: Image.asset('assets/report/speed.png'),
+                      title: Text(
+                        'SPEED MAX',
+                        style: TextStyle(fontSize: _fontSize),
+                      ),
+                      subtitle: Text(
+                        snapshot.data.speedMax.toString(),
+                        style:
+                            TextStyle(fontSize: _fontSize, color: Colors.black),
                       ),
                     ),
                     Divider(
                       thickness: 1,
                       color: Colors.black,
                     ),
-                    Container(
-                      color: _cardColor,
-                      child: ListTile(
-                        title: Text(
-                          'SPEED AVG',
-                          style: TextStyle(fontSize: _fontSize),
-                        ),
-                        subtitle: Text(
-                          snapshot.data.speedAvg.toString(),
-                          style: TextStyle(
-                              fontSize: _fontSize, color: Colors.black),
-                        ),
+                    ListTile(
+                      tileColor: _cardColor,
+                      leading: Image.asset('assets/report/speed.png'),
+                      title: Text(
+                        'SPEED AVG',
+                        style: TextStyle(fontSize: _fontSize),
+                      ),
+                      subtitle: Text(
+                        snapshot.data.speedAvg.toString(),
+                        style:
+                            TextStyle(fontSize: _fontSize, color: Colors.black),
                       ),
                     ),
                     Divider(
                       thickness: 1,
                       color: Colors.black,
                     ),
-                    Container(
-                      color: _cardColor,
-                      child: ListTile(
-                        title: Text(
-                          'Vehicle Running Time',
-                          style: TextStyle(fontSize: _fontSize),
-                        ),
-                        subtitle: Text(
-                          snapshot.data.runningTime(),
-                          style: TextStyle(
-                              fontSize: _fontSize, color: Colors.black),
-                        ),
+                    ListTile(
+                      tileColor: _cardColor,
+                      leading: Image.asset('assets/report/running.png'),
+                      title: Text(
+                        'Vehicle Running Time',
+                        style: TextStyle(fontSize: _fontSize),
+                      ),
+                      subtitle: Text(
+                        snapshot.data.runningTime(),
+                        style:
+                            TextStyle(fontSize: _fontSize, color: Colors.black),
                       ),
                     ),
                     Divider(
                       thickness: 1,
                       color: Colors.black,
                     ),
-                    Container(
-                      color: _cardColor,
-                      child: ListTile(
-                        title: Text(
-                          'STOPS',
-                          style: TextStyle(fontSize: _fontSize),
-                        ),
-                        subtitle: Text(
-                          '${snapshot.data.stops}',
-                          style: TextStyle(
-                              fontSize: _fontSize, color: Colors.black),
-                        ),
+                    ListTile(
+                      tileColor: _cardColor,
+                      leading: Image.asset('assets/report/stop.png'),
+                      title: Text(
+                        'STOPS',
+                        style: TextStyle(fontSize: _fontSize),
+                      ),
+                      subtitle: Text(
+                        '${snapshot.data.stops}',
+                        style:
+                            TextStyle(fontSize: _fontSize, color: Colors.black),
                       ),
                     ),
                     Divider(
                       thickness: 1,
                       color: Colors.black,
                     ),
-                    Container(
-                      color: _cardColor,
-                      child: ListTile(
-                        title: Text(
-                          'PARKING',
-                          style: TextStyle(fontSize: _fontSize),
-                        ),
-                        subtitle: Text(
-                          '${snapshot.data.parkingTimes}',
-                          style: TextStyle(
-                              fontSize: _fontSize, color: Colors.black),
-                        ),
+                    ListTile(
+                      tileColor: _cardColor,
+                      leading: Image.asset('assets/report/parking.png'),
+                      title: Text(
+                        'PARKING',
+                        style: TextStyle(fontSize: _fontSize),
+                      ),
+                      subtitle: Text(
+                        '${snapshot.data.parkingTimes}',
+                        style:
+                            TextStyle(fontSize: _fontSize, color: Colors.black),
                       ),
                     ),
                     Divider(

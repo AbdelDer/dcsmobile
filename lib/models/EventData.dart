@@ -14,6 +14,9 @@ class EventData {
   double _speedKPH;
   double _distanceKM;
   double _odometerKM;
+  double _oilLevel;
+  double _batteryVolts;
+  double _engineTemp;
   String _simPhoneNumber;
   String _activityTime;
   bool _late;
@@ -39,6 +42,12 @@ class EventData {
 
   double get odometerKM => _odometerKM;
 
+  double get oilLevel => _oilLevel;
+
+  double get engineTemp => _engineTemp;
+
+  double get batteryVolts => _batteryVolts;
+
   String get simPhoneNumber => _simPhoneNumber;
 
   // String get activityTime => _activityTime;
@@ -50,16 +59,14 @@ class EventData {
   //TODO: add method that return activity Time
   String activityTime() {
     if(_activityTime == '+24h') return _activityTime;
-    else if(_activityTime.contains(RegExp(r'^(?:(?:([0-9]{3}):)?([0-5]?\d):)?([0-5]?\d)$'))) {
-      //TODO: change condition above with: _activityTime.contains(RegExp(r'^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$'))
+    else if(_activityTime.contains(RegExp(r'^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$'))) {
       return _activityTime;
     }
     else return DateTime.fromMillisecondsSinceEpoch(_timestamp - int.parse(_activityTime)).toString();
   }
 
   String get timestampAsString {
-    final date =
-        new DateTime.fromMillisecondsSinceEpoch(timestamp.toInt() * 1000);
+    final date = DateTime.fromMillisecondsSinceEpoch(timestamp.toInt() * 1000);
     final formatter = new DateFormat('yyyy-MM-dd HH:mm:ss');
     final String formatted = formatter.format(date);
     return formatted;
@@ -165,6 +172,9 @@ class EventData {
       speedKPH,
       distanceKM,
       odometerKM,
+      engineTemp,
+      oilLevel,
+      batteryVolts,
       simPhoneNumber,
       activityTime,
       late,
@@ -179,6 +189,9 @@ class EventData {
         _speedKPH = speedKPH,
         _distanceKM = distanceKM,
         _odometerKM = odometerKM,
+        _engineTemp = engineTemp,
+        _batteryVolts = batteryVolts,
+        _oilLevel = oilLevel,
         _simPhoneNumber = simPhoneNumber,
         _activityTime = activityTime,
         _late = late,
@@ -196,6 +209,9 @@ class EventData {
         speedKPH: json['speedKPH'],
         distanceKM: json['distanceKM'],
         odometerKM: json['odometerKM'],
+        engineTemp: json['engineTemp'],
+        batteryVolts: json['vBatteryVolts'],
+        oilLevel: json['oilLevel'],
         simPhoneNumber: json['simPhoneNumber'],
         activityTime: json['activity_time'],
         late: json['late'],

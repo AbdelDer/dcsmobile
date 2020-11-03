@@ -15,7 +15,15 @@ class Subscription {
 
   num get endDate => _endDate;
 
-  Color get color => subscriptionTime < 30 ? Colors.orange : Colors.white;
+  Color get color {
+    if(subscriptionTime <= 0) {
+      return Colors.red;
+    } else if(subscriptionTime <= 30) {
+      return Colors.orange;
+    } else {
+      return Colors.green;
+    }
+  }
 
   int get subscriptionTime {
     final end = new DateTime.fromMillisecondsSinceEpoch(endDate.toInt() * 1000);

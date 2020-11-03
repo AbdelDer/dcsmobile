@@ -8,6 +8,7 @@ import 'package:dcsmobile/models/Group.dart';
 import 'package:dcsmobile/models/Report.dart';
 import 'package:dcsmobile/models/Subscription.dart';
 import 'package:dcsmobile/models/User.dart';
+import 'package:dcsmobile/models/activity.dart';
 import 'package:dcsmobile/models/alarm.dart';
 import 'package:dcsmobile/models/summaryreport.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
@@ -18,7 +19,8 @@ class Api {
   static final httpClient = HttpClient();
 
   // static final baseUrl = 'http://91.234.195.124:9090/api';
-  static final baseUrl = 'http://192.168.1.37:9090/api';
+  static final baseUrl = 'http://192.168.1.38:9090/api';
+  // static final baseUrl = 'http://192.168.43.113:9090/api';
 
   static Future<Response> login(params) async {
     await connected();
@@ -363,6 +365,23 @@ class Api {
     //     responseBody.map((alarm) => Alarm.fromJson(alarm)));
     print(responseBody);
     return Response.completed(Alarm.fromJson(responseBody));
+  }
+
+  static Future<Response> getHistoryTimeLine(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/history/timeline', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if(httpResponse.statusCode != 200) {
+      return Response.error(responseBody['message']);
+    }
+
+    return Response.completed(responseBody.map((activity) => Activity.fromJson(activity)).toList());
   }
 
   static Future<Response> saveDeviceAlarmSettings(body) async {

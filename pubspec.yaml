@@ -35,6 +35,7 @@ dependencies:
   google_fonts: ^1.1.0
   url_launcher: ^5.5.0
   geodesy: ^0.3.2
+  flutter_svg: ^0.19.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -69,6 +70,8 @@ flutter:
     - assets/markers/
     - assets/introduction/
     - assets/alarm/
+    - assets/report/
+    - assets/historytimeline/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
