@@ -33,7 +33,11 @@ class _ActivityHistoryState extends State<ActivityHistory> {
   StreamController _streamController;
   Stream _stream;
 
-  List<Activity> _timeline = [];
+  List<Activity> _timeline;
+  // these variables for summary statistics in the first row;
+  // NB parking time will be Duration(hours: 24) - _runningTime
+  double _sumDistance;
+  Duration _runningTime;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -126,19 +130,71 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                           height: 50,
                           color: Colors.grey.shade300,
                           child: Row(
+                            mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Icon(
                                 Icons.directions_car,
-                                color: Colors.greenAccent,
+                                size: 30,
+                                color: Colors.greenAccent.shade400,
                               ),
-                              SvgPicture.asset(
-                                'assets/historytimeline/distance.svg',
-                                color: Colors.orange,
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  Activity.printDuration(_runningTime),
+                                  style: TextStyle(color: Colors.black),
+                                ),
                               ),
-                              SvgPicture.asset(
-                                'assets/historytimeline/parking.svg',
-                                color: Colors.blue,
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20.0),
+                                child: VerticalDivider(
+                                  endIndent: 10,
+                                  indent: 10,
+                                  thickness: 2,
+                                  color: Colors.deepOrange,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 30.0),
+                                child: SvgPicture.asset(
+                                  'assets/historytimeline/distance.svg',
+                                  height: 30,
+                                  width: 30,
+                                  color: Colors.orange,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  '$_sumDistance',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20.0),
+                                child: VerticalDivider(
+                                  endIndent: 10,
+                                  indent: 10,
+                                  thickness: 2,
+                                  color: Colors.deepOrange,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 30.0),
+                                child: SvgPicture.asset(
+                                  'assets/historytimeline/parking.svg',
+                                  height: 30,
+                                  width: 30,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  Activity.printDuration(Duration(hours: 24) - _runningTime),
+                                  style: TextStyle(color: Colors.black),
+                                ),
                               ),
                             ],
                           ),
@@ -164,7 +220,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                                     left: 8.0),
                                                 child: Icon(
                                                   Icons.directions_car,
-                                                  color: Colors.greenAccent,
+                                                  color: Colors.greenAccent.shade400,
                                                 ),
                                               )
                                             : Padding(
@@ -278,70 +334,97 @@ class _ActivityHistoryState extends State<ActivityHistory> {
       "endTime": (_endDate.millisecondsSinceEpoch / 1000).toString()
     });
     Api.getHistoryTimeLine(body).then((value) {
-      // _timeline = [];
+      _timeline = [];
       if (value.status == Status.COMPLETED) {
+
+        _runningTime = Duration();
+        _sumDistance = 0;
+
         for (int i = 0; i < value.responseBody.length; i++) {
+
+          _runningTime += value.responseBody[i].activityTimeAsDuration;
+          _sumDistance += value.responseBody[i].distanceKM ?? 0;
+
           var engineOnTime = value.responseBody[i].startTime;
           var engineOffTime = value.responseBody[i].endTime;
           if (value.responseBody.length == 1) {
-            _timeline.add(Activity(
-                engineOnTime,
-                engineOffTime,
-                value.responseBody[i].avgSpeed,
-                value.responseBody[i].distanceKM,
-                "running"));
             if (DateTime.fromMillisecondsSinceEpoch(engineOnTime * 1000)
                 .hour !=
                 0 ||
                 DateTime.fromMillisecondsSinceEpoch(engineOnTime * 1000)
                     .minute !=
-                    59) {
+                    0) {
               _timeline.add(Activity.parking(
                   _selectedDate.millisecondsSinceEpoch / 1000,
                   engineOnTime,
                   "parking"));
             }
-            if (engineOffTime == _endDate &&
-                DateTime.fromMillisecondsSinceEpoch(engineOffTime * 1000)
-                    .hour <
-                    23 ||
-                DateTime.fromMillisecondsSinceEpoch(engineOffTime * 1000)
-                    .minute !=
-                    59) {
-              _timeline.add(Activity.parking(engineOffTime,
-                  _endDate.millisecondsSinceEpoch / 1000, "parking"));
-            }
-          } else {
             _timeline.add(Activity(
                 engineOnTime,
                 engineOffTime,
                 value.responseBody[i].avgSpeed,
                 value.responseBody[i].distanceKM,
                 "running"));
+
+            if (engineOffTime != _endDate &&
+               (DateTime.fromMillisecondsSinceEpoch(engineOffTime * 1000)
+                    .hour <
+                    23 ||
+                DateTime.fromMillisecondsSinceEpoch(engineOffTime * 1000)
+                    .minute !=
+                    59)) {
+              _timeline.add(Activity.parking(engineOffTime,
+                  _endDate.millisecondsSinceEpoch / 1000, "parking"));
+            }
+          } else {
             if (i == 0) {
               if (DateTime.fromMillisecondsSinceEpoch(engineOnTime * 1000)
                           .hour !=
                       0 ||
                   DateTime.fromMillisecondsSinceEpoch(engineOnTime * 1000)
                           .minute !=
-                      59) {
+                      0) {
                 _timeline.add(Activity.parking(
                     _selectedDate.millisecondsSinceEpoch / 1000,
                     engineOnTime,
                     "parking"));
               }
+              _timeline.add(Activity(
+                  engineOnTime,
+                  engineOffTime,
+                  value.responseBody[i].avgSpeed,
+                  value.responseBody[i].distanceKM,
+                  "running"));
+
+              _timeline.add(Activity.parking(engineOffTime,
+                  value.responseBody[i + 1].startTime, "parking"));
             } else if (i == value.responseBody.length - 1) {
-              if (engineOffTime == _endDate &&
-              DateTime.fromMillisecondsSinceEpoch(engineOffTime * 1000)
+
+              _timeline.add(Activity(
+                  engineOnTime,
+                  engineOffTime,
+                  value.responseBody[i].avgSpeed,
+                  value.responseBody[i].distanceKM,
+                  "running"));
+
+              if (engineOffTime != _endDate &&
+              (DateTime.fromMillisecondsSinceEpoch(engineOffTime * 1000)
                   .hour <
                   23 ||
                   DateTime.fromMillisecondsSinceEpoch(engineOffTime * 1000)
                       .minute !=
-                      59) {
+                      59)) {
                 _timeline.add(Activity.parking(engineOffTime,
                     _endDate.millisecondsSinceEpoch / 1000, "parking"));
               }
             } else if (i > 0 && i < value.responseBody.length - 1) {
+              _timeline.add(Activity(
+                  engineOnTime,
+                  engineOffTime,
+                  value.responseBody[i].avgSpeed,
+                  value.responseBody[i].distanceKM,
+                  "running"));
+
               _timeline.add(Activity.parking(engineOffTime,
                   value.responseBody[i + 1].startTime, "parking"));
             }

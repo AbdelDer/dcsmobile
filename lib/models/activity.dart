@@ -19,7 +19,14 @@ class Activity {
     final _timeDiff = DateTime.fromMillisecondsSinceEpoch((_endTime * 1000).toInt())
         .difference(DateTime.fromMillisecondsSinceEpoch((_startTime * 1000).toInt()));
 
-    return _printDuration(_timeDiff);
+    return printDuration(_timeDiff);
+  }
+
+  Duration get activityTimeAsDuration {
+    final _timeDiff = DateTime.fromMillisecondsSinceEpoch((_endTime * 1000).toInt())
+        .difference(DateTime.fromMillisecondsSinceEpoch((_startTime * 1000).toInt()));
+
+    return _timeDiff;
   }
 
   String get startTimeAsString {
@@ -36,7 +43,7 @@ class Activity {
     return '$hour:$minute';
   }
 
-  String _printDuration(Duration duration) {
+  static String printDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));

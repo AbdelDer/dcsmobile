@@ -367,7 +367,7 @@ class Api {
     return Response.completed(Alarm.fromJson(responseBody));
   }
 
-  static Future<Response> getHistoryTimeLine(body) async {
+  static Future<Response<List<Activity>>> getHistoryTimeLine(body) async {
     await connected();
     var httpCustom = HttpCustom(url: '$baseUrl/history/timeline', body: body);
 
@@ -380,8 +380,7 @@ class Api {
     if(httpResponse.statusCode != 200) {
       return Response.error(responseBody['message']);
     }
-
-    return Response.completed(responseBody.map((activity) => Activity.fromJson(activity)).toList());
+    return Response.completed(responseBody.map<Activity>((activity) => Activity.fromJson(activity)).toList());
   }
 
   static Future<Response> saveDeviceAlarmSettings(body) async {
