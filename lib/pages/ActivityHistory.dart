@@ -7,6 +7,7 @@ import 'package:dcsmobile/Api/Response.dart';
 import 'package:dcsmobile/commons/FEDrawer.dart';
 import 'package:dcsmobile/datepickertimeline/date_picker_timeline.dart';
 import 'package:dcsmobile/models/activity.dart';
+import 'package:dcsmobile/pages/vehicleliveposition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -92,7 +93,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
               controller: _controller,
               //TODO: change initialSelectedDateValue to DateTime.now(),
               initialSelectedDate: _selectedDate,
-              selectionColor: Colors.orange,
+              selectionColor: Colors.deepOrange,
               selectedTextColor: Colors.white,
               onDateChange: (date) {
                 if (_selectedDate != date) {
@@ -127,78 +128,98 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                     return Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        Container(
-                          height: 50,
-                          color: Colors.grey.shade300,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.directions_car,
-                                size: 30,
-                                color: Colors.greenAccent.shade400,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return VehicleLivePosition.History(
+                                    deviceID: this.deviceID,
+                                    option: "History",
+                                    startTime:
+                                        _selectedDate.millisecondsSinceEpoch ~/
+                                            1000,
+                                    endTime:
+                                        _endDate.millisecondsSinceEpoch ~/ 1000,
+                                  );
+                                },
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text(
-                                  Activity.printDuration(_runningTime),
-                                  style: TextStyle(color: Colors.black),
+                            );
+                          },
+                          child: Container(
+                            height: 50,
+                            color: Colors.grey.shade300,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.directions_car,
+                                  size: 30,
+                                  color: Colors.greenAccent.shade400,
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
-                                child: VerticalDivider(
-                                  endIndent: 10,
-                                  indent: 10,
-                                  thickness: 2,
-                                  color: Colors.deepOrange,
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Text(
+                                    Activity.printDuration(_runningTime),
+                                    style: TextStyle(color: Colors.black),
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 30.0),
-                                child: SvgPicture.asset(
-                                  'assets/historytimeline/distance.svg',
-                                  height: 30,
-                                  width: 30,
-                                  color: Colors.orange,
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 20.0),
+                                  child: VerticalDivider(
+                                    endIndent: 10,
+                                    indent: 10,
+                                    thickness: 2,
+                                    color: Colors.deepOrange,
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text(
-                                  '$_sumDistance',
-                                  style: TextStyle(color: Colors.black),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 30.0),
+                                  child: SvgPicture.asset(
+                                    'assets/historytimeline/distance.svg',
+                                    height: 30,
+                                    width: 30,
+                                    color: Colors.orange,
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
-                                child: VerticalDivider(
-                                  endIndent: 10,
-                                  indent: 10,
-                                  thickness: 2,
-                                  color: Colors.deepOrange,
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Text(
+                                    '$_sumDistance',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 30.0),
-                                child: SvgPicture.asset(
-                                  'assets/historytimeline/parking.svg',
-                                  height: 30,
-                                  width: 30,
-                                  color: Colors.blue,
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 20.0),
+                                  child: VerticalDivider(
+                                    endIndent: 10,
+                                    indent: 10,
+                                    thickness: 2,
+                                    color: Colors.deepOrange,
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text(
-                                  Activity.printDuration(
-                                      Duration(hours: 24) - _runningTime),
-                                  style: TextStyle(color: Colors.black),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 30.0),
+                                  child: SvgPicture.asset(
+                                    'assets/historytimeline/parking.svg',
+                                    height: 30,
+                                    width: 30,
+                                    color: Colors.blue,
+                                  ),
                                 ),
-                              ),
-                            ],
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Text(
+                                    Activity.printDuration(
+                                        Duration(hours: 24) - _runningTime),
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Container(
@@ -208,104 +229,127 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                               // shrinkWrap: true,
                               itemCount: _timeline.length,
                               itemBuilder: (context, index) {
-                                return Card(
-                                  child: ListTile(
-                                    title: Row(
-                                      children: [
-                                        Text(
-                                          _timeline[index].startTimeAsString,
-                                          style: TextStyle(color: Colors.black),
-                                        ),
-                                        _timeline[index].activity == "running"
-                                            ? Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 8.0),
-                                                child: Icon(
-                                                  Icons.directions_car,
-                                                  color: Colors
-                                                      .greenAccent.shade400,
-                                                ),
-                                              )
-                                            : Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 8.0),
-                                                child: SvgPicture.asset(
-                                                  'assets/historytimeline/parking.svg',
-                                                  color: Colors.blue,
-                                                ),
-                                              ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 8.0),
-                                          child: SvgPicture.asset(
-                                            'assets/historytimeline/clock.svg',
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 8.0),
-                                          child: Text(
-                                            '${_timeline[index].activityTimeAsString}',
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return VehicleLivePosition.History(
+                                            deviceID: this.deviceID,
+                                            option: "History",
+                                            startTime:
+                                                _timeline[index].startTime.toInt(),
+                                            endTime: _timeline[index].endTime.toInt(),
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  child: Card(
+                                    child: ListTile(
+                                      title: Row(
+                                        children: [
+                                          Text(
+                                            _timeline[index].startTimeAsString,
                                             style:
                                                 TextStyle(color: Colors.black),
                                           ),
-                                        ),
-                                        _timeline[index].activity == "running"
-                                            ? Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: SvgPicture.asset(
-                                                  'assets/historytimeline/distance.svg',
-                                                  color: Colors.orange,
+                                          _timeline[index].activity == "running"
+                                              ? Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 8.0),
+                                                  child: Icon(
+                                                    Icons.directions_car,
+                                                    color: Colors
+                                                        .greenAccent.shade400,
+                                                  ),
+                                                )
+                                              : Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 8.0),
+                                                  child: SvgPicture.asset(
+                                                    'assets/historytimeline/parking.svg',
+                                                    color: Colors.blue,
+                                                  ),
                                                 ),
-                                              )
-                                            : SizedBox(
-                                                height: 0,
-                                                width: 0,
-                                              ),
-                                        _timeline[index].activity == "running"
-                                            ? Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 8.0),
-                                                child: Text(
-                                                  '${_timeline[index].distanceKM}',
-                                                  style: TextStyle(
-                                                      color: Colors.black),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 8.0),
+                                            child: SvgPicture.asset(
+                                              'assets/historytimeline/clock.svg',
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 8.0),
+                                            child: Text(
+                                              '${_timeline[index].activityTimeAsString}',
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                          _timeline[index].activity == "running"
+                                              ? Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: SvgPicture.asset(
+                                                    'assets/historytimeline/distance.svg',
+                                                    color: Colors.orange,
+                                                  ),
+                                                )
+                                              : SizedBox(
+                                                  height: 0,
+                                                  width: 0,
                                                 ),
-                                              )
-                                            : SizedBox(
-                                                height: 0,
-                                                width: 0,
-                                              ),
-                                        _timeline[index].activity == "running"
-                                            ? Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: SvgPicture.asset(
-                                                  'assets/historytimeline/speedometer.svg',
-                                                  color: Colors.orange,
+                                          _timeline[index].activity == "running"
+                                              ? Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 8.0),
+                                                  child: Text(
+                                                    '${_timeline[index].distanceKM}',
+                                                    style: TextStyle(
+                                                        color: Colors.black),
+                                                  ),
+                                                )
+                                              : SizedBox(
+                                                  height: 0,
+                                                  width: 0,
                                                 ),
-                                              )
-                                            : SizedBox(
-                                                height: 0,
-                                                width: 0,
-                                              ),
-                                        _timeline[index].activity == "running"
-                                            ? Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 8.0),
-                                                child: Text(
-                                                  '${_timeline[index].avgSpeed}',
-                                                  style: TextStyle(
-                                                      color: Colors.black),
+                                          _timeline[index].activity == "running"
+                                              ? Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: SvgPicture.asset(
+                                                    'assets/historytimeline/speedometer.svg',
+                                                    color: Colors.orange,
+                                                  ),
+                                                )
+                                              : SizedBox(
+                                                  height: 0,
+                                                  width: 0,
                                                 ),
-                                              )
-                                            : SizedBox(
-                                                height: 0,
-                                                width: 0,
-                                              ),
-                                      ],
+                                          _timeline[index].activity == "running"
+                                              ? Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 8.0),
+                                                  child: Text(
+                                                    '${_timeline[index].avgSpeed}',
+                                                    style: TextStyle(
+                                                        color: Colors.black),
+                                                  ),
+                                                )
+                                              : SizedBox(
+                                                  height: 0,
+                                                  width: 0,
+                                                ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );
@@ -355,7 +399,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                     0) {
               _timeline.add(Activity.parking(
                   _selectedDate.millisecondsSinceEpoch / 1000,
-                  engineOnTime,
+                  engineOnTime - 1,
                   "parking"));
             }
             _timeline.add(Activity(
@@ -372,7 +416,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                     DateTime.fromMillisecondsSinceEpoch(engineOffTime * 1000)
                             .minute !=
                         59)) {
-              _timeline.add(Activity.parking(engineOffTime,
+              _timeline.add(Activity.parking(engineOffTime + 1,
                   _endDate.millisecondsSinceEpoch / 1000, "parking"));
             }
           } else {
@@ -385,7 +429,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                       0) {
                 _timeline.add(Activity.parking(
                     _selectedDate.millisecondsSinceEpoch / 1000,
-                    engineOnTime,
+                    engineOnTime - 1,
                     "parking"));
               }
               _timeline.add(Activity(
@@ -395,8 +439,8 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                   value.responseBody[i].distanceKM,
                   "running"));
 
-              _timeline.add(Activity.parking(engineOffTime,
-                  value.responseBody[i + 1].startTime, "parking"));
+              _timeline.add(Activity.parking(engineOffTime + 1,
+                  value.responseBody[i + 1].startTime - 1, "parking"));
             } else if (i == value.responseBody.length - 1) {
               _timeline.add(Activity(
                   engineOnTime,
@@ -412,7 +456,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                       DateTime.fromMillisecondsSinceEpoch(engineOffTime * 1000)
                               .minute !=
                           59)) {
-                _timeline.add(Activity.parking(engineOffTime,
+                _timeline.add(Activity.parking(engineOffTime + 1,
                     _endDate.millisecondsSinceEpoch / 1000, "parking"));
               }
             } else if (i > 0 && i < value.responseBody.length - 1) {
@@ -423,8 +467,8 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                   value.responseBody[i].distanceKM,
                   "running"));
 
-              _timeline.add(Activity.parking(engineOffTime,
-                  value.responseBody[i + 1].startTime, "parking"));
+              _timeline.add(Activity.parking(engineOffTime + 1,
+                  value.responseBody[i + 1].startTime - 1, "parking"));
             }
           }
         }
@@ -436,5 +480,11 @@ class _ActivityHistoryState extends State<ActivityHistory> {
       ApiShowDialog.dialog(
           scaffoldKey: _scaffoldKey, message: error.toString(), type: 'error');
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _streamController.close();
   }
 }

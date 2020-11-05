@@ -216,11 +216,11 @@ class Api {
     return Response.completed(responseBody);
   }
 
-  static Future<Response> getHistory(deviceID) async {
+  static Future<Response> getHistory(deviceID, startTime, endTime) async {
     await connected();
     var body;
     var httpCustom;
-    body = jsonEncode({"deviceID": deviceID});
+    body = jsonEncode({"deviceID": deviceID, "startTime": startTime, "endTime": endTime});
     httpCustom = HttpCustom(url: '$baseUrl/solo/eventdataList', body: body);
 
     final httpResponse = await httpCustom

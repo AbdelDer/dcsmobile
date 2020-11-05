@@ -19,13 +19,25 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class VehicleLivePosition extends StatefulWidget {
   final deviceID;
   final option;
+  int startTime;
+  int endTime;
 
-  const VehicleLivePosition({Key key, this.deviceID, this.option})
-      : super(key: key);
+  VehicleLivePosition({Key key, @required this.deviceID, @required this.option}) : super(key: key);
+
+  VehicleLivePosition.History(
+      {@required this.deviceID,
+        @required this.option,
+        @required this.startTime,
+        @required this.endTime});
 
   @override
-  _VehicleLivePositionState createState() =>
-      _VehicleLivePositionState(this.deviceID, this.option);
+  _VehicleLivePositionState createState() {
+    if(option == "History") {
+      return _VehicleLivePositionState.History(deviceID, option, startTime, endTime);
+    }else {
+      return _VehicleLivePositionState(this.deviceID, this.option);
+    }
+  }
 }
 
 class _VehicleLivePositionState extends State<VehicleLivePosition> {
@@ -50,8 +62,12 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
   bool _first = true;
   Timer _timer;
   double _dialogTextSize = 16;
+  int _startTime;
+  int _endTime;
 
   _VehicleLivePositionState(this._deviceID, this._option);
+
+  _VehicleLivePositionState.History(this._deviceID, this._option, this._startTime, this._endTime);
 
   @override
   void initState() {
@@ -62,7 +78,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
   void dispose() {
     super.dispose();
     _timer?.cancel();
-    _streamSubscription.cancel();
+    _streamSubscription?.cancel();
   }
 
   double _getMyBearing(Position lastPosition, Position currentPosition) {
@@ -81,11 +97,10 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
   _positionDetails() async {
     if (_option == "History") {
       Timer.run(() async {
-        await Api.getHistory(this._deviceID).then((r) async {
+        await Api.getHistory(this._deviceID, this._startTime, this._endTime).then((r) async {
           for (EventData ed in r.responseBody) {
-            await Future.delayed(Duration(milliseconds: 1500));
+            await Future.delayed(Duration(milliseconds: 1000));
             _setData(ed);
-            // yield ed;
           }
         }).catchError((err) {
           ApiShowDialog.dialog(
@@ -170,7 +185,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                             ? Colors.lightBlueAccent
                             : Colors.red),
                     warningValue: _warningSpeed,
-                    displayText: '${_odometer.toStringAsFixed(2)}',
+                    displayText: '${_odometer?.toStringAsFixed(2)}',
                     displayTextStyle: TextStyle(
                         fontSize: 20,
                         backgroundColor: Colors.white,
@@ -238,7 +253,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
         color: Colors.deepOrangeAccent,
         width: 2);
     final infoWindow = InfoWindow(
-        snippet: "Speed: ${data.speedKPH} Km/h",
+        snippet: "Speed: ${data.speedKPH} Km/h more...",
         title: "${data.vehicleModel}",
         onTap: () {
           showDialog(
