@@ -34,6 +34,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
   Stream _stream;
 
   List<Activity> _timeline;
+
   // these variables for summary statistics in the first row;
   // NB parking time will be Duration(hours: 24) - _runningTime
   double _sumDistance;
@@ -192,7 +193,8 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 8.0),
                                 child: Text(
-                                  Activity.printDuration(Duration(hours: 24) - _runningTime),
+                                  Activity.printDuration(
+                                      Duration(hours: 24) - _runningTime),
                                   style: TextStyle(color: Colors.black),
                                 ),
                               ),
@@ -220,7 +222,8 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                                     left: 8.0),
                                                 child: Icon(
                                                   Icons.directions_car,
-                                                  color: Colors.greenAccent.shade400,
+                                                  color: Colors
+                                                      .greenAccent.shade400,
                                                 ),
                                               )
                                             : Padding(
@@ -316,9 +319,8 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                     child: Text(snapshot.error),
                   );
                 } else {
-                  return SizedBox(
-                    height: 0,
-                    width: 0,
+                  return Center(
+                    child: CircularProgressIndicator(),
                   );
                 }
               }),
@@ -336,23 +338,20 @@ class _ActivityHistoryState extends State<ActivityHistory> {
     Api.getHistoryTimeLine(body).then((value) {
       _timeline = [];
       if (value.status == Status.COMPLETED) {
-
         _runningTime = Duration();
         _sumDistance = 0;
 
         for (int i = 0; i < value.responseBody.length; i++) {
-
           _runningTime += value.responseBody[i].activityTimeAsDuration;
           _sumDistance += value.responseBody[i].distanceKM ?? 0;
 
           var engineOnTime = value.responseBody[i].startTime;
           var engineOffTime = value.responseBody[i].endTime;
           if (value.responseBody.length == 1) {
-            if (DateTime.fromMillisecondsSinceEpoch(engineOnTime * 1000)
-                .hour !=
-                0 ||
+            if (DateTime.fromMillisecondsSinceEpoch(engineOnTime * 1000).hour !=
+                    0 ||
                 DateTime.fromMillisecondsSinceEpoch(engineOnTime * 1000)
-                    .minute !=
+                        .minute !=
                     0) {
               _timeline.add(Activity.parking(
                   _selectedDate.millisecondsSinceEpoch / 1000,
@@ -367,12 +366,12 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                 "running"));
 
             if (engineOffTime != _endDate &&
-               (DateTime.fromMillisecondsSinceEpoch(engineOffTime * 1000)
-                    .hour <
-                    23 ||
-                DateTime.fromMillisecondsSinceEpoch(engineOffTime * 1000)
-                    .minute !=
-                    59)) {
+                (DateTime.fromMillisecondsSinceEpoch(engineOffTime * 1000)
+                            .hour <
+                        23 ||
+                    DateTime.fromMillisecondsSinceEpoch(engineOffTime * 1000)
+                            .minute !=
+                        59)) {
               _timeline.add(Activity.parking(engineOffTime,
                   _endDate.millisecondsSinceEpoch / 1000, "parking"));
             }
@@ -399,7 +398,6 @@ class _ActivityHistoryState extends State<ActivityHistory> {
               _timeline.add(Activity.parking(engineOffTime,
                   value.responseBody[i + 1].startTime, "parking"));
             } else if (i == value.responseBody.length - 1) {
-
               _timeline.add(Activity(
                   engineOnTime,
                   engineOffTime,
@@ -408,12 +406,12 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                   "running"));
 
               if (engineOffTime != _endDate &&
-              (DateTime.fromMillisecondsSinceEpoch(engineOffTime * 1000)
-                  .hour <
-                  23 ||
-                  DateTime.fromMillisecondsSinceEpoch(engineOffTime * 1000)
-                      .minute !=
-                      59)) {
+                  (DateTime.fromMillisecondsSinceEpoch(engineOffTime * 1000)
+                              .hour <
+                          23 ||
+                      DateTime.fromMillisecondsSinceEpoch(engineOffTime * 1000)
+                              .minute !=
+                          59)) {
                 _timeline.add(Activity.parking(engineOffTime,
                     _endDate.millisecondsSinceEpoch / 1000, "parking"));
               }
