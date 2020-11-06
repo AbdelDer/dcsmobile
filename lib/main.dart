@@ -18,7 +18,7 @@ void main() {
       MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "Tracking App",
-        initialRoute: '/dashboard',
+        initialRoute: '/activityhistory',
         navigatorObservers: [routeObserver],
         theme: ThemeData(
           primaryColor: Colors.deepOrange,
@@ -38,7 +38,7 @@ void main() {
           '/help': (context) => HelpScreen("Assistance"),
           '/report': (context) => ReportScreen(),
           '/commands': (context) => CommandsScreen(),
-          '/activityhistory': (context) => ActivityHistory(),
+          '/activityhistory': (context) => ActivityHistory(deviceID: "demo3", vehicleModel: "citroen"),
         },
         // home: Home(),
       )

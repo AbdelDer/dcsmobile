@@ -26,105 +26,109 @@ class _DashboardSecondRowState extends State<DashboardSecondRow> {
   _DashboardSecondRowState(this.maxSpeed, this.maxDistance, this.maxRunningTime);
 
   String runningTimeAsString(runningTime) {
-    var d = Duration(minutes: runningTime?.toInt());
-    List<String> parts = d.toString().split(':');
-    return '${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}';
+    if(runningTime != null){
+      var d = Duration(minutes: runningTime?.toInt());
+      List<String> parts = d.toString().split(':');
+      return '${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}';
+    }else {
+      return null;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (MediaQuery.of(context).size.width < 410) {
-      return FadeAnimation(
-          2.2,
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              GestureDetector(
-                child: Icon(
-                  Icons.arrow_back,
-                  color: Colors.black,
-                ),
-                onTap: () {
-                  setState(() {
-                    if (_indexStack < 2) {
-                      _indexStack++;
-                    } else {
-                      _indexStack = 0;
-                    }
-                    if (_indexStack == 0)
-                      _visible = [true, false, false];
-                    else if (_indexStack == 1)
-                      _visible = [false, true, false];
-                    else if (_indexStack == 2) _visible = [false, false, true];
-                  });
-                },
-              ),
-              IndexedStack(
-                index: _indexStack,
-                children: <Widget>[
-                  AnimatedOpacity(
-                    opacity: _visible[0] ? 1.0 : 0.0,
-                    duration: Duration(milliseconds: 500),
-                    child: RoundedContainer(
-                        colors: [
-                          Colors.deepOrange.shade300,
-                          Colors.deepOrange.shade400
-                        ],
-                        maxSubject: "Kilometrage",
-                        maxValue: maxDistance['maxDistance'],
-                        model: maxDistance['vehicleModel']),
-                  ),
-                  AnimatedOpacity(
-                    opacity: _visible[1] ? 1.0 : 0.0,
-                    duration: Duration(milliseconds: 500),
-                    child: RoundedContainer(
-                        colors: [
-                          Colors.deepOrange.shade400,
-                          Colors.deepOrange.shade500
-                        ],
-                        maxSubject: "Vitesse",
-                        maxValue: maxSpeed['maxSpeed'],
-                        model: maxSpeed['vehicleModel']),
-                  ),
-                  AnimatedOpacity(
-                    opacity: _visible[2] ? 1.0 : 0.0,
-                    duration: Duration(milliseconds: 500),
-                    child: RoundedContainer(
-                        colors: [
-                          Colors.deepOrange.shade500,
-                          Colors.deepOrange.shade600
-                        ],
-                        maxSubject: "T. en Marche",
-                        maxValue: runningTimeAsString(maxRunningTime['maxRunningTime']),
-                        model: maxRunningTime['vehicleModel']),
-                  ),
-                ],
-              ),
-              GestureDetector(
-                child: Icon(
-                  Icons.arrow_forward,
-                  color: Colors.black,
-                ),
-                onTap: () {
-                  setState(() {
-                    if (_indexStack > 0) {
-                      _indexStack--;
-                    } else {
-                      _indexStack = 2;
-                    }
-                    if (_indexStack == 0)
-                      _visible = [true, false, false];
-                    else if (_indexStack == 1)
-                      _visible = [false, true, false];
-                    else if (_indexStack == 2) _visible = [false, false, true];
-                  });
-                },
-              ),
-            ],
-          ));
-    } else {
+    // if (MediaQuery.of(context).size.width < 410) {
+    //   return FadeAnimation(
+    //       2.2,
+    //       Row(
+    //         crossAxisAlignment: CrossAxisAlignment.center,
+    //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    //         mainAxisSize: MainAxisSize.max,
+    //         children: <Widget>[
+    //           GestureDetector(
+    //             child: Icon(
+    //               Icons.arrow_back,
+    //               color: Colors.black,
+    //             ),
+    //             onTap: () {
+    //               setState(() {
+    //                 if (_indexStack < 2) {
+    //                   _indexStack++;
+    //                 } else {
+    //                   _indexStack = 0;
+    //                 }
+    //                 if (_indexStack == 0)
+    //                   _visible = [true, false, false];
+    //                 else if (_indexStack == 1)
+    //                   _visible = [false, true, false];
+    //                 else if (_indexStack == 2) _visible = [false, false, true];
+    //               });
+    //             },
+    //           ),
+    //           IndexedStack(
+    //             index: _indexStack,
+    //             children: <Widget>[
+    //               AnimatedOpacity(
+    //                 opacity: _visible[0] ? 1.0 : 0.0,
+    //                 duration: Duration(milliseconds: 500),
+    //                 child: RoundedContainer(
+    //                     colors: [
+    //                       Colors.deepOrange.shade300,
+    //                       Colors.deepOrange.shade400
+    //                     ],
+    //                     maxSubject: "Kilometrage",
+    //                     maxValue: maxDistance['maxDistance'],
+    //                     model: maxDistance['vehicleModel']),
+    //               ),
+    //               AnimatedOpacity(
+    //                 opacity: _visible[1] ? 1.0 : 0.0,
+    //                 duration: Duration(milliseconds: 500),
+    //                 child: RoundedContainer(
+    //                     colors: [
+    //                       Colors.deepOrange.shade400,
+    //                       Colors.deepOrange.shade500
+    //                     ],
+    //                     maxSubject: "Vitesse",
+    //                     maxValue: maxSpeed['maxSpeed'],
+    //                     model: maxSpeed['vehicleModel']),
+    //               ),
+    //               AnimatedOpacity(
+    //                 opacity: _visible[2] ? 1.0 : 0.0,
+    //                 duration: Duration(milliseconds: 500),
+    //                 child: RoundedContainer(
+    //                     colors: [
+    //                       Colors.deepOrange.shade500,
+    //                       Colors.deepOrange.shade600
+    //                     ],
+    //                     maxSubject: "T. en Marche",
+    //                     maxValue: runningTimeAsString(maxRunningTime['maxRunningTime']),
+    //                     model: maxRunningTime['vehicleModel']),
+    //               ),
+    //             ],
+    //           ),
+    //           GestureDetector(
+    //             child: Icon(
+    //               Icons.arrow_forward,
+    //               color: Colors.black,
+    //             ),
+    //             onTap: () {
+    //               setState(() {
+    //                 if (_indexStack > 0) {
+    //                   _indexStack--;
+    //                 } else {
+    //                   _indexStack = 2;
+    //                 }
+    //                 if (_indexStack == 0)
+    //                   _visible = [true, false, false];
+    //                 else if (_indexStack == 1)
+    //                   _visible = [false, true, false];
+    //                 else if (_indexStack == 2) _visible = [false, false, true];
+    //               });
+    //             },
+    //           ),
+    //         ],
+    //       ));
+    // } else {
       return Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -153,6 +157,6 @@ class _DashboardSecondRowState extends State<DashboardSecondRow> {
                 model: maxRunningTime['vehicleModel']),
           ],
       );
-    }
+    // }
   }
 }

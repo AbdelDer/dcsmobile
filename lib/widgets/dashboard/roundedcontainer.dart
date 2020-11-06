@@ -47,56 +47,61 @@ class _RoundedContainerState extends State<RoundedContainer> {
       _fontSize = 15;
     }
 
-    return Container(
-      padding: EdgeInsets.all(10),
-      height: _heightContainer,
-      width: _widthContainer,
-      decoration: BoxDecoration(
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(10),
-        gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: this.colors),
-        // boxShadow: [
-        //   BoxShadow(color: Colors.black, blurRadius: 10.0),
-        // ],
-        // borderRadius: BorderRadius.circular(60.0),
-      ),
-      child: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Text(
-              "MAX",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: _fontSize,
-                  fontWeight: FontWeight.bold),
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          padding: EdgeInsets.all(10),
+          height: _heightContainer,
+          width: _widthContainer,
+          decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(10),
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: this.colors),
+            // boxShadow: [
+            //   BoxShadow(color: Colors.black, blurRadius: 10.0),
+            // ],
+            // borderRadius: BorderRadius.circular(60.0),
+          ),
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Text(
+                  "MAX",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: _fontSize,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  maxSubject ?? 'null',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: _fontSize,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  maxValue ?? 'null',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: _fontSize,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  model ?? 'null',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: _fontSize,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
-            Text(
-              maxSubject ?? 'null',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: _fontSize,
-                  fontWeight: FontWeight.bold),
-            ),
-            Text(
-              maxValue ?? 'null',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: _fontSize,
-                  fontWeight: FontWeight.bold),
-            ),
-            Text(
-              model ?? 'null',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: _fontSize,
-                  fontWeight: FontWeight.bold),
-            ),
-          ],
+          ),
         ),
       ),
     );

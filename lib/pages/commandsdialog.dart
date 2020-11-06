@@ -51,13 +51,13 @@ class _CommandsDialogState extends State<CommandsDialog> {
         ),
       ),
       children: [
-        Center(
+        !_late ? Center(
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: RaisedButton(
               padding: const EdgeInsets.symmetric(horizontal: 85),
               child: Text(
-                _late ? "" : "Allumer",
+                "Allumer",
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
@@ -67,14 +67,14 @@ class _CommandsDialogState extends State<CommandsDialog> {
               color: Colors.green.shade500,
             ),
           ),
-        ),
-        Center(
+        ) : SizedBox(height: 0, width: 0,),
+        !_late ? Center(
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: RaisedButton(
               padding: const EdgeInsets.symmetric(horizontal: 85),
               child: Text(
-                _late ? "" : "Eteindre",
+                "Eteindre",
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
@@ -83,7 +83,7 @@ class _CommandsDialogState extends State<CommandsDialog> {
               color: Colors.green.shade500,
             ),
           ),
-        ),
+        ) : SizedBox(height: 0, width: 0,),
         Center(
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0),
@@ -116,13 +116,13 @@ class _CommandsDialogState extends State<CommandsDialog> {
             ),
           ),
         ),
-        Center(
+        !_late ? Center(
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: RaisedButton(
               padding: const EdgeInsets.symmetric(horizontal: 70),
               child: Text(
-                _late ? "" : "KLAXONNER",
+                "KLAXONNER",
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
@@ -131,14 +131,14 @@ class _CommandsDialogState extends State<CommandsDialog> {
               color: Colors.lightBlueAccent.shade700,
             ),
           ),
-        ),
-        Center(
+        ) : SizedBox(height: 0, width: 0,),
+        !_late ? Center(
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: RaisedButton(
               padding: const EdgeInsets.symmetric(horizontal: 60),
               child: Text(
-                _late ? "" : "SMS LOCATION",
+                "SMS LOCATION",
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
@@ -147,7 +147,7 @@ class _CommandsDialogState extends State<CommandsDialog> {
               color: Colors.lightBlueAccent.shade700,
             ),
           ),
-        ),
+        ) : SizedBox(height: 0, width: 0,),
       ],
     );
   }

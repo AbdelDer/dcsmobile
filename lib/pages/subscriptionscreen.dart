@@ -19,19 +19,29 @@ class SubscriptionScreen extends StatelessWidget {
             future: getDevicesSubscription(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return ListView.builder(
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (context, index) {
-                      // print('${snapshot.data}');
-                      return Card(
-                        color: snapshot.data[index].color,
-                        child: ListTile(
-                          leading: Icon(Icons.directions_car, color: Colors.black,),
-                          title: Text(snapshot.data[index].vehicleModel, style: TextStyle(color: Colors.black),),
-                          trailing: Text('${snapshot.data[index].subscriptionTime.toString()} jours'),
-                        ),
-                      );
-                    });
+                if(snapshot.data.message != null) {
+                  return Center(
+                    child: Text(
+                      snapshot.data.message,
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                  );
+                }else {
+                  return ListView.builder(
+                      itemCount: snapshot.data.responseBody.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          color: snapshot.data.responseBody[index].color,
+                          child: ListTile(
+                            leading: Icon(Icons.directions_car, color: Colors.black,),
+                            title: Text(snapshot.data.responseBody[index].vehicleModel, style: TextStyle(color: Colors.black),),
+                            trailing: Text('${snapshot.data.responseBody[index].subscriptionTime.toString()} jours'),
+                          ),
+                        );
+                      });
+                }
               } else if (snapshot.hasError) {
                 return AlertDialog();
               } else {
@@ -47,7 +57,7 @@ class SubscriptionScreen extends StatelessWidget {
   Future getDevicesSubscription() async {
     var subscriptionDetails;
     await Api.getDevicesSubscription().then((value) {
-      subscriptionDetails = value.responseBody;
+      subscriptionDetails = value;
       // print('${value.data}');
     }).catchError((error) {
       print('error is $error');

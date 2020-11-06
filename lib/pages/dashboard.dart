@@ -6,6 +6,7 @@ import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/pages/reportscreen.dart';
 import 'package:dcsmobile/pages/subscriptionscreen.dart';
 import 'package:dcsmobile/widgets/dashboard/customswipper.dart';
+import 'package:dcsmobile/widgets/dashboard/dashboardsecondrow.dart';
 import 'package:dcsmobile/widgets/dashboardbtn.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +86,7 @@ class _DashboardState extends State<Dashboard> with RouteAware, WidgetsBindingOb
       _streamController = new StreamController();
       _stream = _streamController.stream;
       _fetchData();
-      _timer = Timer.periodic(Duration(seconds: 3), (timer) async {
+      _timer = Timer.periodic(Duration(seconds: 30), (timer) async {
         await _fetchData();
       });
     });
@@ -193,58 +194,71 @@ class _DashboardState extends State<Dashboard> with RouteAware, WidgetsBindingOb
               mainAxisSize: MainAxisSize.max,
               children: [
                 Row(
+                  mainAxisSize: MainAxisSize.max,
                   children: [
-                    GestureDetector(
-                      onTap: () => _handleOnTap('Tous'),
-                      child: DashboardBtn(
-                        quantity: data['firstRow']['all'],
-                        description: 'Tous',
-                        color: Colors.blue,
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => _handleOnTap('Tous'),
+                        child: DashboardBtn(
+                          quantity: data['firstRow']['all'],
+                          description: 'Tous',
+                          color: Colors.blue,
+                        ),
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () => _handleOnTap('En marche'),
-                      child: DashboardBtn(
-                        quantity: data['firstRow']['moving'],
-                        description: 'En marche',
-                        color: Colors.green,
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => _handleOnTap('En marche'),
+                        child: DashboardBtn(
+                          quantity: data['firstRow']['moving'],
+                          description: 'En marche',
+                          color: Colors.green,
+                        ),
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () => _handleOnTap('En parking'),
-                      child: DashboardBtn(
-                        quantity: data['parked'],
-                        description: 'En parking',
-                        color: Colors.white,
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => _handleOnTap('En parking'),
+                        child: DashboardBtn(
+                          quantity: data['parked'],
+                          description: 'En parking',
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ],
                 ),
                 Row(
                   children: [
-                    GestureDetector(
-                      onTap: () => _handleOnTap('late'),
-                      child: DashboardBtn(
-                        quantity: data['firstRow']['late'],
-                        description: 'En retard',
-                        color: Colors.yellow,
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => _handleOnTap('late'),
+                        child: DashboardBtn(
+                          quantity: data['firstRow']['late'],
+                          description: 'En retard',
+                          color: Colors.yellow,
+                        ),
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () => _handleOnTap('renewal'),
-                      child: DashboardBtn(
-                        quantity: data['firstRow']['renewal'],
-                        description: 'Renouvellement',
-                        color: Colors.brown,
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => _handleOnTap('renewal'),
+                        child: DashboardBtn(
+                          quantity: data['firstRow']['renewal'],
+                          description: 'Renouvellement',
+                          color: Colors.brown,
+                        ),
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () => _handleOnTap('alert'),
-                      child: DashboardBtn(
-                        // quantity: data['Alerte'],
-                        quantity: 0,
-                        description: 'Alerte',
-                        color: Colors.red,
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => _handleOnTap('alert'),
+                        child: DashboardBtn(
+                          // quantity: data['Alerte'],
+                          quantity: 0,
+                          description: 'Alerte',
+                          color: Colors.red,
+                        ),
                       ),
                     ),
                   ],
@@ -298,10 +312,10 @@ class _DashboardState extends State<Dashboard> with RouteAware, WidgetsBindingOb
             ),
             child: Column(
               children: <Widget>[
-                // DashboardSecondRow(
-                //     maxSpeed: data['maxSpeed'],
-                //     maxDistance: data['maxDistance'],
-                //     maxRunningTime: data['maxRunningTime']),
+                DashboardSecondRow(
+                    maxSpeed: data['maxSpeed'],
+                    maxDistance: data['maxDistance'],
+                    maxRunningTime: data['maxRunningTime']),
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Row(children: <Widget>[
@@ -341,10 +355,10 @@ class _DashboardState extends State<Dashboard> with RouteAware, WidgetsBindingOb
                     )),
                   ]),
                 ),
-                CustomSwipper(
-                  mediaQuery: mediaQuery,
-                  data: data,
-                ),
+                // CustomSwipper(
+                //   mediaQuery: mediaQuery,
+                //   data: data,
+                // ),
               ],
             ),
           ),
