@@ -24,7 +24,7 @@ class Dashboard extends StatefulWidget {
   _DashboardState createState() => _DashboardState(_routeObserver);
 }
 
-class _DashboardState extends State<Dashboard> with RouteAware{
+class _DashboardState extends State<Dashboard> with RouteAware, WidgetsBindingObserver{
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   MediaQueryData mediaQuery;
   bool useMobileLayout;
@@ -51,16 +51,32 @@ class _DashboardState extends State<Dashboard> with RouteAware{
   @override
   void didPushNext() {
     // Route was pushed onto navigator and is now topmost route.
-    setState(() {
-      _timer.cancel();
-      _streamController.close();
-    });
+    _killApiCall();
     // print('Pushed A Route ${_timer.isActive}');
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch(state){
+      case AppLifecycleState.resumed:
+        //here if dashboard is displayed then we'll initialise the timer and streamController
+        if(ModalRoute.of(context).isCurrent) _setTimerAndStream();
+        break;
+      case AppLifecycleState.inactive:
+        break;
+      case AppLifecycleState.paused:
+        //here if the app is in background then We'll stop the api call
+        _killApiCall();
+        break;
+      case AppLifecycleState.detached:
+        break;
+    }
   }
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _setTimerAndStream();
   }
 
@@ -77,18 +93,24 @@ class _DashboardState extends State<Dashboard> with RouteAware{
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _timer.cancel();
     _streamController.close();
     _routeObserver.unsubscribe(this);
     super.dispose();
   }
 
+  _killApiCall() {
+    setState(() {
+      _timer.cancel();
+      _streamController.close();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     mediaQuery = MediaQuery.of(context);
     useMobileLayout = mediaQuery.size.shortestSide < 600;
-    //if the page is displayed then set the timer ant initialise the streamBuilder
-
     return Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
