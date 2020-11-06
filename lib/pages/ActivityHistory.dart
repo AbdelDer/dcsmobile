@@ -6,6 +6,7 @@ import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/Api/Response.dart';
 import 'package:dcsmobile/commons/FEDrawer.dart';
 import 'package:dcsmobile/datepickertimeline/date_picker_timeline.dart';
+import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/models/activity.dart';
 import 'package:dcsmobile/pages/vehicleliveposition.dart';
 import 'package:flutter/material.dart';
@@ -188,7 +189,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 8.0),
                                   child: Text(
-                                    '$_sumDistance',
+                                    '$_sumDistance KM',
                                     style: TextStyle(color: Colors.black),
                                   ),
                                 ),

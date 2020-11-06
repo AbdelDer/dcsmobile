@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:math' as math;
 
+import 'package:dcsmobile/main.dart';
 import 'package:geodesy/geodesy.dart' as gdesy;
 
 import 'package:dcsmobile/Api/Api.dart';

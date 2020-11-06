@@ -19,8 +19,8 @@ class Api {
   static final httpClient = HttpClient();
 
   // static final baseUrl = 'http://91.234.195.124:9090/api';
-  static final baseUrl = 'http://192.168.1.38:9090/api';
-  // static final baseUrl = 'http://192.168.43.113:9090/api';
+  // static final baseUrl = 'http://192.168.1.38:9090/api';
+  static final baseUrl = 'http://192.168.100.192:9090/api';
 
   static Future<Response> login(params) async {
     await connected();

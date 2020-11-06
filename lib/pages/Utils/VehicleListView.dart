@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
+import 'package:dcsmobile/Api/Response.dart';
 import 'package:dcsmobile/pages/HistoryScreen.dart';
 import 'package:dcsmobile/pages/ReportView(deprecated).dart';
 import 'package:dcsmobile/pages/commandsdialog.dart';
@@ -56,7 +57,18 @@ class VehicleListViewState extends State {
                 message: '${snapshot.error}',
                 type: 'error');
           } else if (snapshot.hasData) {
-            return SingleChildScrollView(child: DeviceCard(snapshot.data, _option, _scaffoldKey));
+              if(snapshot.data.message != null) {
+                return Center(
+                  child: Text(
+                    snapshot.data.message,
+                    style: TextStyle(
+                      fontSize: 20
+                    ),
+                  ),
+                );
+              }else {
+                return SingleChildScrollView(child: DeviceCard(snapshot.data.responseBody, _option, _scaffoldKey));
+              }
           }
         } else if (snapshot.connectionState == ConnectionState.none) {
           ApiShowDialog.dialog(
@@ -80,22 +92,15 @@ class VehicleListViewState extends State {
       this.search
     ];
 
-    var list = [];
+    Response response;
 
     await Api.devices(params).then((_) {
-      if (_.message != null) {
-        ApiShowDialog.dialog(
-            scaffoldKey: _scaffoldKey,
-            message: search == '' ? _.message : _.message + ' de ce modèle',
-            type: 'error');
-      } else {
-        list = _.responseBody;
-      }
+      response = _;
     }).catchError((err) {
       ApiShowDialog.dialog(
           scaffoldKey: _scaffoldKey, message: err, type: 'error');
     });
-    yield list;
+    yield response;
   }
 
   @override

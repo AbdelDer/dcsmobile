@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 
 class DashboardBtn extends StatefulWidget {
 
-  int quantity;
-  String description;
-  Color color;
+  final int quantity;
+  final String description;
+  final Color color;
 
-  DashboardBtn({this.quantity, this.description, this.color});
+  DashboardBtn({@required this.quantity, @required this.description, @required this.color});
 
   @override
   _DashboardBtnState createState() => _DashboardBtnState(this.quantity, this.description, this.color);
@@ -31,83 +31,46 @@ class _DashboardBtnState extends State<DashboardBtn> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: InkResponse(
-        containedInkWell: true,
-        splashColor: Colors.black,
-        onTap: () {
-          if(description == 'En retard') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CommandsScreen(initIndex: 1,),
-              ),
-            );
-          }else if(description == 'Renouvellement') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SubscriptionScreen(),
-              ),
-            );
-          }else if(description == "Alerte") {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => NotificationsView(),
-              ),
-            );
-          }else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Position(description, "Live"),
-                ),
-              );
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                width: _width,
-                height: _height,
-                color: Colors.grey.shade900,
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Icon(
-                        Icons.place,
-                        color: color,
-                        size: 30,
-                      ),
-                      Text(
-                        "${quantity ?? 0}",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
-                      Text(
-                        description,
-                        style: TextStyle(color: Colors.white, fontSize: 11.5),
-                      ),
-                    ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Container(
+            width: _width,
+            height: _height,
+            color: Colors.grey.shade900,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Icon(
+                    Icons.place,
+                    color: color,
+                    size: 30,
                   ),
-                ),
+                  Text(
+                    "${quantity ?? 0}",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                  Text(
+                    description,
+                    style: TextStyle(color: Colors.white, fontSize: 11.5),
+                  ),
+                ],
               ),
-              Container(
-                height: 5,
-                width: _width,
-                color: color,
-              )
-            ],
+            ),
           ),
-        ),
+          Container(
+            height: 5,
+            width: _width,
+            color: color,
+          )
+        ],
       ),
     );
   }

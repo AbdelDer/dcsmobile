@@ -1,3 +1,4 @@
+import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/pages/Position.dart';
 import 'package:dcsmobile/pages/commandsscreen.dart';
 import 'package:dcsmobile/pages/dashboard.dart';
@@ -10,7 +11,7 @@ import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class FEDrawer extends StatelessWidget {
+class FEDrawerOld extends StatelessWidget {
   EncryptedSharedPreferences _preferences = EncryptedSharedPreferences();
   String _username;
 
@@ -64,16 +65,16 @@ class FEDrawer extends StatelessWidget {
 //                  color: Colors.white,
 //                )
                 ),
-            ListTile(
-              leading: Icon(Icons.dashboard),
-              title: Text('Tableau de bord'),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Dashboard(),
-                ),
-              ),
-            ),
+            // ListTile(
+            //   leading: Icon(Icons.dashboard),
+            //   title: Text('Tableau de bord'),
+            //   onTap: () => Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //       builder: (context) => Dashboard(),
+            //     ),
+            //   ),
+            // ),
             ListTile(
               leading: Icon(Icons.place),
               title: Text('Position'),
