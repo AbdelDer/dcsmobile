@@ -200,7 +200,7 @@ class _DeviceCardState extends State<DeviceCard> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Draining(
+                  builder: (context) => DrainingScreen(
                     vehicleModel: data.vehicleModel,
                     deviceID: data.deviceID,
                   ),

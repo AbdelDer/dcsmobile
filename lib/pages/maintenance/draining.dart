@@ -1,40 +1,50 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:dcsmobile/Api/Api.dart';
+import 'package:dcsmobile/Api/ApiShowDialog.dart';
+import 'package:dcsmobile/Api/Response.dart';
 import 'package:dcsmobile/main.dart';
+import 'package:dcsmobile/models/draining.dart';
+import 'package:dcsmobile/widgets/customdatepicker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
-class Draining extends StatefulWidget {
+class DrainingScreen extends StatefulWidget {
   final String vehicleModel;
   final String deviceID;
 
-  const Draining({@required this.vehicleModel, @required this.deviceID});
+  const DrainingScreen({@required this.vehicleModel, @required this.deviceID});
 
   @override
-  _DrainingState createState() =>
-      _DrainingState(this.vehicleModel, this.deviceID);
+  _DrainingScreenState createState() =>
+      _DrainingScreenState(this.vehicleModel, this.deviceID);
 }
 
-class _DrainingState extends State<Draining> {
+class _DrainingScreenState extends State<DrainingScreen> {
   final String _vehicleModel;
   final String _deviceID;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final _drainingController = TextEditingController();
-  final _dateController = TextEditingController();
   final _kmStartController = TextEditingController();
   final _kmEndController = TextEditingController();
 
   StreamController _streamController;
   Stream _stream;
 
-  _DrainingState(this._vehicleModel, this._deviceID);
+  //we will save the date chose by user as unix timestamp
+  num _timestampChose = DateTime.now().millisecondsSinceEpoch * 1000;
+
+  _DrainingScreenState(this._vehicleModel, this._deviceID);
 
   @override
   void initState() {
     super.initState();
     _streamController = StreamController();
     _stream = _streamController.stream;
+    _getDrainingData();
   }
 
   @override
@@ -89,7 +99,7 @@ class _DrainingState extends State<Draining> {
         stream: _stream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            if (snapshot.data.message != null) {
+            if (snapshot.data.status == Status.ERROR) {
               return Center(
                 child: Text(
                   snapshot.data.message,
@@ -104,7 +114,8 @@ class _DrainingState extends State<Draining> {
                 itemCount: snapshot.data.responseBody.length,
                 itemBuilder: (context, index) {
                   return Dismissible(
-                    key: Key(snapshot.data.responseBody[index]),
+                    key: Key(
+                        snapshot.data.responseBody[index].timestamp.toString()),
                     background: _slideRightBackground(),
                     secondaryBackground: _slideLeftBackground(),
                     confirmDismiss: (direction) async {
@@ -132,11 +143,9 @@ class _DrainingState extends State<Draining> {
                                       "Delete",
                                       style: TextStyle(color: Colors.red),
                                     ),
-                                    onPressed: () {
+                                    onPressed: () async{
                                       // TODO: Delete the item from DB etc..
-                                      setState(() {
-                                        // itemsList.removeAt(index);
-                                      });
+                                      await _deleteDraining(snapshot.data.responseBody[index].timestamp);
                                       Navigator.of(context).pop();
                                     },
                                   ),
@@ -147,21 +156,33 @@ class _DrainingState extends State<Draining> {
                       //if user would edit the item
                       return true;
                     },
-                    onDismissed: (direction) {
+                    onDismissed: (direction) async{
                       if (direction == DismissDirection.endToStart) {
-                        //delete
+                        print('to delete');
                       } else {
                         showDialog(
                             context: context,
                             builder: (context) {
-                              return _dialog(data: snapshot.data.respnseBody[index]);
+                              return _dialog(
+                                  data: snapshot.data.responseBody[index]);
                             });
                       }
                     },
                     child: InkWell(
                       onTap: () => print('element tapped'),
                       child: ListTile(
-                        leading: Icon(Icons.directions_car),
+                        leading: Icon(
+                          Icons.directions_car,
+                          color: Colors.black,
+                        ),
+                        title: Text(
+                          snapshot.data.responseBody[index].drainingName,
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        subtitle: Text(DateFormat('yyyy-MM-dd HH:mm:ss').format(
+                            DateTime.fromMillisecondsSinceEpoch(
+                                snapshot.data.responseBody[index].timestamp *
+                                    1000))),
                       ),
                     ),
                   );
@@ -178,7 +199,12 @@ class _DrainingState extends State<Draining> {
     );
   }
 
-  _getDrainingData() async {}
+  _getDrainingData() async {
+    Api.getDraining(jsonEncode({"deviceID": _deviceID})).then((value) {
+      _streamController.add(value);
+      print(value);
+    }).catchError((error) {});
+  }
 
   Widget _slideRightBackground() {
     return Container(
@@ -240,11 +266,10 @@ class _DrainingState extends State<Draining> {
 
   Widget _dialog({data}) {
     //editing case
-    if(data != null) {
+    if (data != null) {
       _drainingController.value = TextEditingValue(text: data.drainingName);
-      _dateController.value = TextEditingValue(text: data.timestamp);
-      _kmStartController.value = TextEditingValue(text: data.kmStart);
-      _kmEndController.value = TextEditingValue(text: data.kmEnd);
+      _kmStartController.value = TextEditingValue(text: '${data.kmStart}');
+      _kmEndController.value = TextEditingValue(text: '${data.kmEnd}');
     }
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -285,22 +310,16 @@ class _DrainingState extends State<Draining> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  keyboardType: TextInputType.text,
-                  controller: _dateController,
-                  decoration: InputDecoration(
-                    border: new OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        const Radius.circular(10.0),
-                      ),
-                    ),
-                    labelText: "Date",
-                    hintText: "Date",
-                  ),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
-                  ],
-                ),
+                child: CustomTextFieldDatePicker(
+                    lastDate: DateTime.now(),
+                    firstDate: DateTime.now().subtract(Duration(days: 365)),
+                    initialDate: data != null
+                        ? DateTime.fromMillisecondsSinceEpoch(
+                            data.timestamp * 1000)
+                        : DateTime.now().subtract(Duration(minutes: 1)),
+                    onDateChanged: (date) {
+                      _timestampChose = date.millisecondsSinceEpoch / 1000;
+                    }),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -365,7 +384,13 @@ class _DrainingState extends State<Draining> {
                         "Save",
                         style: TextStyle(color: Colors.black),
                       ),
-                      onPressed: () {},
+                      onPressed: () async {
+                        if (data != null) {
+                          await _updateDraining();
+                        } else {
+                          await _saveDraining();
+                        }
+                      },
                     )
                   ],
                 ),
@@ -375,5 +400,47 @@ class _DrainingState extends State<Draining> {
         ),
       ),
     );
+  }
+
+  _updateDraining() {}
+
+  _saveDraining() async{
+    Draining draining = Draining(
+        _deviceID,
+        _drainingController.value.text,
+        _timestampChose,
+        double.parse(_kmStartController.value.text),
+        double.parse(_kmEndController.value.text));
+    await Api.saveDraining(jsonEncode(draining.toJson())).then((value) async{
+      await _getDrainingData();
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("added"),
+      ));
+      Navigator.of(context).pop();
+    }).catchError((error) {
+      ApiShowDialog.dialog(
+          scaffoldKey: _scaffoldKey, message: error.toString(), type: 'error');
+    });
+  }
+
+  _deleteDraining(timestamp) async{
+    print(jsonEncode(Draining.id(_deviceID, timestamp).idToJson()));
+    await Api.deleteDraining(
+            jsonEncode(Draining.id(_deviceID, timestamp).idToJson()))
+        .then((value) {
+          print('value is $value');
+      if (value.status == Status.ERROR) {
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(value.responseBody.message),
+        ));
+      } else {
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text("removed"),
+        ));
+        _getDrainingData();
+      }
+    }).catchError((error) {
+      ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: error.toString(), type: 'error');
+    });
   }
 }

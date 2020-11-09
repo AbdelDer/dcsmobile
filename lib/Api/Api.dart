@@ -10,6 +10,7 @@ import 'package:dcsmobile/models/Subscription.dart';
 import 'package:dcsmobile/models/User.dart';
 import 'package:dcsmobile/models/activity.dart';
 import 'package:dcsmobile/models/alarm.dart';
+import 'package:dcsmobile/models/draining.dart';
 import 'package:dcsmobile/models/summaryreport.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 
@@ -19,8 +20,8 @@ class Api {
   static final httpClient = HttpClient();
 
   // static final baseUrl = 'http://91.234.195.124:9090/api';
-  // static final baseUrl = 'http://192.168.1.38:9090/api';
-  static final baseUrl = 'http://192.168.100.53:9090/api';
+  static final baseUrl = 'http://192.168.1.38:9090/api';
+  // static final baseUrl = 'http://192.168.100.53:9090/api';
 
   static Future<Response> login(params) async {
     await connected();
@@ -220,7 +221,8 @@ class Api {
     await connected();
     var body;
     var httpCustom;
-    body = jsonEncode({"deviceID": deviceID, "startTime": startTime, "endTime": endTime});
+    body = jsonEncode(
+        {"deviceID": deviceID, "startTime": startTime, "endTime": endTime});
     httpCustom = HttpCustom(url: '$baseUrl/solo/eventdataList', body: body);
 
     final httpResponse = await httpCustom
@@ -357,7 +359,7 @@ class Api {
 
     if (httpResponse.statusCode == 404) {
       throw ('404');
-    } else if(httpResponse.statusCode != 200) {
+    } else if (httpResponse.statusCode != 200) {
       return Response.error(responseBody['message']);
     }
 
@@ -377,10 +379,12 @@ class Api {
 
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
-    if(httpResponse.statusCode != 200) {
+    if (httpResponse.statusCode != 200) {
       return Response.error(responseBody['message']);
     }
-    return Response.completed(responseBody.map<Activity>((activity) => Activity.fromJson(activity)).toList());
+    return Response.completed(responseBody
+        .map<Activity>((activity) => Activity.fromJson(activity))
+        .toList());
   }
 
   static Future<Response> saveDeviceAlarmSettings(body) async {
@@ -393,7 +397,7 @@ class Api {
 
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
-    if(httpResponse.statusCode != 201) {
+    if (httpResponse.statusCode != 201) {
       return Response.error(responseBody['message']);
     }
 
@@ -411,6 +415,78 @@ class Api {
 
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
+    if (httpResponse.statusCode != 200) {
+      if (responseBody['message'] == null || responseBody['message'] == "") {
+        return Response.error('Réssayer plus tard');
+      } else {
+        return Response.error(responseBody['message']);
+      }
+    }
+    return Response.completed(Alarm.fromJson(responseBody));
+  }
+
+  static Future<Response<List<Draining>>> getDraining(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/findall/draining', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      return Response.error(responseBody['message']);
+    }
+    return Response.completed(responseBody
+        .map<Draining>((draining) => Draining.fromJson(draining))
+        .toList());
+  }
+
+  static Future<Response<Draining>> saveDraining(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/add/draining', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 201) {
+      return Response.error(responseBody['message']);
+    }
+
+    return Response<Draining>.completed(Draining.fromJson(responseBody));
+  }
+
+  static Future<Response> deleteDraining(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/delete/draining', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      return Response.error(responseBody['message']);
+    }
+
+    return Response.completed(responseBody);
+  }
+
+  /*static Future<Response> updateDraining(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/update/draining', body: body);
+
+    final httpResponse = await httpCustom
+        .put()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
     if(httpResponse.statusCode != 200) {
       if(responseBody['message'] == null || responseBody['message'] == "") {
         return Response.error('Réssayer plus tard');
@@ -419,7 +495,7 @@ class Api {
       }
     }
     return Response.completed(Alarm.fromJson(responseBody));
-  }
+  }*/
 
   static connected() async {
     try {
