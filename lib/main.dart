@@ -18,7 +18,7 @@ void main() {
       MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "Tracking App",
-        initialRoute: '/activityhistory',
+        initialRoute: '/maintenance',
         navigatorObservers: [routeObserver],
         theme: ThemeData(
           primaryColor: Colors.deepOrange,
@@ -29,16 +29,17 @@ void main() {
           // te, build the FirstScreen widget.
           // When navigating to the "/second" route, build the SecondScreen widget.
           '/login': (context) => Login(),
-          '/history': (context) => Position("Tous", "History"),
+          '/history': (context) => Position("all", "History"),
           '/introduction': (context) => IntroductionPage(),
           '/dashboard': (context) => Dashboard(routeObserver),
-          '/position': (context) => Position("Tous", "Live"),
-          '/alarm': (context) => Position("Tous", "Alarms"),
+          '/position': (context) => Position("all", "Live"),
+          '/alarm': (context) => Position("all", "Alarms"),
           '/notifications': (context) => NotificationsView(),
           '/help': (context) => HelpScreen("Assistance"),
           '/report': (context) => ReportScreen(),
           '/commands': (context) => CommandsScreen(),
-          '/activityhistory': (context) => ActivityHistory(deviceID: "demo3", vehicleModel: "citroen"),
+          '/maintenance': (context) => Position("all", "Maintenance"),
+          // '/activityhistory': (context) => ActivityHistory(deviceID: "demo3", vehicleModel: "citroen"),
         },
         // home: Home(),
       )
@@ -116,7 +117,7 @@ class FEDrawer extends StatelessWidget {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Position("Tous", "Live"),
+                  builder: (context) => Position("all", "Live"),
                 ),
               ),
             ),
@@ -126,7 +127,7 @@ class FEDrawer extends StatelessWidget {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Position("Tous", "History"),
+                  builder: (context) => Position("all", "History"),
                 ),
               ),
             ),
@@ -170,7 +171,7 @@ class FEDrawer extends StatelessWidget {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Position("Tous", "Alarms"),
+                  builder: (context) => Position("all", "Alarms"),
                 ),
               ),
             ),
@@ -196,13 +197,7 @@ class FEDrawer extends StatelessWidget {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Scaffold(
-                    appBar: AppBar(
-                      title: Text("Maintenance"),
-                      backgroundColor: Colors.deepOrange,
-                    ),
-                    drawer: FEDrawer(),
-                  ),
+                  builder: (context) => Position("all", "Maintenance"),
                 ),
               ),
             ),

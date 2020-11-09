@@ -77,9 +77,9 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
 
   @override
   void dispose() {
-    super.dispose();
     _timer?.cancel();
     _streamSubscription?.cancel();
+    super.dispose();
   }
 
   double _getMyBearing(Position lastPosition, Position currentPosition) {

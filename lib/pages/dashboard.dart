@@ -198,10 +198,10 @@ class _DashboardState extends State<Dashboard> with RouteAware, WidgetsBindingOb
                   children: [
                     Expanded(
                       child: GestureDetector(
-                        onTap: () => _handleOnTap('Tous'),
+                        onTap: () => _handleOnTap('all'),
                         child: DashboardBtn(
                           quantity: data['firstRow']['all'],
-                          description: 'Tous',
+                          description: 'all',
                           color: Colors.blue,
                         ),
                       ),
@@ -293,7 +293,7 @@ class _DashboardState extends State<Dashboard> with RouteAware, WidgetsBindingOb
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Position("Tous", "Live"),
+                        builder: (context) => Position("all", "Live"),
                       ),
                     );
                   }),

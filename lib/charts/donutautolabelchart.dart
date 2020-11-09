@@ -71,7 +71,7 @@ class DonutAutoLabelChart extends StatelessWidget {
         data = [
           //TODO: change renewal with all
 
-          new VehicleStatus("Tous", num.parse(receivedData['firstRow']['renewal'].toString()) ?? 0,
+          new VehicleStatus("all", num.parse(receivedData['firstRow']['renewal'].toString()) ?? 0,
               Colors.orangeAccent.shade200),
         ];
       }else {

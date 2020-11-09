@@ -39,6 +39,8 @@ class _PositionState extends State<Position> {
       _title = Text("Position");
     } else if(_option == "Commands"){
       _title = Text("Commandes");
+    } else if(_option == "Maintenance"){
+      _title = Text("Maintenance");
     }
   }
 

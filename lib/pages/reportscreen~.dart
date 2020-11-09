@@ -20,7 +20,7 @@ class _ReportScreenState extends State<ReportScreen> {
   final GlobalKey<VehicleListViewState> _deviceListViewKey =
   GlobalKey<VehicleListViewState>();
   final _title;
-  final _description = "Tous";
+  final _description = "all";
   final _option = "";
   var _selectedType;
   var _selectedModel;

@@ -52,8 +52,8 @@ class _ReportViewState extends State<ReportView> {
 
   @override
   void dispose() {
-    super.dispose();
     _streamSubscription.cancel();
+    super.dispose();
   }
 
   Stream<Report> _reportStream(deviceID) async* {

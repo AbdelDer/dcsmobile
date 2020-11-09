@@ -82,7 +82,7 @@ class FEDrawerOld extends StatelessWidget {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Position("Tous", "Live"),
+                  builder: (context) => Position("all", "Live"),
                 ),
               ),
             ),
@@ -92,7 +92,7 @@ class FEDrawerOld extends StatelessWidget {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Position("Tous", "History"),
+                  builder: (context) => Position("all", "History"),
                 ),
               ),
             ),
@@ -136,7 +136,7 @@ class FEDrawerOld extends StatelessWidget {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Position("Tous", "Alarms"),
+                  builder: (context) => Position("all", "Alarms"),
                 ),
               ),
             ),

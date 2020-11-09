@@ -486,7 +486,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
 
   @override
   void dispose() {
-    super.dispose();
     _streamController.close();
+    super.dispose();
   }
 }

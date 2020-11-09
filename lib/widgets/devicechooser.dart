@@ -168,7 +168,7 @@ class _DeviceChooserState extends State<DeviceChooser> {
     List<String> params = [
       await prefs.getString("accountID"),
       await prefs.getString("userID") ?? '',
-      "Tous",
+      "all",
       _searchController.text ?? '',
     ];
 

@@ -2,6 +2,7 @@ import 'package:dcsmobile/pages/ActivityHistory.dart';
 import 'package:dcsmobile/pages/HistoryScreen.dart';
 import 'package:dcsmobile/pages/alarmscreen.dart';
 import 'package:dcsmobile/pages/commandsdialog.dart';
+import 'package:dcsmobile/pages/maintenance/draining.dart';
 import 'package:dcsmobile/pages/reportscreen.dart';
 import 'package:dcsmobile/pages/vehicleliveposition.dart';
 import 'package:flutter/material.dart';
@@ -27,8 +28,14 @@ class _DeviceCardState extends State<DeviceCard> {
   var data;
   String _option;
   final GlobalKey<ScaffoldState> _scaffoldKey;
+  var expansionChildren;
 
   _DeviceCardState(this.data, this._option, this._scaffoldKey);
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,36 +51,7 @@ class _DeviceCardState extends State<DeviceCard> {
                 elevation: 2,
                 child: ExpansionTile(
                   initiallyExpanded: false,
-                  children: _option == "speedReport"
-                      ? <Widget>[
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 200,
-                            child: GoogleMap(
-                              initialCameraPosition: CameraPosition(
-                                  target: LatLng(data[index].latitude,
-                                      data[index].longitude),
-                                  zoom: 17),
-                              zoomControlsEnabled: false,
-                              markers: Set.of([
-                                Marker(
-                                    markerId:
-                                        MarkerId('${data[index].timestamp}'),
-                                    position: LatLng(data[index].latitude,
-                                        data[index].longitude),
-                                    infoWindow: InfoWindow(
-                                        snippet:
-                                            "lat: ${data[index].latitude}, lon: ${data[index].longitude}",
-                                        title:
-                                            "Speed: ${data[index].speedKPH}"))
-                              ]),
-                              mapType: MapType.hybrid,
-                              onMapCreated:
-                                  (GoogleMapController googleMapController) {},
-                            ),
-                          )
-                        ]
-                      : [],
+                  children: _childrenWidgets(data[index]),
                   backgroundColor: Colors.transparent,
                   onExpansionChanged: (val) async {
                     if (_option == "Commands") {
@@ -176,5 +154,141 @@ class _DeviceCardState extends State<DeviceCard> {
             }),
       ],
     );
+  }
+
+  _childrenWidgets(data) {
+    if (_option == "speedReport") {
+      return <Widget>[
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: 200,
+          child: GoogleMap(
+            initialCameraPosition: CameraPosition(
+                target: LatLng(data.latitude, data.longitude), zoom: 17),
+            zoomControlsEnabled: false,
+            markers: Set.of([
+              Marker(
+                  markerId: MarkerId('${data.timestamp}'),
+                  position: LatLng(data.latitude, data.longitude),
+                  infoWindow: InfoWindow(
+                      snippet: "lat: ${data.latitude}, lon: ${data.longitude}",
+                      title: "Speed: ${data.speedKPH}"))
+            ]),
+            mapType: MapType.hybrid,
+            onMapCreated: (GoogleMapController googleMapController) {},
+          ),
+        )
+      ];
+    } else if (_option == "Maintenance") {
+      return <Widget>[
+        Container(
+          width: 300,
+          child: RaisedButton.icon(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                side: BorderSide(color: Colors.deepOrange)),
+            padding: const EdgeInsets.symmetric(horizontal: 60),
+            icon: Image.asset('assets/maintenance/draining.png'),
+            label: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                "DRAINING",
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Draining(
+                    vehicleModel: data.vehicleModel,
+                    deviceID: data.deviceID,
+                  ),
+                ),
+              );
+            },
+            color: Colors.white,
+          ),
+        ),
+        Container(
+          width: 300,
+          child: RaisedButton.icon(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                side: BorderSide(color: Colors.deepOrange)),
+            padding: const EdgeInsets.symmetric(horizontal: 60),
+            icon: Image.asset('assets/maintenance/document.png'),
+            label: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                "REGISTRATION\nDOCUMENT",
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+            onPressed: () {},
+            color: Colors.white,
+          ),
+        ),
+        Container(
+          width: 300,
+          child: RaisedButton.icon(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                side: BorderSide(color: Colors.deepOrange)),
+            padding: const EdgeInsets.symmetric(horizontal: 60),
+            icon: Image.asset('assets/maintenance/visit.png'),
+            label: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                "TECHNICAL\nVISIT",
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+            onPressed: () {},
+            color: Colors.white,
+          ),
+        ),
+        Container(
+          width: 300,
+          child: RaisedButton.icon(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                side: BorderSide(color: Colors.deepOrange)),
+            padding: const EdgeInsets.symmetric(horizontal: 60),
+            icon: Image.asset('assets/maintenance/insurance.png'),
+            label: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                "INSURANCE",
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+            onPressed: () {},
+            color: Colors.white,
+          ),
+        ),
+        Container(
+          width: 300,
+          child: RaisedButton.icon(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                side: BorderSide(color: Colors.deepOrange)),
+            padding: const EdgeInsets.symmetric(horizontal: 60),
+            icon: Image.asset('assets/maintenance/entretien.png'),
+            label: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                "ENTRETIRNS",
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+            onPressed: () {},
+            color: Colors.white,
+          ),
+        ),
+      ];
+    } else {
+      return <Widget>[];
+    }
   }
 }

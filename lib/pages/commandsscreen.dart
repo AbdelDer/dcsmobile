@@ -107,7 +107,7 @@ class _CommandsScreenState extends State<CommandsScreen>
           indicatorColor: Colors.white,
           controller: _tabController,
           tabs: [
-            Tab(text: 'Tous'),
+            Tab(text: 'all'),
             Tab(
               text: 'En retard',
             )
@@ -127,7 +127,7 @@ class _CommandsScreenState extends State<CommandsScreen>
                         color: Colors.white,
                         height: MediaQuery.of(context).size.height - 100,
                         child: VehicleListView(_scaffoldKey, _deviceListViewKey,
-                            "Tous", "Commands"),
+                            "all", "Commands"),
                       ),
                     ],
                   ),
@@ -246,8 +246,8 @@ class _CommandsScreenState extends State<CommandsScreen>
 
   @override
   void dispose() {
-    super.dispose();
     _streamController.close();
+    super.dispose();
   }
 
   fetchData(search) async {

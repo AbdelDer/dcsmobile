@@ -18,9 +18,9 @@ import 'HttpCustom.dart';
 class Api {
   static final httpClient = HttpClient();
 
-  static final baseUrl = 'http://91.234.195.124:9090/api';
+  // static final baseUrl = 'http://91.234.195.124:9090/api';
   // static final baseUrl = 'http://192.168.1.38:9090/api';
-  // static final baseUrl = 'http://192.168.100.192:9090/api';
+  static final baseUrl = 'http://192.168.100.53:9090/api';
 
   static Future<Response> login(params) async {
     await connected();
@@ -89,7 +89,7 @@ class Api {
         "search": params[3]
       });
       switch (params[2]) {
-        case "Tous":
+        case "all":
           {
             httpCustom =
                 HttpCustom(url: '$baseUrl/account/devices', body: body);
@@ -116,7 +116,7 @@ class Api {
         "search": params[3]
       });
       switch (params[2]) {
-        case "Tous":
+        case "all":
           {
             httpCustom = HttpCustom(url: '$baseUrl/user/devices', body: body);
             break;
