@@ -26,6 +26,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
   final String _vehicleModel;
   final String _deviceID;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  var _formKey = GlobalKey<FormState>();
 
   final _drainingController = TextEditingController();
   final _kmStartController = TextEditingController();
@@ -35,7 +36,10 @@ class _DrainingScreenState extends State<DrainingScreen> {
   Stream _stream;
 
   //we will save the date chose by user as unix timestamp
-  num _timestampChose = DateTime.now().millisecondsSinceEpoch * 1000;
+  num _timestampChose =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)
+              .millisecondsSinceEpoch ~/
+          1000;
 
   _DrainingScreenState(this._vehicleModel, this._deviceID);
 
@@ -119,10 +123,11 @@ class _DrainingScreenState extends State<DrainingScreen> {
                     background: _slideRightBackground(),
                     secondaryBackground: _slideLeftBackground(),
                     confirmDismiss: (direction) async {
+                      //in all cases we'll return false because we don't want to dismiss the item.
                       if (direction == DismissDirection.endToStart) {
                         //here if the user want to delete the item first we'll
                         //show a confirmation dialog
-                        return await showDialog(
+                        await showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
@@ -143,22 +148,16 @@ class _DrainingScreenState extends State<DrainingScreen> {
                                       "Delete",
                                       style: TextStyle(color: Colors.red),
                                     ),
-                                    onPressed: () async{
-                                      // TODO: Delete the item from DB etc..
-                                      await _deleteDraining(snapshot.data.responseBody[index].timestamp);
+                                    onPressed: () async {
                                       Navigator.of(context).pop();
+                                      await _deleteDraining(snapshot
+                                          .data.responseBody[index].timestamp);
                                     },
                                   ),
                                 ],
                               );
                             });
-                      }
-                      //if user would edit the item
-                      return true;
-                    },
-                    onDismissed: (direction) async{
-                      if (direction == DismissDirection.endToStart) {
-                        print('to delete');
+                        return false;
                       } else {
                         showDialog(
                             context: context,
@@ -166,8 +165,10 @@ class _DrainingScreenState extends State<DrainingScreen> {
                               return _dialog(
                                   data: snapshot.data.responseBody[index]);
                             });
+                        return false;
                       }
                     },
+                    onDismissed: (direction) {},
                     child: InkWell(
                       onTap: () => print('element tapped'),
                       child: ListTile(
@@ -179,10 +180,11 @@ class _DrainingScreenState extends State<DrainingScreen> {
                           snapshot.data.responseBody[index].drainingName,
                           style: TextStyle(color: Colors.black),
                         ),
-                        subtitle: Text(DateFormat('yyyy-MM-dd HH:mm:ss').format(
-                            DateTime.fromMillisecondsSinceEpoch(
-                                snapshot.data.responseBody[index].timestamp *
-                                    1000))),
+                        subtitle: Text(
+                            '${DateFormat('yyyy-MM-dd')
+                                .format(DateTime.fromMillisecondsSinceEpoch(
+                                snapshot.data.responseBody[index].timestamp * 1000)
+                            )} | ${snapshot.data.responseBody[index].kmStart} | ${snapshot.data.responseBody[index].kmEnd}'),
                       ),
                     ),
                   );
@@ -202,7 +204,6 @@ class _DrainingScreenState extends State<DrainingScreen> {
   _getDrainingData() async {
     Api.getDraining(jsonEncode({"deviceID": _deviceID})).then((value) {
       _streamController.add(value);
-      print(value);
     }).catchError((error) {});
   }
 
@@ -286,149 +287,240 @@ class _DrainingScreenState extends State<DrainingScreen> {
         height: 350,
         width: 250,
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  keyboardType: TextInputType.text,
-                  controller: _drainingController,
-                  decoration: InputDecoration(
-                    border: new OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        const Radius.circular(10.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    keyboardType: TextInputType.text,
+                    controller: _drainingController,
+                    decoration: InputDecoration(
+                      border: new OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(10.0),
+                        ),
+                      ),
+                      labelText: "Draining",
+                      hintText: "Draining",
+                      errorStyle: TextStyle(
+                        color: Colors.red,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    labelText: "Draining",
-                    hintText: "Draining",
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return "a name is necessary";
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      _formKey.currentState.validate();
+                    },
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
+                    ],
                   ),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
-                  ],
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CustomTextFieldDatePicker(
-                    lastDate: DateTime.now(),
-                    firstDate: DateTime.now().subtract(Duration(days: 365)),
-                    initialDate: data != null
-                        ? DateTime.fromMillisecondsSinceEpoch(
-                            data.timestamp * 1000)
-                        : DateTime.now().subtract(Duration(minutes: 1)),
-                    onDateChanged: (date) {
-                      _timestampChose = date.millisecondsSinceEpoch / 1000;
-                    }),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  keyboardType: TextInputType.text,
-                  controller: _kmStartController,
-                  decoration: InputDecoration(
-                    border: new OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        const Radius.circular(10.0),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CustomTextFieldDatePicker(
+                      lastDate: DateTime.now(),
+                      firstDate: DateTime.now().subtract(Duration(days: 365)),
+                      initialDate: data != null
+                          ? DateTime.fromMillisecondsSinceEpoch(
+                              data.timestamp * 1000)
+                          : DateTime.now().subtract(Duration(minutes: 1)),
+                      onDateChanged: (date) {
+                        _timestampChose = date.millisecondsSinceEpoch / 1000;
+                      }),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    keyboardType: TextInputType.text,
+                    controller: _kmStartController,
+                    decoration: InputDecoration(
+                      border: new OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(10.0),
+                        ),
+                      ),
+                      labelText: "Km start",
+                      hintText: "Km start",
+                      errorStyle: TextStyle(
+                        color: Colors.red,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    labelText: "Km start",
-                    hintText: "Km start",
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return "km Start is necessary";
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      _formKey.currentState.validate();
+                    },
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
+                    ],
                   ),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
-                  ],
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  keyboardType: TextInputType.text,
-                  controller: _kmEndController,
-                  decoration: InputDecoration(
-                    border: new OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        const Radius.circular(10.0),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    keyboardType: TextInputType.text,
+                    controller: _kmEndController,
+                    decoration: InputDecoration(
+                      border: new OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(10.0),
+                        ),
+                      ),
+                      labelText: "Km end",
+                      hintText: "Km end",
+                      errorStyle: TextStyle(
+                        color: Colors.red,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    labelText: "Km end",
-                    hintText: "Km end",
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return "Km end is necessary";
+                      } else if (double.parse(value) <=
+                          double.parse(_kmStartController.value.text)) {
+                        return "Km end should be greater then km Start";
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      _formKey.currentState.validate();
+                    },
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
+                    ],
                   ),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
-                  ],
                 ),
-              ),
-              Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    FlatButton(
-                      child: Text(
-                        "close",
-                        style:
-                            TextStyle(color: Colors.deepOrange, fontSize: 18),
+                Center(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      FlatButton(
+                        child: Text(
+                          "close",
+                          style:
+                              TextStyle(color: Colors.deepOrange, fontSize: 18),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
                       ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    FlatButton.icon(
-                      color: Colors.white,
-                      icon: Icon(
-                        Icons.save_alt,
-                        color: Colors.black,
-                      ),
-                      label: Text(
-                        "Save",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      onPressed: () async {
-                        if (data != null) {
-                          await _updateDraining();
-                        } else {
-                          await _saveDraining();
-                        }
-                      },
-                    )
-                  ],
+                      FlatButton.icon(
+                        color: Colors.white,
+                        icon: Icon(
+                          Icons.save_alt,
+                          color: Colors.black,
+                        ),
+                        label: Text(
+                          "Save",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        onPressed: () async {
+                          if (_formKey.currentState.validate()) {
+                            if (data != null) {
+                              await _updateDraining();
+                            } else {
+                              await _saveDraining();
+                            }
+                          }
+                        },
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  _updateDraining() {}
-
-  _saveDraining() async{
+  _updateDraining() async {
     Draining draining = Draining(
         _deviceID,
         _drainingController.value.text,
         _timestampChose,
         double.parse(_kmStartController.value.text),
         double.parse(_kmEndController.value.text));
-    await Api.saveDraining(jsonEncode(draining.toJson())).then((value) async{
-      await _getDrainingData();
-      _scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("added"),
-      ));
-      Navigator.of(context).pop();
+    await Api.updateDraining(jsonEncode(draining.toJson())).then((value) async {
+      if (value.status == Status.ERROR) {
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(
+            "something's wrong",
+            style: TextStyle(color: Colors.red),
+          ),
+        ));
+      } else {
+        _drainingController.value = TextEditingValue(text: '');
+        _kmStartController.value = TextEditingValue(text: '');
+        _kmEndController.value = TextEditingValue(text: '');
+
+        await _getDrainingData();
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text("updated"),
+        ));
+        Navigator.of(context).pop();
+      }
     }).catchError((error) {
       ApiShowDialog.dialog(
           scaffoldKey: _scaffoldKey, message: error.toString(), type: 'error');
     });
   }
 
-  _deleteDraining(timestamp) async{
-    print(jsonEncode(Draining.id(_deviceID, timestamp).idToJson()));
+  _saveDraining() async {
+    Draining draining = Draining(
+        _deviceID,
+        _drainingController.value.text,
+        _timestampChose,
+        double.parse(_kmStartController.value.text),
+        double.parse(_kmEndController.value.text));
+    await Api.saveDraining(jsonEncode(draining.toJson())).then((value) async {
+      if (value.status == Status.ERROR) {
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(
+            "something's wrong",
+            style: TextStyle(color: Colors.red),
+          ),
+        ));
+      } else {
+        _drainingController.value = TextEditingValue(text: '');
+        _kmStartController.value = TextEditingValue(text: '');
+        _kmEndController.value = TextEditingValue(text: '');
+
+        await _getDrainingData();
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text("added"),
+        ));
+        Navigator.of(context).pop();
+      }
+    }).catchError((error) {
+      ApiShowDialog.dialog(
+          scaffoldKey: _scaffoldKey, message: error.toString(), type: 'error');
+    });
+  }
+
+  _deleteDraining(timestamp) async {
     await Api.deleteDraining(
             jsonEncode(Draining.id(_deviceID, timestamp).idToJson()))
         .then((value) {
-          print('value is $value');
       if (value.status == Status.ERROR) {
         _scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(value.responseBody.message),
@@ -440,7 +532,9 @@ class _DrainingScreenState extends State<DrainingScreen> {
         _getDrainingData();
       }
     }).catchError((error) {
-      ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: error.toString(), type: 'error');
+      print('error is $error');
+      ApiShowDialog.dialog(
+          scaffoldKey: _scaffoldKey, message: error.toString(), type: 'error');
     });
   }
 }

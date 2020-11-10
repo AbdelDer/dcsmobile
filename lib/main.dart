@@ -1,4 +1,3 @@
-import 'package:dcsmobile/pages/ActivityHistory.dart';
 import 'package:dcsmobile/pages/commandsscreen.dart';
 import 'package:dcsmobile/pages/helpscreen.dart';
 import 'package:dcsmobile/pages/notificationsview.dart';

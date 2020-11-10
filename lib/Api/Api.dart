@@ -20,8 +20,8 @@ class Api {
   static final httpClient = HttpClient();
 
   // static final baseUrl = 'http://91.234.195.124:9090/api';
-  static final baseUrl = 'http://192.168.1.38:9090/api';
-  // static final baseUrl = 'http://192.168.100.53:9090/api';
+  // static final baseUrl = 'http://192.168.1.38:9090/api';
+  static final baseUrl = 'http://192.168.100.53:9090/api';
 
   static Future<Response> login(params) async {
     await connected();
@@ -468,16 +468,17 @@ class Api {
         .post()
         .catchError((err) => throw ('erreur lié au serveur'));
 
-    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+    // var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
     if (httpResponse.statusCode != 200) {
-      return Response.error(responseBody['message']);
+      // return Response.error(responseBody['message']);
+      return Response.error('problem');
     }
 
-    return Response.completed(responseBody);
+    return Response.completed(null);
   }
 
-  /*static Future<Response> updateDraining(body) async {
+  static Future<Response> updateDraining(body) async {
     await connected();
     var httpCustom = HttpCustom(url: '$baseUrl/update/draining', body: body);
 
@@ -488,14 +489,10 @@ class Api {
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
     if(httpResponse.statusCode != 200) {
-      if(responseBody['message'] == null || responseBody['message'] == "") {
         return Response.error('Réssayer plus tard');
-      } else {
-        return Response.error(responseBody['message']);
-      }
     }
-    return Response.completed(Alarm.fromJson(responseBody));
-  }*/
+    return Response.completed(Draining.fromJson(responseBody));
+  }
 
   static connected() async {
     try {
