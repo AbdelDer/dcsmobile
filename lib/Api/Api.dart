@@ -556,11 +556,10 @@ class Api {
         .put()
         .catchError((err) => throw ('erreur lié au serveur'));
 
-    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
-
     if(httpResponse.statusCode != 200) {
         return Response.error('Réssayer plus tard');
     }
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
     return Response.completed(TechnicalVisit.fromJson(responseBody));
   }
 

@@ -28,6 +28,7 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
   final String _deviceID;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   var _formKey = GlobalKey<FormState>();
+  var _dialogKey = GlobalKey();
 
   final _nameController = TextEditingController();
 
@@ -44,7 +45,10 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
               .millisecondsSinceEpoch ~/
           1000;
 
-  Color _timestampEndColor = Colors.transparent;
+  bool errorTimestampEndVisibility = false;
+  bool errorTimestampStartVisibility = false;
+  String errorTimestampStartMsg = "try to verify that you give a unique date";
+  String errorTimestampEndMsg = "try to verify that you give a unique date";
 
   _TechnicalVisitScreenState(this._vehicleModel, this._deviceID);
 
@@ -279,134 +283,158 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
       ),
       backgroundColor: Colors.transparent,
       elevation: 0.0,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        // color: Colors.white,
-        // height: 350,
-        // width: 250,
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    keyboardType: TextInputType.text,
-                    controller: _nameController,
-                    decoration: InputDecoration(
-                      border: new OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(
-                          const Radius.circular(10.0),
+      child: StatefulBuilder(
+        key: _dialogKey,
+        builder: (context, snapshot) {
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            // color: Colors.white,
+            // height: 350,
+            // width: 250,
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        keyboardType: TextInputType.text,
+                        controller: _nameController,
+                        decoration: InputDecoration(
+                          border: new OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(10.0),
+                            ),
+                          ),
+                          labelText: "Technical visit",
+                          hintText: "Technical visit",
+                          errorStyle: TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      labelText: "Technical visit",
-                      hintText: "Technical visit",
-                      errorStyle: TextStyle(
-                        color: Colors.red,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
+                        validator: (String value) {
+                          if (value.isEmpty) {
+                            return "a name is necessary";
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          _formKey.currentState.validate();
+                        },
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
+                        ],
                       ),
                     ),
-                    validator: (String value) {
-                      if (value.isEmpty) {
-                        return "a name is necessary";
-                      }
-                      return null;
-                    },
-                    onChanged: (value) {
-                      _formKey.currentState.validate();
-                    },
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CustomTextFieldDatePicker(
-                    labelText: 'start Date',
-                      lastDate: DateTime.now(),
-                      firstDate: DateTime.now().subtract(Duration(days: 365)),
-                      initialDate: data != null
-                          ? DateTime.fromMillisecondsSinceEpoch(
-                              data.timestampStart * 1000)
-                          : DateTime.now().subtract(Duration(minutes: 1)),
-                      onDateChanged: (date) {
-                        _timestampStartChose =
-                            date.millisecondsSinceEpoch / 1000;
-                      }),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(color: _timestampEndColor)),
-                    child: CustomTextFieldDatePicker(
-                        labelText: 'end date',
-                        lastDate: DateTime.now().add(Duration(days: 740)),
-                        firstDate: DateTime.now().subtract(Duration(days: 365)),
-                        initialDate: data != null
-                            ? DateTime.fromMillisecondsSinceEpoch(
-                                data.timestampEnd * 1000)
-                            : DateTime.now().subtract(Duration(minutes: 1)),
-                        onDateChanged: (date) {
-                          _timestampEndChose =
-                              date.millisecondsSinceEpoch / 1000;
-                        }),
-                  ),
-                ),
-                Center(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      FlatButton(
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CustomTextFieldDatePicker(
+                        labelText: 'start Date',
+                          lastDate: DateTime.now(),
+                          firstDate: DateTime.now().subtract(Duration(days: 365)),
+                          initialDate: data != null
+                              ? DateTime.fromMillisecondsSinceEpoch(
+                                  data.timestampStart * 1000)
+                              : DateTime.now().subtract(Duration(minutes: 1)),
+                          onDateChanged: (date) {
+                            _timestampStartChose =
+                                date.millisecondsSinceEpoch / 1000;
+                          }),
+                    ),
+                    Visibility(
+                        visible: errorTimestampStartVisibility,
                         child: Text(
-                          "close",
-                          style:
-                              TextStyle(color: Colors.deepOrange, fontSize: 18),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      FlatButton.icon(
-                        color: Colors.white,
-                        icon: Icon(
-                          Icons.save_alt,
-                          color: Colors.black,
-                        ),
-                        label: Text(
-                          "Save",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        onPressed: () async {
-                          if (_formKey.currentState.validate() &&
-                              _timestampEndChose > _timestampStartChose) {
-                            if (data != null) {
-                              await _updateTechnicalVisit(data?.id);
-                            } else {
-                              await _saveTechnicalVisit();
+                          errorTimestampStartMsg,
+                          style: TextStyle(fontSize: 14, color: Colors.red, ),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CustomTextFieldDatePicker(
+                          labelText: 'end date',
+                          lastDate: DateTime.now().add(Duration(days: 740)),
+                          firstDate: DateTime.now().subtract(Duration(days: 365)),
+                          initialDate: data != null
+                              ? DateTime.fromMillisecondsSinceEpoch(
+                                  data.timestampEnd * 1000)
+                              : DateTime.now().subtract(Duration(minutes: 1)),
+                          onDateChanged: (date) {
+                            _timestampEndChose =
+                                date.millisecondsSinceEpoch / 1000;
+                            if(errorTimestampEndVisibility) {
+                              _dialogKey.currentState.setState(() {
+                                errorTimestampEndVisibility = !errorTimestampEndVisibility;
+                              });
                             }
-                            setState(() {
-                              if (_timestampEndColor != Colors.transparent)
-                                _timestampEndColor = Colors.transparent;
-                            });
-                          }
-                        },
-                      )
-                    ],
-                  ),
+                          }),
+                    ),
+                    Visibility(
+                        visible: errorTimestampEndVisibility,
+                        child: Text(
+                          errorTimestampEndMsg,
+                          style: TextStyle(fontSize: 14, color: Colors.red, ),
+                        )),
+                    Center(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          FlatButton(
+                            child: Text(
+                              "close",
+                              style:
+                                  TextStyle(color: Colors.deepOrange, fontSize: 18),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          FlatButton.icon(
+                            color: Colors.white,
+                            icon: Icon(
+                              Icons.save_alt,
+                              color: Colors.black,
+                            ),
+                            label: Text(
+                              "Save",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            onPressed: () async {
+                              if (_formKey.currentState.validate() &&
+                                  _timestampEndChose > _timestampStartChose) {
+                                if(errorTimestampEndVisibility) {
+                                  _dialogKey.currentState.setState(() {
+                                    errorTimestampEndVisibility = !errorTimestampEndVisibility;
+                                  });
+                                }
+                                if (data != null) {
+                                  await _updateTechnicalVisit(data?.id);
+                                } else {
+                                  await _saveTechnicalVisit();
+                                }
+                              } else if(_timestampEndChose <= _timestampStartChose){
+                                _dialogKey.currentState.setState(() {
+                                  errorTimestampEndMsg = "date end should be greater then start date";
+                                  errorTimestampEndVisibility = true;
+                                });
+                              }
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        }
       ),
     );
   }
@@ -417,13 +445,19 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
     await Api.updateTechnicalVisit(jsonEncode(technicalVisit.toJson()))
         .then((value) async {
       if (value.status == Status.ERROR) {
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text(
-            "something's wrong",
-            style: TextStyle(color: Colors.red),
-          ),
-        ));
+        _dialogKey.currentState.setState(() {
+          errorTimestampEndVisibility = !errorTimestampEndVisibility;
+          errorTimestampStartVisibility = !errorTimestampStartVisibility;
+          errorTimestampStartMsg = "verify that start date is unique";
+          errorTimestampEndMsg = "verify that end date is unique";
+        });
       } else {
+        if (errorTimestampEndVisibility || errorTimestampStartVisibility) {
+          _dialogKey.currentState.setState(() {
+            errorTimestampEndVisibility = !errorTimestampEndVisibility;
+            errorTimestampStartVisibility = !errorTimestampStartVisibility;
+          });
+        }
         _nameController.value = TextEditingValue(text: '');
         await _getTechnicalVisitData();
         _scaffoldKey.currentState.showSnackBar(SnackBar(
