@@ -12,6 +12,7 @@ import 'package:dcsmobile/models/activity.dart';
 import 'package:dcsmobile/models/alarm.dart';
 import 'package:dcsmobile/models/draining.dart';
 import 'package:dcsmobile/models/summaryreport.dart';
+import 'package:dcsmobile/models/technicalvisit.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 
 import 'HttpCustom.dart';
@@ -21,7 +22,7 @@ class Api {
 
   // static final baseUrl = 'http://91.234.195.124:9090/api';
   // static final baseUrl = 'http://192.168.1.38:9090/api';
-  static final baseUrl = 'http://192.168.100.53:9090/api';
+  static final baseUrl = 'http://192.168.100.22:9090/api';
 
   static Future<Response> login(params) async {
     await connected();
@@ -486,12 +487,81 @@ class Api {
         .put()
         .catchError((err) => throw ('erreur lié au serveur'));
 
+    if(httpResponse.statusCode != 200) {
+        return Response.error('Réssayer plus tard');
+    }
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    return Response.completed(Draining.fromJson(responseBody));
+  }
+
+  static Future<Response<List<TechnicalVisit>>> getTechnicalVisit(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/findall/technicalVisit', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      return Response.error(responseBody['message']);
+    }
+    return Response.completed(responseBody
+        .map<TechnicalVisit>((technicalVisit) => TechnicalVisit.fromJson(technicalVisit))
+        .toList());
+  }
+
+  static Future<Response<TechnicalVisit>> saveTechnicalVisit(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/add/technicalVisit', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 201) {
+      return Response.error(responseBody['message']);
+    }
+
+    return Response<TechnicalVisit>.completed(TechnicalVisit.fromJson(responseBody));
+  }
+
+  static Future<Response> deleteTechnicalVisit(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/delete/technicalVisit', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    // var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      // return Response.error(responseBody['message']);
+      return Response.error('problem');
+    }
+
+    return Response.completed(null);
+  }
+
+  static Future<Response> updateTechnicalVisit(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/update/technicalVisit', body: body);
+
+    final httpResponse = await httpCustom
+        .put()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
     if(httpResponse.statusCode != 200) {
         return Response.error('Réssayer plus tard');
     }
-    return Response.completed(Draining.fromJson(responseBody));
+    return Response.completed(TechnicalVisit.fromJson(responseBody));
   }
 
   static connected() async {

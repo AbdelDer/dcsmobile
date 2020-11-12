@@ -2,7 +2,8 @@ import 'package:dcsmobile/pages/ActivityHistory.dart';
 import 'package:dcsmobile/pages/HistoryScreen.dart';
 import 'package:dcsmobile/pages/alarmscreen.dart';
 import 'package:dcsmobile/pages/commandsdialog.dart';
-import 'package:dcsmobile/pages/maintenance/draining.dart';
+import 'package:dcsmobile/pages/maintenance/drainingscreen.dart';
+import 'package:dcsmobile/pages/maintenance/technicalvisitscreen.dart';
 import 'package:dcsmobile/pages/reportscreen.dart';
 import 'package:dcsmobile/pages/vehicleliveposition.dart';
 import 'package:flutter/material.dart';
@@ -244,7 +245,17 @@ class _DeviceCardState extends State<DeviceCard> {
                 style: TextStyle(color: Colors.black),
               ),
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TechnicalVisitScreen(
+                    vehicleModel: data.vehicleModel,
+                    deviceID: data.deviceID,
+                  ),
+                ),
+              );
+            },
             color: Colors.white,
           ),
         ),

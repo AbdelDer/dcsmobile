@@ -1,14 +1,16 @@
 class Draining {
+  num _id;
   String _deviceID;
   String _drainingName;
   num _timestamp;
   double _kmStart;
   double _kmEnd;
 
-  Draining(this._deviceID, this._drainingName, this._timestamp, this._kmStart,
-      this._kmEnd);
+  Draining(this._id, this._deviceID, this._drainingName, this._timestamp,
+      this._kmStart, this._kmEnd);
 
-  Draining.id(this._deviceID, this._timestamp);
+  Draining.withoutID(this._deviceID, this._drainingName, this._timestamp,
+      this._kmStart, this._kmEnd);
 
   String get deviceID => _deviceID;
 
@@ -17,24 +19,30 @@ class Draining {
   }
 
   factory Draining.fromJson(Map<dynamic, dynamic> json) {
-    return Draining(json["drainingID"]["deviceID"], json["drainingName"],
-        json["drainingID"]["timestamp"], json["kmStart"], json["kmEnd"]);
+    return Draining(json["id"], json["deviceID"], json["drainingName"],
+        json["timestamp"], json["kmStart"], json["kmEnd"]);
   }
 
-  Map<String, dynamic> toJson() => {
-    "drainingID": {
-      "deviceID": _deviceID,
-      "timestamp" : _timestamp
-    },
-    "drainingName" : _drainingName,
-    "kmStart" : _kmStart,
-    "kmEnd" : _kmEnd
-  };
-
-  Map<String, dynamic> idToJson() => {
-      "deviceID": _deviceID,
-      "timestamp": _timestamp
-  };
+  Map<String, dynamic> toJson() {
+    if (_id != null) {
+      return {
+        "id": _id,
+        "deviceID": _deviceID,
+        "timestamp": _timestamp,
+        "drainingName": _drainingName,
+        "kmStart": _kmStart,
+        "kmEnd": _kmEnd
+      };
+    }else {
+      return {
+        "deviceID": _deviceID,
+        "timestamp": _timestamp,
+        "drainingName": _drainingName,
+        "kmStart": _kmStart,
+        "kmEnd": _kmEnd
+      };
+    }
+  }
 
   String get drainingName => _drainingName;
 
@@ -58,5 +66,11 @@ class Draining {
 
   set kmEnd(double value) {
     _kmEnd = value;
+  }
+
+  num get id => _id;
+
+  set id(num value) {
+    _id = value;
   }
 }

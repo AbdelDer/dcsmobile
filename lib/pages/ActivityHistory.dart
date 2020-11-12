@@ -88,7 +88,8 @@ class _ActivityHistoryState extends State<ActivityHistory> {
             child: DatePicker(
               //TODO: give this datetime DateTime.now().subtract(Duration(days: 30)), instead
               DateTime(2020, 10, 3),
-              daysCount: 31,
+              daysCount: 365,
+              // daysCount: 31,
               width: 60,
               height: 80,
               controller: _controller,

@@ -30,7 +30,7 @@ dependencies:
   google_maps_flutter: ^0.5.27+1
   geolocator: ^5.3.1
   geocoder: ^0.2.1
-  intl: ^0.16.0
+  intl: ^0.16.1
   introduction_screen: ^1.0.7
   google_fonts: ^1.1.0
   url_launcher: ^5.5.0

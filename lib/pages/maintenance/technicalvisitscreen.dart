@@ -5,50 +5,55 @@ import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/Api/Response.dart';
 import 'package:dcsmobile/main.dart';
-import 'package:dcsmobile/models/draining.dart';
+import 'package:dcsmobile/models/technicalvisit.dart';
 import 'package:dcsmobile/widgets/customdatepicker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-class DrainingScreen extends StatefulWidget {
+class TechnicalVisitScreen extends StatefulWidget {
   final String vehicleModel;
   final String deviceID;
 
-  const DrainingScreen({@required this.vehicleModel, @required this.deviceID});
+  const TechnicalVisitScreen(
+      {@required this.vehicleModel, @required this.deviceID});
 
   @override
-  _DrainingScreenState createState() =>
-      _DrainingScreenState(this.vehicleModel, this.deviceID);
+  _TechnicalVisitScreenState createState() =>
+      _TechnicalVisitScreenState(this.vehicleModel, this.deviceID);
 }
 
-class _DrainingScreenState extends State<DrainingScreen> {
+class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
   final String _vehicleModel;
   final String _deviceID;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   var _formKey = GlobalKey<FormState>();
 
-  final _drainingController = TextEditingController();
-  final _kmStartController = TextEditingController();
-  final _kmEndController = TextEditingController();
+  final _nameController = TextEditingController();
 
   StreamController _streamController;
   Stream _stream;
 
   //we will save the date chose by user as unix timestamp
-  num _timestampChose =
+  num _timestampStartChose =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)
+              .millisecondsSinceEpoch ~/
+          1000;
+  num _timestampEndChose =
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)
               .millisecondsSinceEpoch ~/
           1000;
 
-  _DrainingScreenState(this._vehicleModel, this._deviceID);
+  Color _timestampEndColor = Colors.transparent;
+
+  _TechnicalVisitScreenState(this._vehicleModel, this._deviceID);
 
   @override
   void initState() {
     super.initState();
     _streamController = StreamController();
     _stream = _streamController.stream;
-    _getDrainingData();
+    _getTechnicalVisitData();
   }
 
   @override
@@ -85,7 +90,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
             Align(
               alignment: Alignment.topLeft,
               child: Text(
-                "Draining",
+                "Technical Visit",
               ),
             ),
             Align(
@@ -118,8 +123,8 @@ class _DrainingScreenState extends State<DrainingScreen> {
                 itemCount: snapshot.data.responseBody.length,
                 itemBuilder: (context, index) {
                   return Dismissible(
-                    key: Key(
-                        snapshot.data.responseBody[index].timestamp.toString()),
+                    key: Key(snapshot.data.responseBody[index].timestampStart
+                        .toString()),
                     background: _slideRightBackground(),
                     secondaryBackground: _slideLeftBackground(),
                     confirmDismiss: (direction) async {
@@ -150,8 +155,8 @@ class _DrainingScreenState extends State<DrainingScreen> {
                                     ),
                                     onPressed: () async {
                                       Navigator.of(context).pop();
-                                      await _deleteDraining(snapshot
-                                          .data.responseBody[index].timestamp);
+                                      await _deleteTechnicalVisit(
+                                          snapshot.data.responseBody[index].id);
                                     },
                                   ),
                                 ],
@@ -170,21 +175,17 @@ class _DrainingScreenState extends State<DrainingScreen> {
                     },
                     onDismissed: (direction) {},
                     child: InkWell(
-                      onTap: () => print('element tapped'),
                       child: ListTile(
                         leading: Icon(
                           Icons.directions_car,
                           color: Colors.black,
                         ),
                         title: Text(
-                          snapshot.data.responseBody[index].drainingName,
+                          snapshot.data.responseBody[index].technicalVisitName,
                           style: TextStyle(color: Colors.black),
                         ),
                         subtitle: Text(
-                            '${DateFormat('yyyy-MM-dd')
-                                .format(DateTime.fromMillisecondsSinceEpoch(
-                                snapshot.data.responseBody[index].timestamp * 1000)
-                            )} | ${snapshot.data.responseBody[index].kmStart} | ${snapshot.data.responseBody[index].kmEnd}'),
+                            '${DateFormat('yyyy-MM-dd').format(DateTime.fromMillisecondsSinceEpoch(snapshot.data.responseBody[index].timestampStart * 1000))} | ${DateFormat('yyyy-MM-dd').format(DateTime.fromMillisecondsSinceEpoch(snapshot.data.responseBody[index].timestampEnd * 1000))}'),
                       ),
                     ),
                   );
@@ -201,8 +202,8 @@ class _DrainingScreenState extends State<DrainingScreen> {
     );
   }
 
-  _getDrainingData() async {
-    Api.getDraining(jsonEncode({"deviceID": _deviceID})).then((value) {
+  _getTechnicalVisitData() async {
+    Api.getTechnicalVisit(jsonEncode({"deviceID": _deviceID})).then((value) {
       _streamController.add(value);
     }).catchError((error) {});
   }
@@ -268,9 +269,9 @@ class _DrainingScreenState extends State<DrainingScreen> {
   Widget _dialog({data}) {
     //editing case
     if (data != null) {
-      _drainingController.value = TextEditingValue(text: data.drainingName);
-      _kmStartController.value = TextEditingValue(text: '${data.kmStart}');
-      _kmEndController.value = TextEditingValue(text: '${data.kmEnd}');
+      _nameController.value = TextEditingValue(text: data.technicalVisitName);
+      _timestampStartChose = data.timestampStart;
+      _timestampEndChose = data.timestampEnd;
     }
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -284,8 +285,8 @@ class _DrainingScreenState extends State<DrainingScreen> {
           borderRadius: BorderRadius.circular(12),
         ),
         // color: Colors.white,
-        height: 350,
-        width: 250,
+        // height: 350,
+        // width: 250,
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,
@@ -296,15 +297,15 @@ class _DrainingScreenState extends State<DrainingScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     keyboardType: TextInputType.text,
-                    controller: _drainingController,
+                    controller: _nameController,
                     decoration: InputDecoration(
                       border: new OutlineInputBorder(
                         borderRadius: const BorderRadius.all(
                           const Radius.circular(10.0),
                         ),
                       ),
-                      labelText: "Draining",
-                      hintText: "Draining",
+                      labelText: "Technical visit",
+                      hintText: "Technical visit",
                       errorStyle: TextStyle(
                         color: Colors.red,
                         fontSize: 12,
@@ -328,83 +329,35 @@ class _DrainingScreenState extends State<DrainingScreen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: CustomTextFieldDatePicker(
+                    labelText: 'start Date',
                       lastDate: DateTime.now(),
                       firstDate: DateTime.now().subtract(Duration(days: 365)),
                       initialDate: data != null
                           ? DateTime.fromMillisecondsSinceEpoch(
-                              data.timestamp * 1000)
+                              data.timestampStart * 1000)
                           : DateTime.now().subtract(Duration(minutes: 1)),
                       onDateChanged: (date) {
-                        _timestampChose = date.millisecondsSinceEpoch / 1000;
+                        _timestampStartChose =
+                            date.millisecondsSinceEpoch / 1000;
                       }),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    keyboardType: TextInputType.text,
-                    controller: _kmStartController,
-                    decoration: InputDecoration(
-                      border: new OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(
-                          const Radius.circular(10.0),
-                        ),
-                      ),
-                      labelText: "Km start",
-                      hintText: "Km start",
-                      errorStyle: TextStyle(
-                        color: Colors.red,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    validator: (String value) {
-                      if (value.isEmpty) {
-                        return "km Start is necessary";
-                      }
-                      return null;
-                    },
-                    onChanged: (value) {
-                      _formKey.currentState.validate();
-                    },
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    keyboardType: TextInputType.text,
-                    controller: _kmEndController,
-                    decoration: InputDecoration(
-                      border: new OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(
-                          const Radius.circular(10.0),
-                        ),
-                      ),
-                      labelText: "Km end",
-                      hintText: "Km end",
-                      errorStyle: TextStyle(
-                        color: Colors.red,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    validator: (String value) {
-                      if (value.isEmpty) {
-                        return "Km end is necessary";
-                      } else if (double.parse(value) <=
-                          double.parse(_kmStartController.value.text)) {
-                        return "Km end should be greater then km Start";
-                      }
-                      return null;
-                    },
-                    onChanged: (value) {
-                      _formKey.currentState.validate();
-                    },
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
-                    ],
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: _timestampEndColor)),
+                    child: CustomTextFieldDatePicker(
+                        labelText: 'end date',
+                        lastDate: DateTime.now().add(Duration(days: 740)),
+                        firstDate: DateTime.now().subtract(Duration(days: 365)),
+                        initialDate: data != null
+                            ? DateTime.fromMillisecondsSinceEpoch(
+                                data.timestampEnd * 1000)
+                            : DateTime.now().subtract(Duration(minutes: 1)),
+                        onDateChanged: (date) {
+                          _timestampEndChose =
+                              date.millisecondsSinceEpoch / 1000;
+                        }),
                   ),
                 ),
                 Center(
@@ -433,12 +386,17 @@ class _DrainingScreenState extends State<DrainingScreen> {
                           style: TextStyle(color: Colors.black),
                         ),
                         onPressed: () async {
-                          if (_formKey.currentState.validate()) {
+                          if (_formKey.currentState.validate() &&
+                              _timestampEndChose > _timestampStartChose) {
                             if (data != null) {
-                              await _updateDraining();
+                              await _updateTechnicalVisit(data?.id);
                             } else {
-                              await _saveDraining();
+                              await _saveTechnicalVisit();
                             }
+                            setState(() {
+                              if (_timestampEndColor != Colors.transparent)
+                                _timestampEndColor = Colors.transparent;
+                            });
                           }
                         },
                       )
@@ -453,14 +411,11 @@ class _DrainingScreenState extends State<DrainingScreen> {
     );
   }
 
-  _updateDraining() async {
-    Draining draining = Draining(
-        _deviceID,
-        _drainingController.value.text,
-        _timestampChose,
-        double.parse(_kmStartController.value.text),
-        double.parse(_kmEndController.value.text));
-    await Api.updateDraining(jsonEncode(draining.toJson())).then((value) async {
+  _updateTechnicalVisit(id) async {
+    TechnicalVisit technicalVisit = TechnicalVisit(id, _deviceID,
+        _nameController.value.text, _timestampStartChose, _timestampEndChose);
+    await Api.updateTechnicalVisit(jsonEncode(technicalVisit.toJson()))
+        .then((value) async {
       if (value.status == Status.ERROR) {
         _scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(
@@ -469,11 +424,8 @@ class _DrainingScreenState extends State<DrainingScreen> {
           ),
         ));
       } else {
-        _drainingController.value = TextEditingValue(text: '');
-        _kmStartController.value = TextEditingValue(text: '');
-        _kmEndController.value = TextEditingValue(text: '');
-
-        await _getDrainingData();
+        _nameController.value = TextEditingValue(text: '');
+        await _getTechnicalVisitData();
         _scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text("updated"),
         ));
@@ -485,14 +437,11 @@ class _DrainingScreenState extends State<DrainingScreen> {
     });
   }
 
-  _saveDraining() async {
-    Draining draining = Draining(
-        _deviceID,
-        _drainingController.value.text,
-        _timestampChose,
-        double.parse(_kmStartController.value.text),
-        double.parse(_kmEndController.value.text));
-    await Api.saveDraining(jsonEncode(draining.toJson())).then((value) async {
+  _saveTechnicalVisit() async {
+    TechnicalVisit technicalVisit = TechnicalVisit.withoutID(_deviceID,
+        _nameController.value.text, _timestampStartChose, _timestampEndChose);
+    await Api.saveTechnicalVisit(jsonEncode(technicalVisit.toJson()))
+        .then((value) async {
       if (value.status == Status.ERROR) {
         _scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(
@@ -501,11 +450,9 @@ class _DrainingScreenState extends State<DrainingScreen> {
           ),
         ));
       } else {
-        _drainingController.value = TextEditingValue(text: '');
-        _kmStartController.value = TextEditingValue(text: '');
-        _kmEndController.value = TextEditingValue(text: '');
+        _nameController.value = TextEditingValue(text: '');
 
-        await _getDrainingData();
+        await _getTechnicalVisitData();
         _scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text("added"),
         ));
@@ -517,10 +464,8 @@ class _DrainingScreenState extends State<DrainingScreen> {
     });
   }
 
-  _deleteDraining(timestamp) async {
-    await Api.deleteDraining(
-            jsonEncode(Draining.id(_deviceID, timestamp).idToJson()))
-        .then((value) {
+  _deleteTechnicalVisit(id) async {
+    await Api.deleteTechnicalVisit(jsonEncode({"id": id})).then((value) {
       if (value.status == Status.ERROR) {
         _scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(value.responseBody.message),
@@ -529,7 +474,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
         _scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text("removed"),
         ));
-        _getDrainingData();
+        _getTechnicalVisitData();
       }
     }).catchError((error) {
       print('error is $error');
