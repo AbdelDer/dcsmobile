@@ -11,6 +11,7 @@ import 'package:dcsmobile/models/User.dart';
 import 'package:dcsmobile/models/activity.dart';
 import 'package:dcsmobile/models/alarm.dart';
 import 'package:dcsmobile/models/draining.dart';
+import 'package:dcsmobile/models/insurance.dart';
 import 'package:dcsmobile/models/summaryreport.dart';
 import 'package:dcsmobile/models/technicalvisit.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
@@ -561,6 +562,74 @@ class Api {
     }
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
     return Response.completed(TechnicalVisit.fromJson(responseBody));
+  }
+
+  static Future<Response<List<Insurance>>> getInsurance(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/findall/insurance', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      return Response.error(responseBody['message']);
+    }
+    return Response.completed(responseBody
+        .map<Insurance>((insurance) => Insurance.fromJson(insurance))
+        .toList());
+  }
+
+  static Future<Response<Insurance>> saveInsurance(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/add/insurance', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 201) {
+      return Response.error(responseBody['message']);
+    }
+
+    return Response<Insurance>.completed(Insurance.fromJson(responseBody));
+  }
+
+  static Future<Response> deleteInsurance(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/delete/insurance', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    // var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      // return Response.error(responseBody['message']);
+      return Response.error('problem');
+    }
+
+    return Response.completed(null);
+  }
+
+  static Future<Response> updateInsurance(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/update/insurance', body: body);
+
+    final httpResponse = await httpCustom
+        .put()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    if(httpResponse.statusCode != 200) {
+        return Response.error('Réssayer plus tard');
+    }
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+    return Response.completed(Insurance.fromJson(responseBody));
   }
 
   static connected() async {

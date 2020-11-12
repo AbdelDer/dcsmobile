@@ -1,14 +1,14 @@
-class TechnicalVisit {
+class Insurance {
   num _id;
   String _deviceID;
-  String _technicalVisitName;
+  String _InsuranceName;
   num _timestampStart;
   num _timestampEnd;
 
-  TechnicalVisit(this._id, this._deviceID, this._technicalVisitName,
+  Insurance(this._id, this._deviceID, this._InsuranceName,
       this._timestampStart, this._timestampEnd);
 
-  TechnicalVisit.withoutID(this._deviceID, this._technicalVisitName,
+  Insurance.withoutID(this._deviceID, this._InsuranceName,
       this._timestampStart, this._timestampEnd);
 
   String get deviceID => _deviceID;
@@ -17,8 +17,8 @@ class TechnicalVisit {
     _deviceID = value;
   }
 
-  factory TechnicalVisit.fromJson(Map<dynamic, dynamic> json) {
-    return TechnicalVisit(
+  factory Insurance.fromJson(Map<dynamic, dynamic> json) {
+    return Insurance(
         json["id"],
         json["deviceID"],
         json["technicalVisitName"],
@@ -33,14 +33,14 @@ class TechnicalVisit {
         "deviceID": _deviceID,
         "timestampStart": _timestampStart,
         "timestampEnd": _timestampEnd,
-        "technicalVisitName": _technicalVisitName
+        "technicalVisitName": _InsuranceName
       };
     }else {
       return {
         "deviceID": _deviceID,
         "timestampStart": _timestampStart,
         "timestampEnd": _timestampEnd,
-        "technicalVisitName": _technicalVisitName
+        "technicalVisitName": _InsuranceName
       };
     }
   }
@@ -57,10 +57,10 @@ class TechnicalVisit {
     _timestampStart = value;
   }
 
-  String get technicalVisitName => _technicalVisitName;
+  String get insuranceName => _InsuranceName;
 
-  set technicalVisitName(String value) {
-    _technicalVisitName = value;
+  set insuranceName(String value) {
+    _InsuranceName = value;
   }
   num get id => _id;
 
