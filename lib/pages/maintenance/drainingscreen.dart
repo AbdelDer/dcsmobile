@@ -510,20 +510,21 @@ class _DrainingScreenState extends State<DrainingScreen> {
         double.parse(_kmEndController.value.text));
     await Api.saveDraining(jsonEncode(draining.toJson())).then((value) async {
       if (value.status == Status.ERROR) {
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text(
-            "something's wrong",
-            style: TextStyle(color: Colors.red),
-          ),
-        ));
+        _dialogKey.currentState.setState(() {
+          errorMsgVisibility = !errorMsgVisibility;
+        });
       } else {
         _drainingController.value = TextEditingValue(text: '');
         _kmStartController.value = TextEditingValue(text: '');
         _kmEndController.value = TextEditingValue(text: '');
-
+        if (errorMsgVisibility) {
+          _dialogKey.currentState.setState(() {
+            errorMsgVisibility = !errorMsgVisibility;
+          });
+        }
         await _getDrainingData();
         _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text("added"),
+          content: Text("updated"),
         ));
         Navigator.of(context).pop();
       }

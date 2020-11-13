@@ -487,18 +487,23 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
         _nameController.value.text, _timestampStartChose, _timestampEndChose);
     await Api.saveInsurance(jsonEncode(insurance.toJson())).then((value) async {
       if (value.status == Status.ERROR) {
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text(
-            "something's wrong",
-            style: TextStyle(color: Colors.red),
-          ),
-        ));
+        _dialogKey.currentState.setState(() {
+          errorTimestampEndVisibility = !errorTimestampEndVisibility;
+          errorTimestampStartVisibility = !errorTimestampStartVisibility;
+          errorTimestampStartMsg = "verify that start date is unique";
+          errorTimestampEndMsg = "verify that end date is unique";
+        });
       } else {
+        if (errorTimestampEndVisibility || errorTimestampStartVisibility) {
+          _dialogKey.currentState.setState(() {
+            errorTimestampEndVisibility = !errorTimestampEndVisibility;
+            errorTimestampStartVisibility = !errorTimestampStartVisibility;
+          });
+        }
         _nameController.value = TextEditingValue(text: '');
-
         await _getInsuranceData();
         _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text("added"),
+          content: Text("updated"),
         ));
         Navigator.of(context).pop();
       }

@@ -397,12 +397,11 @@ class Api {
         .post()
         .catchError((err) => throw ('erreur lié au serveur'));
 
-    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
-
     if (httpResponse.statusCode != 201) {
-      return Response.error(responseBody['message']);
+      return Response.error('try another time');
     }
 
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
     return Response.completed(
         responseBody.map((alarm) => Alarm.fromJson(alarm)));
   }
@@ -453,12 +452,11 @@ class Api {
         .post()
         .catchError((err) => throw ('erreur lié au serveur'));
 
-    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
-
     if (httpResponse.statusCode != 201) {
-      return Response.error(responseBody['message']);
+      return Response.error('try another time');
     }
 
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
     return Response<Draining>.completed(Draining.fromJson(responseBody));
   }
 
@@ -522,12 +520,11 @@ class Api {
         .post()
         .catchError((err) => throw ('erreur lié au serveur'));
 
-    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
-
     if (httpResponse.statusCode != 201) {
-      return Response.error(responseBody['message']);
+      return Response.error('try another time');
     }
 
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
     return Response<TechnicalVisit>.completed(TechnicalVisit.fromJson(responseBody));
   }
 
@@ -590,12 +587,11 @@ class Api {
         .post()
         .catchError((err) => throw ('erreur lié au serveur'));
 
-    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
-
     if (httpResponse.statusCode != 201) {
-      return Response.error(responseBody['message']);
+      return Response.error('try another time');
     }
 
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
     return Response<Insurance>.completed(Insurance.fromJson(responseBody));
   }
 

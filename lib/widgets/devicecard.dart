@@ -212,25 +212,25 @@ class _DeviceCardState extends State<DeviceCard> {
             color: Colors.white,
           ),
         ),
-        Container(
-          width: 300,
-          child: RaisedButton.icon(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-                side: BorderSide(color: Colors.deepOrange)),
-            padding: const EdgeInsets.symmetric(horizontal: 60),
-            icon: Image.asset('assets/maintenance/document.png'),
-            label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                "REGISTRATION\nDOCUMENT",
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-            onPressed: () {},
-            color: Colors.white,
-          ),
-        ),
+        // Container(
+        //   width: 300,
+        //   child: RaisedButton.icon(
+        //     shape: RoundedRectangleBorder(
+        //         borderRadius: BorderRadius.circular(18.0),
+        //         side: BorderSide(color: Colors.deepOrange)),
+        //     padding: const EdgeInsets.symmetric(horizontal: 60),
+        //     icon: Image.asset('assets/maintenance/document.png'),
+        //     label: Padding(
+        //       padding: const EdgeInsets.symmetric(horizontal: 10),
+        //       child: Text(
+        //         "REGISTRATION\nDOCUMENT",
+        //         style: TextStyle(color: Colors.black),
+        //       ),
+        //     ),
+        //     onPressed: () {},
+        //     color: Colors.white,
+        //   ),
+        // ),
         Container(
           width: 300,
           child: RaisedButton.icon(
