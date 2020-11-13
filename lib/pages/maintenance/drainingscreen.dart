@@ -354,7 +354,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextFormField(
-                          keyboardType: TextInputType.text,
+                          keyboardType: TextInputType.number,
                           controller: _kmStartController,
                           decoration: InputDecoration(
                             border: new OutlineInputBorder(
@@ -387,7 +387,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextFormField(
-                          keyboardType: TextInputType.text,
+                          keyboardType: TextInputType.number,
                           controller: _kmEndController,
                           decoration: InputDecoration(
                             border: new OutlineInputBorder(

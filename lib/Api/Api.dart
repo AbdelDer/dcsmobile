@@ -11,6 +11,8 @@ import 'package:dcsmobile/models/User.dart';
 import 'package:dcsmobile/models/activity.dart';
 import 'package:dcsmobile/models/alarm.dart';
 import 'package:dcsmobile/models/draining.dart';
+import 'package:dcsmobile/models/entretien.dart';
+import 'package:dcsmobile/models/entretien.dart';
 import 'package:dcsmobile/models/insurance.dart';
 import 'package:dcsmobile/models/summaryreport.dart';
 import 'package:dcsmobile/models/technicalvisit.dart';
@@ -626,6 +628,73 @@ class Api {
     }
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
     return Response.completed(Insurance.fromJson(responseBody));
+  }
+
+  static Future<Response<List<Entretien>>> getEntretien(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/findall/entretien', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      return Response.error(responseBody['message']);
+    }
+    return Response.completed(responseBody
+        .map<Entretien>((insurance) => Entretien.fromJson(insurance))
+        .toList());
+  }
+
+  static Future<Response<Entretien>> saveEntretien(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/add/entretien', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    if (httpResponse.statusCode != 201) {
+      return Response.error('try another time');
+    }
+
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+    return Response<Entretien>.completed(Entretien.fromJson(responseBody));
+  }
+
+  static Future<Response> deleteEntretien(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/delete/entretien', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    // var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      // return Response.error(responseBody['message']);
+      return Response.error('problem');
+    }
+
+    return Response.completed(null);
+  }
+
+  static Future<Response> updateEntretien(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/update/entretien', body: body);
+
+    final httpResponse = await httpCustom
+        .put()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    if(httpResponse.statusCode != 200) {
+        return Response.error('Réssayer plus tard');
+    }
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+    return Response.completed(Entretien.fromJson(responseBody));
   }
 
   static connected() async {
