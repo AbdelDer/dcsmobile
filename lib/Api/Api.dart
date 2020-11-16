@@ -14,6 +14,7 @@ import 'package:dcsmobile/models/draining.dart';
 import 'package:dcsmobile/models/entretien.dart';
 import 'package:dcsmobile/models/entretien.dart';
 import 'package:dcsmobile/models/insurance.dart';
+import 'package:dcsmobile/models/notifications/device.dart';
 import 'package:dcsmobile/models/summaryreport.dart';
 import 'package:dcsmobile/models/technicalvisit.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
@@ -25,7 +26,7 @@ class Api {
 
   // static final baseUrl = 'http://91.234.195.124:9090/api';
   // static final baseUrl = 'http://192.168.1.38:9090/api';
-  static final baseUrl = 'http://192.168.100.22:9090/api';
+  static final baseUrl = 'http://192.168.100.53:9090/api';
 
   static Future<Response> login(params) async {
     await connected();
@@ -388,6 +389,45 @@ class Api {
     }
     return Response.completed(responseBody
         .map<Activity>((activity) => Activity.fromJson(activity))
+        .toList());
+  }
+
+  static Future<Response<List<Device>>> getVehicles(body) async {
+
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/vehicles', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      return Response.error(responseBody['message']);
+    }
+    return Response.completed(responseBody
+        .map<Device>((vehicle) => Device.fromJson(vehicle))
+        .toList());
+  }
+
+  //TODO: change return type and all other details after implementing notification at Api side
+  static Future<Response<List<Device>>> getNotifications(body) async {
+
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/vehicles', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      return Response.error(responseBody['message']);
+    }
+    return Response.completed(responseBody
+        .map<Device>((vehicle) => Device.fromJson(vehicle))
         .toList());
   }
 
