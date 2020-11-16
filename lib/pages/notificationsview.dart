@@ -5,11 +5,10 @@ import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/Api/Response.dart';
 import 'package:dcsmobile/main.dart';
-import 'package:dcsmobile/models/notifications/device.dart';
 import 'package:dcsmobile/models/notifications/filter.dart';
-import 'package:dcsmobile/widgets/customdatepicker.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class NotificationsView extends StatefulWidget {
   @override
@@ -48,8 +47,7 @@ class _NotificationsViewState extends State<NotificationsView> {
     super.initState();
     _streamController = StreamController();
     _stream = _streamController.stream;
-    _getVehicles('init');
-    _getNotifications();
+    _getVehicles('init').then((value) => _getNotifications());
   }
 
   @override
@@ -162,8 +160,56 @@ class _NotificationsViewState extends State<NotificationsView> {
                 return ListView.builder(
                   itemCount: snapshot.data.responseBody.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text('${snapshot.data.responseBody[index].message}'),
+                    return ExpansionTile(
+                      initiallyExpanded: false,
+                      children: <Widget>[
+                        _childrenWidgets(
+                            snapshot.data.responseBody[index].deviceID,
+                            snapshot.data.responseBody[index].timestamp)
+                      ],
+                      backgroundColor: Colors.transparent,
+                      // onExpansionChanged: (value) {
+                      //   if (value) {}
+                      // },
+                      leading: Image.asset(
+                        snapshot.data.responseBody[index].getAssetPath(),
+                        color: Colors.black,
+                      ),
+                      title: Text(
+                        '${snapshot.data.responseBody[index].vehicleModel}',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                        ),
+                      ),
+                      subtitle: Column(
+                        children: [
+                          Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                '${snapshot.data.responseBody[index].message}',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.blueAccent,
+                                ),
+                              )),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              '${snapshot.data.responseBody[index]
+                                  .timestampAsString}',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      trailing: Icon(
+                        Icons.map_outlined,
+                        color: Colors.black,
+                      ),
                     );
                   },
                 );
@@ -187,9 +233,9 @@ class _NotificationsViewState extends State<NotificationsView> {
       if (value.status == Status.ERROR) {
         _vehicleErrorMsg = value.message;
       } else {
-        if(_vehicleErrorMsg != "") _vehicleErrorMsg = "";
+        if (_vehicleErrorMsg != "") _vehicleErrorMsg = "";
         _devices = value.responseBody;
-        if(state != 'init') _vehiclesFilter();
+        if (state != 'init') _vehiclesFilter();
       }
     });
   }
@@ -202,83 +248,95 @@ class _NotificationsViewState extends State<NotificationsView> {
         ),
         context: context,
         builder: (BuildContext context) {
-          return _vehicleErrorMsg == "" ?
-          StatefulBuilder(
-            builder: (context, setState) => Container(
-              color: Colors.white,
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: _devices.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          //without behavior we'll encounter a problem
-                          //when user tap on row blank space
-                          behavior: HitTestBehavior.translucent,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
+          return _vehicleErrorMsg == ""
+              ? StatefulBuilder(
+            builder: (context, setState) =>
+                Container(
+                  color: Colors.white,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: _devices.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              //without behavior we'll encounter a problem
+                              //when user tap on row blank space
+                              behavior: HitTestBehavior.translucent,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    _devices.elementAt(index).vehicleModel,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 20,
-                                    height: 20,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(
-                                        color: Colors.deepOrange,
-                                        width:
-                                            _devices.elementAt(index).selected
+                                    children: [
+                                      Text(
+                                        _devices
+                                            .elementAt(index)
+                                            .vehicleModel,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 20,
+                                        height: 20,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(
+                                            color: Colors.deepOrange,
+                                            width: _devices
+                                                .elementAt(index)
+                                                .selected
                                                 ? 10
                                                 : 1,
-                                      ),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(5)),
-                                    ),
-                                  )
-                                ],
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5)),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
                               ),
-                            ),
+                              onTap: () {
+                                setState(() {
+                                  _devices
+                                      .elementAt(index)
+                                      .selected =
+                                  !_devices
+                                      .elementAt(index)
+                                      .selected;
+                                });
+                              },
+                            );
+                          }),
+                      RaisedButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(color: Colors.deepOrange)),
+                          padding: const EdgeInsets.symmetric(horizontal: 60),
+                          child: Text(
+                            'ok',
+                            style: TextStyle(color: Colors.white),
                           ),
-                          onTap: () {
-                            setState(() {
-                              _devices.elementAt(index).selected =
-                                  !_devices.elementAt(index).selected;
-                            });
-                          },
-                        );
-                      }),
-                  RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                          side: BorderSide(color: Colors.deepOrange)),
-                      padding: const EdgeInsets.symmetric(horizontal: 60),
-                      child: Text(
-                        'ok',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      color: Colors.deepOrange,
-                      onPressed: () async {
-                        await _getNotifications();
-                      }),
-                ],
-              ),
+                          color: Colors.deepOrange,
+                          onPressed: () async {
+                            await _getNotifications();
+                          }),
+                    ],
+                  ),
+                ),
+          )
+              : Container(
+            color: Colors.white,
+            child: Text(
+              _vehicleErrorMsg,
+              style: TextStyle(fontSize: 22),
             ),
-          ) :  Container(
-          color: Colors.white,
-          child: Text(_vehicleErrorMsg, style: TextStyle(fontSize: 22),),
           );
         });
   }
@@ -292,82 +350,89 @@ class _NotificationsViewState extends State<NotificationsView> {
         context: context,
         builder: (BuildContext context) {
           return StatefulBuilder(
-            builder: (context, setState) => Container(
-              color: Colors.white,
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: _eventFilters.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            //without behavior we'll encounter a problem
-                            //when user tap on row blank space
-                            behavior: HitTestBehavior.translucent,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Container(
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
+            builder: (context, setState) =>
+                Container(
+                  color: Colors.white,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: _eventFilters.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                //without behavior we'll encounter a problem
+                                //when user tap on row blank space
+                                behavior: HitTestBehavior.translucent,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Container(
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      _eventFilters.elementAt(index).filterName,
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 20,
-                                      height: 20,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(
-                                          color: Colors.deepOrange,
-                                          width: _eventFilters
+                                      children: [
+                                        Text(
+                                          _eventFilters
+                                              .elementAt(index)
+                                              .filterName,
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                        Container(
+                                          width: 20,
+                                          height: 20,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(
+                                              color: Colors.deepOrange,
+                                              width: _eventFilters
                                                   .elementAt(index)
                                                   .filterValue
-                                              ? 10
-                                              : 1,
-                                        ),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5)),
-                                      ),
-                                    )
-                                  ],
+                                                  ? 10
+                                                  : 1,
+                                            ),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5)),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            onTap: () {
-                              setState(() {
-                                _eventFilters.elementAt(index).filterValue =
-                                    !_eventFilters.elementAt(index).filterValue;
-                              });
-                            },
-                          );
-                        }),
-                  ),
-                  RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                          side: BorderSide(color: Colors.deepOrange)),
-                      padding: const EdgeInsets.symmetric(horizontal: 60),
-                      child: Text(
-                        'ok',
-                        style: TextStyle(color: Colors.white),
+                                onTap: () {
+                                  setState(() {
+                                    _eventFilters
+                                        .elementAt(index)
+                                        .filterValue =
+                                    !_eventFilters
+                                        .elementAt(index)
+                                        .filterValue;
+                                  });
+                                },
+                              );
+                            }),
                       ),
-                      color: Colors.deepOrange,
-                      onPressed: () async {
-                        await _getNotifications();
-                        print(_choicesToJson());
-                      }),
-                ],
-              ),
-            ),
+                      RaisedButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(color: Colors.deepOrange)),
+                          padding: const EdgeInsets.symmetric(horizontal: 60),
+                          child: Text(
+                            'ok',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          color: Colors.deepOrange,
+                          onPressed: () async {
+                            await _getNotifications();
+                            print(_choicesToJson());
+                          }),
+                    ],
+                  ),
+                ),
           );
         });
   }
@@ -382,16 +447,16 @@ class _NotificationsViewState extends State<NotificationsView> {
       'deviceIDs': _devices.where((element) => element.selected).toList(),
       'filters': _eventFilters.where((element) => element.filterValue).toList(),
       'timestampStart': DateTime(
-                  _dateStartChose.year,
-                  _dateStartChose.month,
-                  _dateStartChose.day,
-                  _timeStartChose.hour,
-                  _timeStartChose.minute)
-              .millisecondsSinceEpoch ~/
+          _dateStartChose.year,
+          _dateStartChose.month,
+          _dateStartChose.day,
+          _timeStartChose.hour,
+          _timeStartChose.minute)
+          .millisecondsSinceEpoch ~/
           1000,
       'timestampEnd': DateTime(_dateEndChose.year, _dateEndChose.month,
-                  _dateEndChose.day, _timeEndChose.hour, _timeEndChose.minute)
-              .millisecondsSinceEpoch ~/
+          _dateEndChose.day, _timeEndChose.hour, _timeEndChose.minute)
+          .millisecondsSinceEpoch ~/
           1000
     });
   }
@@ -403,5 +468,270 @@ class _NotificationsViewState extends State<NotificationsView> {
       ApiShowDialog.dialog(
           type: 'error', message: error, scaffoldKey: _scaffoldKey);
     });
+  }
+
+  _getPositionDetails(deviceID, timestamp) async {
+    return await Api.getPositionByTimestampAndDeviceID(
+        jsonEncode({"deviceID": deviceID, "timestamp": timestamp}))
+        .catchError((error) {
+      ApiShowDialog.dialog(
+          scaffoldKey: _scaffoldKey, message: error, type: 'error');
+      throw (error);
+    });
+  }
+
+  _childrenWidgets(deviceID, timestamp) {
+    return FutureBuilder(
+        future: _getPositionDetails(deviceID, timestamp),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data.status == Status.ERROR) {
+              return Container(
+                color: Colors.white,
+                child: Center(
+                  child: Text(snapshot.data.message),
+                ),
+              );
+            } else {
+              var data = snapshot.data.responseBody;
+              return Container(
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
+                height: 200,
+                child: GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                      target: LatLng(snapshot.data.responseBody.latitude,
+                          snapshot.data.responseBody.longitude),
+                      zoom: 17),
+                  zoomControlsEnabled: false,
+                  markers: Set.of([
+                    Marker(
+                        markerId:
+                        MarkerId('${data.timestamp}'),
+                        position: LatLng(data.latitude,
+                            data.longitude),
+                        infoWindow: InfoWindow(
+                            snippet: "Speed: ${data.speedKPH} Km/h more...",
+                            title: "${data.vehicleModel}",
+                            onTap: () {
+                              showDialog(
+                                  context: _scaffoldKey.currentContext,
+                                  builder: (context) {
+                                    return Align(
+                                      alignment: Alignment.center,
+                                      child: Container(
+                                        height: MediaQuery.of(context).size.height / 2,
+                                        width: MediaQuery.of(context).size.width / 1.5,
+                                        color: Colors.white,
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(top: 4.0),
+                                                child: Center(
+                                                  child: Text(
+                                                    "${data.vehicleModel}",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        decoration: TextDecoration.none, color: Colors.deepOrange),
+                                                  ),
+                                                ),
+                                              ),
+                                              Divider(
+                                                thickness: 3,
+                                                color: Colors.black,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "speed: ",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        decoration: TextDecoration.none, color: Colors.black),
+                                                  ),
+                                                  Text(
+                                                    "${data.speedKPH} km/h",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        decoration: TextDecoration.none, color: Colors.deepOrange),
+                                                  ),
+                                                ],
+                                              ),
+                                              Divider(
+                                                thickness: 1,
+                                                color: Colors.black,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "time: ",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        decoration: TextDecoration.none, color: Colors.black),
+                                                  ),
+                                                  Text(
+                                                    data.timestampAsString,
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        decoration: TextDecoration.none, color: Colors.deepOrange),
+                                                  ),
+                                                ],
+                                              ),
+                                              Divider(
+                                                thickness: 1,
+                                                color: Colors.black,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "latitude: ",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        decoration: TextDecoration.none, color: Colors.black),
+                                                  ),
+                                                  Text(
+                                                    "${data.latitude}",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        decoration: TextDecoration.none, color: Colors.deepOrange),
+                                                  ),
+                                                ],
+                                              ),
+                                              Divider(
+                                                thickness: 1,
+                                                color: Colors.black,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "longitude: ",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        decoration: TextDecoration.none, color: Colors.black),
+                                                  ),
+                                                  Text(
+                                                    "${data.longitude}",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        decoration: TextDecoration.none, color: Colors.deepOrange),
+                                                  ),
+                                                ],
+                                              ),
+                                              Divider(
+                                                thickness: 1,
+                                                color: Colors.black,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "oil level: ",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        decoration: TextDecoration.none, color: Colors.black),
+                                                  ),
+                                                  Text(
+                                                    "${data.oilLevel} L",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        decoration: TextDecoration.none, color: Colors.deepOrange),
+                                                  ),
+                                                ],
+                                              ),
+                                              Divider(
+                                                thickness: 1,
+                                                color: Colors.black,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "status: ",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        decoration: TextDecoration.none, color: Colors.black),
+                                                  ),
+                                                  Text("en marche", style: TextStyle(fontSize: 16, decoration: TextDecoration.none, color: Colors.deepOrange),),
+                                                ],
+                                              ),
+                                              Divider(
+                                                thickness: 1,
+                                                color: Colors.black,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "battery: ",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        decoration: TextDecoration.none, color: Colors.black),
+                                                  ),
+                                                  Text(
+                                                    "${data.batteryVolts} V",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        decoration: TextDecoration.none, color: Colors.deepOrange),
+                                                  ),
+                                                ],
+                                              ),
+                                              Divider(
+                                                thickness: 1,
+                                                color: Colors.black,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "engine temp: ",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        decoration: TextDecoration.none, color: Colors.black),
+                                                  ),
+                                                  Text(
+                                                    "${data.engineTemp} °C",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        decoration: TextDecoration.none, color: Colors.deepOrange),
+                                                  ),
+                                                ],
+                                              ),
+                                              Divider(
+                                                thickness: 1,
+                                                color: Colors.black,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Signal: ",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        decoration: TextDecoration.none, color: Colors.black),
+                                                  ),
+                                                  Icon(
+                                                    Icons.signal_wifi_4_bar_outlined,
+                                                    color: Colors.deepOrange,
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  });
+                            })
+                    ),
+                  ]),
+                  mapType: MapType.hybrid,
+                  onMapCreated: (GoogleMapController googleMapController) {},
+                ),
+              );
+            }
+          } else {
+            return SizedBox(
+              height: 0,
+              width: 0,
+            );
+          }
+        });
   }
 }

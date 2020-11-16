@@ -25,8 +25,9 @@ class Api {
   static final httpClient = HttpClient();
 
   // static final baseUrl = 'http://91.234.195.124:9090/api';
-  // static final baseUrl = 'http://192.168.1.38:9090/api';
-  static final baseUrl = 'http://192.168.100.53:9090/api';
+  static final baseUrl = 'http://192.168.1.40:9090/api';
+
+  // static final baseUrl = 'http://192.168.100.53:9090/api';
 
   static Future<Response> login(params) async {
     await connected();
@@ -393,7 +394,6 @@ class Api {
   }
 
   static Future<Response<List<Device>>> getVehicles(body) async {
-
     await connected();
     var httpCustom = HttpCustom(url: '$baseUrl/vehicles', body: body);
 
@@ -412,9 +412,9 @@ class Api {
   }
 
   static Future<Response<List<Notification>>> getNotifications(body) async {
-
     await connected();
-    var httpCustom = HttpCustom(url: '$baseUrl/findall/notification', body: body);
+    var httpCustom =
+        HttpCustom(url: '$baseUrl/findall/notification', body: body);
 
     final httpResponse = await httpCustom
         .post()
@@ -426,8 +426,26 @@ class Api {
       return Response.error(responseBody['message']);
     }
     return Response.completed(responseBody
-        .map<Notification>((notification) => Notification.fromJson(notification))
+        .map<Notification>(
+            (notification) => Notification.fromJson(notification))
         .toList());
+  }
+
+  //used in notification view
+  static Future<Response> getPositionByTimestampAndDeviceID(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/position', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      return Response.error(responseBody['message']);
+    }
+
+    return Response.completed(EventData.fromJson(responseBody));
   }
 
   static Future<Response> saveDeviceAlarmSettings(body) async {
@@ -527,8 +545,8 @@ class Api {
         .put()
         .catchError((err) => throw ('erreur lié au serveur'));
 
-    if(httpResponse.statusCode != 200) {
-        return Response.error('Réssayer plus tard');
+    if (httpResponse.statusCode != 200) {
+      return Response.error('Réssayer plus tard');
     }
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
@@ -537,7 +555,8 @@ class Api {
 
   static Future<Response<List<TechnicalVisit>>> getTechnicalVisit(body) async {
     await connected();
-    var httpCustom = HttpCustom(url: '$baseUrl/findall/technicalVisit', body: body);
+    var httpCustom =
+        HttpCustom(url: '$baseUrl/findall/technicalVisit', body: body);
 
     final httpResponse = await httpCustom
         .post()
@@ -549,7 +568,8 @@ class Api {
       return Response.error(responseBody['message']);
     }
     return Response.completed(responseBody
-        .map<TechnicalVisit>((technicalVisit) => TechnicalVisit.fromJson(technicalVisit))
+        .map<TechnicalVisit>(
+            (technicalVisit) => TechnicalVisit.fromJson(technicalVisit))
         .toList());
   }
 
@@ -566,12 +586,14 @@ class Api {
     }
 
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
-    return Response<TechnicalVisit>.completed(TechnicalVisit.fromJson(responseBody));
+    return Response<TechnicalVisit>.completed(
+        TechnicalVisit.fromJson(responseBody));
   }
 
   static Future<Response> deleteTechnicalVisit(body) async {
     await connected();
-    var httpCustom = HttpCustom(url: '$baseUrl/delete/technicalVisit', body: body);
+    var httpCustom =
+        HttpCustom(url: '$baseUrl/delete/technicalVisit', body: body);
 
     final httpResponse = await httpCustom
         .post()
@@ -589,14 +611,15 @@ class Api {
 
   static Future<Response> updateTechnicalVisit(body) async {
     await connected();
-    var httpCustom = HttpCustom(url: '$baseUrl/update/technicalVisit', body: body);
+    var httpCustom =
+        HttpCustom(url: '$baseUrl/update/technicalVisit', body: body);
 
     final httpResponse = await httpCustom
         .put()
         .catchError((err) => throw ('erreur lié au serveur'));
 
-    if(httpResponse.statusCode != 200) {
-        return Response.error('Réssayer plus tard');
+    if (httpResponse.statusCode != 200) {
+      return Response.error('Réssayer plus tard');
     }
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
     return Response.completed(TechnicalVisit.fromJson(responseBody));
@@ -662,8 +685,8 @@ class Api {
         .put()
         .catchError((err) => throw ('erreur lié au serveur'));
 
-    if(httpResponse.statusCode != 200) {
-        return Response.error('Réssayer plus tard');
+    if (httpResponse.statusCode != 200) {
+      return Response.error('Réssayer plus tard');
     }
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
     return Response.completed(Insurance.fromJson(responseBody));
@@ -729,8 +752,8 @@ class Api {
         .put()
         .catchError((err) => throw ('erreur lié au serveur'));
 
-    if(httpResponse.statusCode != 200) {
-        return Response.error('Réssayer plus tard');
+    if (httpResponse.statusCode != 200) {
+      return Response.error('Réssayer plus tard');
     }
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
     return Response.completed(Entretien.fromJson(responseBody));
