@@ -20,23 +20,24 @@ class _NotificationsViewState extends State<NotificationsView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   var _choices = ["vehicles filtering", "events filtering", "new date"];
   var _devices = [];
+  String _vehicleErrorMsg = "";
 
   DateTime _dateStartChose = DateTime.now();
-  TimeOfDay _timeStartChose = TimeOfDay.now();
+  TimeOfDay _timeStartChose = TimeOfDay(hour: 0, minute: 0);
   DateTime _dateEndChose = DateTime.now();
-  TimeOfDay _timeEndChose = TimeOfDay.now();
+  TimeOfDay _timeEndChose = TimeOfDay(hour: 23, minute: 59);
 
   var _eventFilters = [
-    Filter(filterName: "battery"),
-    Filter(filterName: "bonnet"),
-    Filter(filterName: "crash"),
-    Filter(filterName: "disconnect"),
-    Filter(filterName: "driver"),
-    Filter(filterName: "maxSpeed"),
-    Filter(filterName: "maxTemp"),
-    Filter(filterName: "mintTemp"),
-    Filter(filterName: "startUp"),
-    Filter(filterName: "towing"),
+    Filter(filterName: "battery", filterAbbreviation: "BA"),
+    Filter(filterName: "bonnet", filterAbbreviation: "BO"),
+    Filter(filterName: "crash", filterAbbreviation: "CR"),
+    Filter(filterName: "disconnect", filterAbbreviation: "DI"),
+    Filter(filterName: "driver", filterAbbreviation: "DR"),
+    Filter(filterName: "speed", filterAbbreviation: "SP"),
+    Filter(filterName: "maxTemp", filterAbbreviation: "TMAX"),
+    Filter(filterName: "mintTemp", filterAbbreviation: "TMIN"),
+    Filter(filterName: "startUp", filterAbbreviation: "SU"),
+    Filter(filterName: "towing", filterAbbreviation: "TO"),
   ];
 
   StreamController _streamController;
@@ -47,6 +48,7 @@ class _NotificationsViewState extends State<NotificationsView> {
     super.initState();
     _streamController = StreamController();
     _stream = _streamController.stream;
+    _getVehicles('init');
     _getNotifications();
   }
 
@@ -145,11 +147,11 @@ class _NotificationsViewState extends State<NotificationsView> {
           stream: _stream,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              if (snapshot.data.value.status == Status.ERROR) {
+              if (snapshot.data.status == Status.ERROR) {
                 return Center(
                   child: Container(
                     child: Text(
-                      snapshot.data.value.message,
+                      snapshot.data.message,
                       style: TextStyle(
                         fontSize: 18,
                       ),
@@ -158,9 +160,11 @@ class _NotificationsViewState extends State<NotificationsView> {
                 );
               } else {
                 return ListView.builder(
-                  itemCount: snapshot.data.length,
+                  itemCount: snapshot.data.responseBody.length,
                   itemBuilder: (context, index) {
-                    return ListTile();
+                    return ListTile(
+                      title: Text('${snapshot.data.responseBody[index].message}'),
+                    );
                   },
                 );
               }
@@ -173,7 +177,7 @@ class _NotificationsViewState extends State<NotificationsView> {
     );
   }
 
-  Future _getVehicles() async {
+  Future _getVehicles(state) async {
     EncryptedSharedPreferences _preferences = EncryptedSharedPreferences();
     final _params = {
       "accountID": await _preferences.getString("accountID"),
@@ -181,116 +185,102 @@ class _NotificationsViewState extends State<NotificationsView> {
     };
     await Api.getVehicles(jsonEncode(_params)).then((value) {
       if (value.status == Status.ERROR) {
-        throw ('${value.message}');
+        _vehicleErrorMsg = value.message;
       } else {
+        if(_vehicleErrorMsg != "") _vehicleErrorMsg = "";
         _devices = value.responseBody;
+        if(state != 'init') _vehiclesFilter();
       }
     });
   }
 
   _vehiclesFilter() async {
-    await _getVehicles().then((value) {
-      return showModalBottomSheet(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15.0),
-                topRight: Radius.circular(15.0)),
-          ),
-          context: context,
-          builder: (BuildContext context) {
-            return StatefulBuilder(
-              builder: (context, setState) => Container(
-                color: Colors.white,
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: _devices.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            //without behavior we'll encounter a problem
-                            //when user tap on row blank space
-                            behavior: HitTestBehavior.translucent,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      _devices.elementAt(index).vehicleModel,
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                      ),
+    return showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
+        ),
+        context: context,
+        builder: (BuildContext context) {
+          return _vehicleErrorMsg == "" ?
+          StatefulBuilder(
+            builder: (context, setState) => Container(
+              color: Colors.white,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: _devices.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          //without behavior we'll encounter a problem
+                          //when user tap on row blank space
+                          behavior: HitTestBehavior.translucent,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    _devices.elementAt(index).vehicleModel,
+                                    style: TextStyle(
+                                      fontSize: 20,
                                     ),
-                                    Container(
-                                      width: 20,
-                                      height: 20,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(
-                                          color: Colors.deepOrange,
-                                          width:
-                                              _devices.elementAt(index).selected
-                                                  ? 10
-                                                  : 1,
-                                        ),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5)),
+                                  ),
+                                  Container(
+                                    width: 20,
+                                    height: 20,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(
+                                        color: Colors.deepOrange,
+                                        width:
+                                            _devices.elementAt(index).selected
+                                                ? 10
+                                                : 1,
                                       ),
-                                    )
-                                  ],
-                                ),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5)),
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
-                            onTap: () {
-                              setState(() {
-                                _devices.elementAt(index).selected =
-                                    !_devices.elementAt(index).selected;
-                              });
-                            },
-                          );
-                        }),
-                    RaisedButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                            side: BorderSide(color: Colors.deepOrange)),
-                        padding: const EdgeInsets.symmetric(horizontal: 60),
-                        child: Text(
-                          'ok',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        color: Colors.deepOrange,
-                        onPressed: () async {
-                          await _getNotifications();
-                        }),
-                  ],
-                ),
+                          ),
+                          onTap: () {
+                            setState(() {
+                              _devices.elementAt(index).selected =
+                                  !_devices.elementAt(index).selected;
+                            });
+                          },
+                        );
+                      }),
+                  RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                          side: BorderSide(color: Colors.deepOrange)),
+                      padding: const EdgeInsets.symmetric(horizontal: 60),
+                      child: Text(
+                        'ok',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      color: Colors.deepOrange,
+                      onPressed: () async {
+                        await _getNotifications();
+                      }),
+                ],
               ),
-            );
-          });
-    }).catchError((error) {
-      showModalBottomSheet(
-          context: context,
-          builder: (BuildContext context) {
-            return Container(
-              color: Colors.white,
-              child: Center(
-                child: Text(
-                  error,
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 22,
-                  ),
-                ),
-              ),
-            );
-          });
-    });
+            ),
+          ) :  Container(
+          color: Colors.white,
+          child: Text(_vehicleErrorMsg, style: TextStyle(fontSize: 22),),
+          );
+        });
   }
 
   _modalEventFilters() {
@@ -373,6 +363,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                       color: Colors.deepOrange,
                       onPressed: () async {
                         await _getNotifications();
+                        print(_choicesToJson());
                       }),
                 ],
               ),
@@ -389,8 +380,8 @@ class _NotificationsViewState extends State<NotificationsView> {
 
     return jsonEncode({
       'deviceIDs': _devices.where((element) => element.selected).toList(),
-      'filters': _eventFilters.toList(),
-      'timestamp start': DateTime(
+      'filters': _eventFilters.where((element) => element.filterValue).toList(),
+      'timestampStart': DateTime(
                   _dateStartChose.year,
                   _dateStartChose.month,
                   _dateStartChose.day,
@@ -398,7 +389,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                   _timeStartChose.minute)
               .millisecondsSinceEpoch ~/
           1000,
-      'timestamp end': DateTime(_dateEndChose.year, _dateEndChose.month,
+      'timestampEnd': DateTime(_dateEndChose.year, _dateEndChose.month,
                   _dateEndChose.day, _timeEndChose.hour, _timeEndChose.minute)
               .millisecondsSinceEpoch ~/
           1000

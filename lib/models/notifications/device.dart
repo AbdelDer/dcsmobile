@@ -1,7 +1,7 @@
 class Device {
   String _deviceID;
   String _vehicleModel;
-  bool _selected = false;
+  bool _selected = true;
 
 
   String get deviceID => _deviceID;

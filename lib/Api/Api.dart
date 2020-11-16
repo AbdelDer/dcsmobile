@@ -12,9 +12,9 @@ import 'package:dcsmobile/models/activity.dart';
 import 'package:dcsmobile/models/alarm.dart';
 import 'package:dcsmobile/models/draining.dart';
 import 'package:dcsmobile/models/entretien.dart';
-import 'package:dcsmobile/models/entretien.dart';
 import 'package:dcsmobile/models/insurance.dart';
 import 'package:dcsmobile/models/notifications/device.dart';
+import 'package:dcsmobile/models/notifications/notification.dart';
 import 'package:dcsmobile/models/summaryreport.dart';
 import 'package:dcsmobile/models/technicalvisit.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
@@ -411,11 +411,10 @@ class Api {
         .toList());
   }
 
-  //TODO: change return type and all other details after implementing notification at Api side
-  static Future<Response<List<Device>>> getNotifications(body) async {
+  static Future<Response<List<Notification>>> getNotifications(body) async {
 
     await connected();
-    var httpCustom = HttpCustom(url: '$baseUrl/vehicles', body: body);
+    var httpCustom = HttpCustom(url: '$baseUrl/findall/notification', body: body);
 
     final httpResponse = await httpCustom
         .post()
@@ -427,7 +426,7 @@ class Api {
       return Response.error(responseBody['message']);
     }
     return Response.completed(responseBody
-        .map<Device>((vehicle) => Device.fromJson(vehicle))
+        .map<Notification>((notification) => Notification.fromJson(notification))
         .toList());
   }
 

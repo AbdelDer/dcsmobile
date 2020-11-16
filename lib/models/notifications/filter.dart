@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 
 class Filter {
   String _filterName;
+  String _filterAbbreviation;
   bool _filterValue = true;
-
 
   String get filterName => _filterName;
 
@@ -17,8 +17,15 @@ class Filter {
     _filterValue = value;
   }
 
-  Filter({@required filterName, filterValue})
+  String get filterAbbreviation => _filterAbbreviation;
+
+  set filterAbbreviation(String value) {
+    _filterAbbreviation = value;
+  }
+
+  Filter({@required filterName, filterAbbreviation, filterValue})
       : _filterName = filterName,
+        _filterAbbreviation = filterAbbreviation,
         _filterValue = filterValue == null ? true : filterValue;
 
   @override
@@ -33,9 +40,5 @@ class Filter {
   //   );
   // }
 
-  Map<String, dynamic> toJson() =>
-      {
-        'filterName': _filterName,
-        'value': _filterValue,
-      };
+  toJson() => _filterAbbreviation;
 }
