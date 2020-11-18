@@ -158,9 +158,9 @@ class _CommandsScreenState extends State<CommandsScreen>
                                         return CommandsDialog(snapshot.data.responseBody[index].vehicleModel, snapshot.data.responseBody[index].simPhoneNumber, snapshot.data.responseBody[index].late ?? true);
                                       });
                                 },
-                                leading: Icon(
-                                  Icons.place,
-                                  color: Colors.black,
+                                leading: Image.asset(
+                                  'assets/icons/r_marker_blue.png',
+                                  width: 30,
                                 ),
                                 title: Row(children: <Widget>[
                                   Icon(Icons.directions_car),
