@@ -17,7 +17,7 @@ void main() {
       MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "Tracking App",
-        initialRoute: '/dashboard',
+        initialRoute: '/maintenance',
         navigatorObservers: [routeObserver],
         theme: ThemeData(
           primaryColor: Colors.deepOrange,

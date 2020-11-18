@@ -26,4 +26,13 @@ class HttpCustom {
       body: body,
     );
   }
+
+  Future<Response> delete() async {
+    return await http.delete(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+  }
 }

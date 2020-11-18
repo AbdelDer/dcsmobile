@@ -510,23 +510,29 @@ class Api {
         .post()
         .catchError((err) => throw ('erreur lié au serveur'));
 
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
     if (httpResponse.statusCode != 201) {
+      if(responseBody['message'] != null) {
+        return Response.error(responseBody['message']);
+      }
       return Response.error('try another time');
     }
 
-    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
     return Response<Draining>.completed(Draining.fromJson(responseBody));
   }
 
-  static Future<Response> deleteDraining(body) async {
+  static Future<Response> deleteDraining(id) async {
     await connected();
-    var httpCustom = HttpCustom(url: '$baseUrl/delete/draining', body: body);
+    var httpCustom = HttpCustom(url: '$baseUrl/delete/draining/$id');
 
     final httpResponse = await httpCustom
-        .post()
+        .delete()
         .catchError((err) => throw ('erreur lié au serveur'));
 
     // var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+    print(httpCustom.url);
+    print(httpResponse.body);
 
     if (httpResponse.statusCode != 200) {
       // return Response.error(responseBody['message']);
@@ -544,10 +550,14 @@ class Api {
         .put()
         .catchError((err) => throw ('erreur lié au serveur'));
 
-    if (httpResponse.statusCode != 200) {
-      return Response.error('Réssayer plus tard');
-    }
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      if(responseBody['message'] != null) {
+        return Response.error(responseBody['message']);
+      }
+      return Response.error('try another time');
+    }
 
     return Response.completed(Draining.fromJson(responseBody));
   }
@@ -580,22 +590,26 @@ class Api {
         .post()
         .catchError((err) => throw ('erreur lié au serveur'));
 
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
     if (httpResponse.statusCode != 201) {
+      if(responseBody['message'] != null) {
+        return Response.error(responseBody['message']);
+      }
       return Response.error('try another time');
     }
 
-    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
     return Response<TechnicalVisit>.completed(
         TechnicalVisit.fromJson(responseBody));
   }
 
-  static Future<Response> deleteTechnicalVisit(body) async {
+  static Future<Response> deleteTechnicalVisit(id) async {
     await connected();
     var httpCustom =
-        HttpCustom(url: '$baseUrl/delete/technicalVisit', body: body);
+        HttpCustom(url: '$baseUrl/delete/technicalVisit/$id');
 
     final httpResponse = await httpCustom
-        .post()
+        .delete()
         .catchError((err) => throw ('erreur lié au serveur'));
 
     // var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
@@ -617,10 +631,15 @@ class Api {
         .put()
         .catchError((err) => throw ('erreur lié au serveur'));
 
-    if (httpResponse.statusCode != 200) {
-      return Response.error('Réssayer plus tard');
-    }
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      if(responseBody['message'] != null) {
+        return Response.error(responseBody['message']);
+      }
+      return Response.error('try another time');
+    }
+
     return Response.completed(TechnicalVisit.fromJson(responseBody));
   }
 
@@ -650,20 +669,24 @@ class Api {
         .post()
         .catchError((err) => throw ('erreur lié au serveur'));
 
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
     if (httpResponse.statusCode != 201) {
+      if(responseBody['message'] != null) {
+        return Response.error(responseBody['message']);
+      }
       return Response.error('try another time');
     }
 
-    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
     return Response<Insurance>.completed(Insurance.fromJson(responseBody));
   }
 
-  static Future<Response> deleteInsurance(body) async {
+  static Future<Response> deleteInsurance(id) async {
     await connected();
-    var httpCustom = HttpCustom(url: '$baseUrl/delete/insurance', body: body);
+    var httpCustom = HttpCustom(url: '$baseUrl/delete/insurance/$id');
 
     final httpResponse = await httpCustom
-        .post()
+        .delete()
         .catchError((err) => throw ('erreur lié au serveur'));
 
     // var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
@@ -684,10 +707,15 @@ class Api {
         .put()
         .catchError((err) => throw ('erreur lié au serveur'));
 
-    if (httpResponse.statusCode != 200) {
-      return Response.error('Réssayer plus tard');
-    }
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      if(responseBody['message'] != null) {
+        return Response.error(responseBody['message']);
+      }
+      return Response.error('try another time');
+    }
+
     return Response.completed(Insurance.fromJson(responseBody));
   }
 
@@ -717,20 +745,24 @@ class Api {
         .post()
         .catchError((err) => throw ('erreur lié au serveur'));
 
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
     if (httpResponse.statusCode != 201) {
+      if(responseBody['message'] != null) {
+        return Response.error(responseBody['message']);
+      }
       return Response.error('try another time');
     }
 
-    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
     return Response<Entretien>.completed(Entretien.fromJson(responseBody));
   }
 
-  static Future<Response> deleteEntretien(body) async {
+  static Future<Response> deleteEntretien(id) async {
     await connected();
-    var httpCustom = HttpCustom(url: '$baseUrl/delete/entretien', body: body);
+    var httpCustom = HttpCustom(url: '$baseUrl/delete/entretien/$id');
 
     final httpResponse = await httpCustom
-        .post()
+        .delete()
         .catchError((err) => throw ('erreur lié au serveur'));
 
     // var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
@@ -751,10 +783,15 @@ class Api {
         .put()
         .catchError((err) => throw ('erreur lié au serveur'));
 
-    if (httpResponse.statusCode != 200) {
-      return Response.error('Réssayer plus tard');
-    }
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      if(responseBody['message'] != null) {
+        return Response.error(responseBody['message']);
+      }
+      return Response.error('try another time');
+    }
+
     return Response.completed(Entretien.fromJson(responseBody));
   }
 

@@ -21,7 +21,7 @@ class Insurance {
     return Insurance(
         json["id"],
         json["deviceID"],
-        json["technicalVisitName"],
+        json["insuranceName"],
         json["timestampStart"],
         json["timestampEnd"]);
   }
@@ -33,14 +33,14 @@ class Insurance {
         "deviceID": _deviceID,
         "timestampStart": _timestampStart,
         "timestampEnd": _timestampEnd,
-        "technicalVisitName": _InsuranceName
+        "insuranceName": _InsuranceName
       };
     }else {
       return {
         "deviceID": _deviceID,
         "timestampStart": _timestampStart,
         "timestampEnd": _timestampEnd,
-        "technicalVisitName": _InsuranceName
+        "insuranceName": _InsuranceName
       };
     }
   }

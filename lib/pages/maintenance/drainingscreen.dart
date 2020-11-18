@@ -346,11 +346,15 @@ class _DrainingScreenState extends State<DrainingScreen> {
                             }),
                       ),
                       Visibility(
-                          visible: errorMsgVisibility,
-                          child: Text(
-                            "try to verify that you give a unique date",
-                            style: TextStyle(fontSize: 14, color: Colors.red, ),
-                          )),
+                        visible: errorMsgVisibility,
+                        child: Text(
+                          "this date already exists",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextFormField(
@@ -477,9 +481,11 @@ class _DrainingScreenState extends State<DrainingScreen> {
         double.parse(_kmEndController.value.text));
     await Api.updateDraining(jsonEncode(draining.toJson())).then((value) async {
       if (value.status == Status.ERROR) {
-        _dialogKey.currentState.setState(() {
-          errorMsgVisibility = !errorMsgVisibility;
-        });
+        if (value.message.contains('timestamp')) {
+          _dialogKey.currentState.setState(() {
+            errorMsgVisibility = true;
+          });
+        }
       } else {
         _drainingController.value = TextEditingValue(text: '');
         _kmStartController.value = TextEditingValue(text: '');
@@ -510,9 +516,11 @@ class _DrainingScreenState extends State<DrainingScreen> {
         double.parse(_kmEndController.value.text));
     await Api.saveDraining(jsonEncode(draining.toJson())).then((value) async {
       if (value.status == Status.ERROR) {
-        _dialogKey.currentState.setState(() {
-          errorMsgVisibility = !errorMsgVisibility;
-        });
+        if (value.message.contains('timestamp')) {
+          _dialogKey.currentState.setState(() {
+            errorMsgVisibility = true;
+          });
+        }
       } else {
         _drainingController.value = TextEditingValue(text: '');
         _kmStartController.value = TextEditingValue(text: '');
@@ -535,10 +543,11 @@ class _DrainingScreenState extends State<DrainingScreen> {
   }
 
   _deleteDraining(id) async {
-    await Api.deleteDraining(jsonEncode({"id": id})).then((value) {
+    await Api.deleteDraining(id).then((value) {
       if (value.status == Status.ERROR) {
+        print(value);
         _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text(value.responseBody.message),
+          content: Text(value.message),
         ));
       } else {
         _scaffoldKey.currentState.showSnackBar(SnackBar(

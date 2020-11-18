@@ -457,16 +457,21 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
         .then((value) async {
       if (value.status == Status.ERROR) {
         _dialogKey.currentState.setState(() {
-          errorTimestampEndVisibility = !errorTimestampEndVisibility;
-          errorTimestampStartVisibility = !errorTimestampStartVisibility;
-          errorTimestampStartMsg = "verify that start date is unique";
-          errorTimestampEndMsg = "verify that end date is unique";
+          if(value.message.contains('date start')) {
+            errorTimestampStartVisibility = true;
+            errorTimestampEndVisibility = false;
+            errorTimestampStartMsg = "start date already exists";
+          } else if(value.message.contains('date end')) {
+            errorTimestampStartVisibility = false;
+            errorTimestampEndVisibility = true;
+            errorTimestampEndMsg = "end date already exists";
+          }
         });
       } else {
         if (errorTimestampEndVisibility || errorTimestampStartVisibility) {
           _dialogKey.currentState.setState(() {
-            errorTimestampEndVisibility = !errorTimestampEndVisibility;
-            errorTimestampStartVisibility = !errorTimestampStartVisibility;
+            errorTimestampEndVisibility = false;
+            errorTimestampStartVisibility = false;
           });
         }
         _nameController.value = TextEditingValue(text: '');
@@ -488,16 +493,21 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
     await Api.saveInsurance(jsonEncode(insurance.toJson())).then((value) async {
       if (value.status == Status.ERROR) {
         _dialogKey.currentState.setState(() {
-          errorTimestampEndVisibility = !errorTimestampEndVisibility;
-          errorTimestampStartVisibility = !errorTimestampStartVisibility;
-          errorTimestampStartMsg = "verify that start date is unique";
-          errorTimestampEndMsg = "verify that end date is unique";
+          if(value.message.contains('date start')) {
+            errorTimestampStartVisibility = true;
+            errorTimestampEndVisibility = false;
+            errorTimestampStartMsg = "start date already exists";
+          } else if(value.message.contains('date end')) {
+            errorTimestampStartVisibility = false;
+            errorTimestampEndVisibility = true;
+            errorTimestampEndMsg = "end date already exists";
+          }
         });
       } else {
         if (errorTimestampEndVisibility || errorTimestampStartVisibility) {
           _dialogKey.currentState.setState(() {
-            errorTimestampEndVisibility = !errorTimestampEndVisibility;
-            errorTimestampStartVisibility = !errorTimestampStartVisibility;
+            errorTimestampEndVisibility = false;
+            errorTimestampStartVisibility = false;
           });
         }
         _nameController.value = TextEditingValue(text: '');
@@ -514,7 +524,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
   }
 
   _deleteInsurance(id) async {
-    await Api.deleteInsurance(jsonEncode({"id": id})).then((value) {
+    await Api.deleteInsurance(jsonEncode(id)).then((value) {
       if (value.status == Status.ERROR) {
         _scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(value.responseBody.message),
