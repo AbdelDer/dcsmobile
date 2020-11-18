@@ -70,8 +70,7 @@ class DonutAutoLabelChart extends StatelessWidget {
       if(receivedData['firstRow']['moving'] == 0 && receivedData['firstRow']['parked'] == 0) {
         data = [
           //TODO: change renewal with all
-
-          new VehicleStatus("all", num.parse(receivedData['firstRow']['renewal'].toString()) ?? 0,
+          new VehicleStatus("all", num.parse(receivedData['firstRow']['all'].toString()) ?? 0,
               Colors.orangeAccent.shade200),
         ];
       }else {

@@ -177,7 +177,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                     size: 220,
                     minValue: 0,
                     maxValue: 220,
-                    currentValue: _speedKPH,
+                    currentValue: _speedKPH?.roundToDouble(),
                     displayNumericStyle: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,

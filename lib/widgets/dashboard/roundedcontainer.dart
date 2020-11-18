@@ -33,18 +33,18 @@ class _RoundedContainerState extends State<RoundedContainer> {
         MediaQuery.of(context).size.shortestSide >= 600) {
       _heightContainer = 180;
       _widthContainer = 170;
-      _fontSize = 24;
+      _fontSize = 13;
 //      print("tablet portrait");
     } else if (MediaQuery.of(context).orientation == Orientation.landscape &&
         MediaQuery.of(context).size.shortestSide >= 550) {
       _heightContainer = 180;
       _widthContainer = 170;
-      _fontSize = 24;
+      _fontSize = 13;
 //      print("tablet landscape");
     } else {
       _heightContainer = 130;
       _widthContainer = 120;
-      _fontSize = 15;
+      _fontSize = 13;
     }
 
     return Expanded(
@@ -92,12 +92,15 @@ class _RoundedContainerState extends State<RoundedContainer> {
                       fontSize: _fontSize,
                       fontWeight: FontWeight.bold),
                 ),
-                Text(
-                  model ?? 'null',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: _fontSize,
-                      fontWeight: FontWeight.bold),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    model ?? 'null',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: _fontSize,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             ),

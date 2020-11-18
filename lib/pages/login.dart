@@ -120,8 +120,8 @@ class _LoginState extends State<Login> {
                                         validator: (String value) {
                                           if (value.isEmpty) {
                                             return "Nom du Compte est obligatoire";
-                                          } else if (value.contains(new RegExp(
-                                              r"[0-9]|@|\+|-|\/|\*"))) {
+                                          // } else if (value.contains(new RegExp(r"[0-9]|@|\+|-|\/|\*"))) {
+                                          } else if (value.contains(new RegExp(r"@|\+|-|\/|\*"))) {
                                             return "Nom du compte doit contenir seuelement des alphabets";
                                           }
                                           return null;

@@ -24,9 +24,9 @@ class DeviceCard extends StatefulWidget {
 }
 
 class _DeviceCardState extends State<DeviceCard> {
-  double _modelFontSize = 24;
-  double _addressFontSize = 17;
-  double _detailsFontSize = 15;
+  double _modelFontSize = 16;
+  double _addressFontSize = 14;
+  double _detailsFontSize = 12;
 
   var data;
   String _option;
@@ -119,7 +119,9 @@ class _DeviceCardState extends State<DeviceCard> {
                     Text(
                       data[index].vehicleModel,
                       style: TextStyle(
-                          fontSize: _modelFontSize, color: Colors.black),
+                        fontSize: _modelFontSize,
+                        color: Colors.black,
+                      ),
                     )
                   ]),
                   subtitle: Column(
@@ -140,11 +142,17 @@ class _DeviceCardState extends State<DeviceCard> {
                       _option == "speedReport"
                           ? Text(
                               "${data[index].timestampAsString} ${data[index].speedKPH} Km/h",
-                              style: TextStyle(fontSize: _detailsFontSize),
+                              style: TextStyle(
+                                fontSize: _detailsFontSize,
+                                color: Colors.black,
+                              ),
                             )
                           : Text(
                               "${data[index].timestampAsString} ${data[index].distanceKM} Km/J",
-                              style: TextStyle(fontSize: _detailsFontSize),
+                              style: TextStyle(
+                                fontSize: _detailsFontSize,
+                                color: Colors.black,
+                              ),
                             ),
                     ],
                   ),

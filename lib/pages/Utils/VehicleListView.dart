@@ -3,17 +3,10 @@ import 'dart:async';
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/Api/Response.dart';
-import 'package:dcsmobile/pages/HistoryScreen.dart';
-import 'package:dcsmobile/pages/ReportView(deprecated).dart';
-import 'package:dcsmobile/pages/commandsdialog.dart';
-import 'package:dcsmobile/pages/reportscreen.dart';
 import 'package:dcsmobile/widgets/devicecard.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoder/geocoder.dart';
-
-import '../vehicleliveposition.dart';
 
 class VehicleListView<T> extends StatefulWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey;

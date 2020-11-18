@@ -220,7 +220,7 @@ class _DashboardState extends State<Dashboard> with RouteAware, WidgetsBindingOb
                       child: GestureDetector(
                         onTap: () => _handleOnTap('En parking'),
                         child: DashboardBtn(
-                          quantity: data['parked'],
+                          quantity: data['firstRow']['parked'],
                           description: 'En parking',
                           color: Colors.white,
                         ),
@@ -355,10 +355,10 @@ class _DashboardState extends State<Dashboard> with RouteAware, WidgetsBindingOb
                     )),
                   ]),
                 ),
-                // CustomSwipper(
-                //   mediaQuery: mediaQuery,
-                //   data: data,
-                // ),
+                CustomSwipper(
+                  mediaQuery: mediaQuery,
+                  data: data,
+                ),
               ],
             ),
           ),

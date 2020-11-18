@@ -1,10 +1,10 @@
 import 'package:dcsmobile/widgets/dashboard/roundedcontainer.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../animations/fadeanimation.dart';
 
 class DashboardSecondRow extends StatefulWidget {
-
   final maxSpeed;
   final maxDistance;
   final maxRunningTime;
@@ -12,7 +12,8 @@ class DashboardSecondRow extends StatefulWidget {
   DashboardSecondRow({this.maxSpeed, this.maxDistance, this.maxRunningTime});
 
   @override
-  _DashboardSecondRowState createState() => _DashboardSecondRowState(this.maxSpeed, this.maxDistance, this.maxRunningTime);
+  _DashboardSecondRowState createState() => _DashboardSecondRowState(
+      this.maxSpeed, this.maxDistance, this.maxRunningTime);
 }
 
 class _DashboardSecondRowState extends State<DashboardSecondRow> {
@@ -23,14 +24,15 @@ class _DashboardSecondRowState extends State<DashboardSecondRow> {
   final maxDistance;
   final maxRunningTime;
 
-  _DashboardSecondRowState(this.maxSpeed, this.maxDistance, this.maxRunningTime);
+  _DashboardSecondRowState(
+      this.maxSpeed, this.maxDistance, this.maxRunningTime);
 
   String runningTimeAsString(runningTime) {
-    if(runningTime != null){
+    if (runningTime != null) {
       var d = Duration(minutes: runningTime?.toInt());
       List<String> parts = d.toString().split(':');
       return '${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}';
-    }else {
+    } else {
       return null;
     }
   }
@@ -129,34 +131,37 @@ class _DashboardSecondRowState extends State<DashboardSecondRow> {
     //         ],
     //       ));
     // } else {
-      return Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            RoundedContainer(
-                colors: [
-                  Colors.deepOrange.shade300,
-                  Colors.deepOrange.shade400,
-                ],
-                maxSubject: "Kilometrage",
-                maxValue: maxDistance['maxDistance'],
-                model: maxDistance['vehicleModel']),
-            RoundedContainer(colors: [
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+        RoundedContainer(
+            colors: [
+              Colors.deepOrange.shade300,
+              Colors.deepOrange.shade400,
+            ],
+            maxSubject: "Kilometrage",
+            maxValue: maxDistance['maxDistance']?.toStringAsFixed(2),
+            model: maxDistance['vehicleModel']),
+        RoundedContainer(
+            colors: [
               Colors.deepOrange.shade400,
               Colors.deepOrange.shade500,
-            ], maxSubject: "Vitesse", maxValue: maxSpeed['maxSpeed'],
-                model: maxSpeed['vehicleModel']),
-            RoundedContainer(
-                colors: [
-                  Colors.deepOrange.shade500,
-                  Colors.deepOrange.shade600,
-                ],
-                maxSubject: "T. en Marche",
-                maxValue: maxRunningTime['maxRunningTime'],
-                model: maxRunningTime['vehicleModel']),
-          ],
-      );
+            ],
+            maxSubject: "Vitesse",
+            maxValue: maxSpeed['maxSpeed']?.toStringAsFixed(2),
+            model: maxSpeed['vehicleModel']),
+        RoundedContainer(
+            colors: [
+              Colors.deepOrange.shade500,
+              Colors.deepOrange.shade600,
+            ],
+            maxSubject: "T. en Marche",
+            maxValue: runningTimeAsString(maxRunningTime['maxRunningTime']),
+            model: maxRunningTime['vehicleModel']),
+      ],
+    );
     // }
   }
 }
