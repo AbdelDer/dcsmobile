@@ -280,14 +280,20 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
     if (_deviceID == "" && _userID == '') {
       _body = jsonEncode({
         'accountID': _accountID,
+        'startTime': _pickedDateTimeStart.millisecondsSinceEpoch ~/ 1000,
+        'endTime': _pickedDateTimeEnd.millisecondsSinceEpoch ~/ 1000
       });
     } else if (_deviceID == '' && _userID != '') {
       _body = jsonEncode({
         'userID': _userID,
+        'startTime': _pickedDateTimeStart.millisecondsSinceEpoch ~/ 1000,
+        'endTime': _pickedDateTimeEnd.millisecondsSinceEpoch ~/ 1000
       });
     } else {
       _body = jsonEncode({
         'deviceID': _deviceID,
+        'startTime': _pickedDateTimeStart.millisecondsSinceEpoch ~/ 1000,
+        'endTime': _pickedDateTimeEnd.millisecondsSinceEpoch ~/ 1000
       });
     }
 

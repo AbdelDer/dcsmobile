@@ -14,18 +14,24 @@ class SpeedReportScreen extends StatefulWidget {
   final String _deviceID;
   final double _speed;
   final String _vehicleModel;
+  final DateTime _pickedDateTimeStart;
+  final DateTime _pickedDateTimeEnd;
 
-  const SpeedReportScreen(this._deviceID, this._speed, this._vehicleModel);
+  const SpeedReportScreen(this._deviceID, this._speed, this._vehicleModel,
+      this._pickedDateTimeStart, this._pickedDateTimeEnd);
 
   @override
   _SpeedReportScreenState createState() =>
-      _SpeedReportScreenState(this._deviceID, this._speed, this._vehicleModel);
+      _SpeedReportScreenState(this._deviceID, this._speed, this._vehicleModel,
+          this._pickedDateTimeStart, this._pickedDateTimeEnd);
 }
 
 class _SpeedReportScreenState extends State<SpeedReportScreen> {
   final String _deviceID;
   final double _speed;
   final String _vehicleModel;
+  final DateTime _pickedDateTimeStart;
+  final DateTime _pickedDateTimeEnd;
 
   double _modelFontSize = 24;
   double _addressFontSize = 18;
@@ -36,7 +42,8 @@ class _SpeedReportScreenState extends State<SpeedReportScreen> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  _SpeedReportScreenState(this._deviceID, this._speed, this._vehicleModel);
+  _SpeedReportScreenState(this._deviceID, this._speed, this._vehicleModel,
+      this._pickedDateTimeStart, this._pickedDateTimeEnd);
 
   @override
   Widget build(BuildContext context) {
@@ -68,14 +75,16 @@ class _SpeedReportScreenState extends State<SpeedReportScreen> {
         child: FutureBuilder(
           future: _fetchData(),
           builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                ApiShowDialog.dialog(
-                    scaffoldKey: _scaffoldKey,
-                    message: '${snapshot.error}',
-                    type: 'error');
-              } else if (snapshot.hasData) {
-                return SingleChildScrollView(child: DeviceCard(snapshot.data, "speedReport", _scaffoldKey));
-              }
+            if (snapshot.hasError) {
+              ApiShowDialog.dialog(
+                  scaffoldKey: _scaffoldKey,
+                  message: '${snapshot.error}',
+                  type: 'error');
+            } else if (snapshot.hasData) {
+              return SingleChildScrollView(
+                  child:
+                      DeviceCard(snapshot.data, "speedReport", _scaffoldKey));
+            }
             return Center(child: CircularProgressIndicator());
           },
         ),
@@ -89,11 +98,26 @@ class _SpeedReportScreenState extends State<SpeedReportScreen> {
     String _accountID =
         await _encryptedSharedPreferences.getString("accountID");
     if (_deviceID == "" && _userID == '') {
-      _body = jsonEncode({'accountID': _accountID, 'speed': _speed});
+      _body = jsonEncode({
+        'accountID': _accountID,
+        'speed': _speed,
+        'startTime': _pickedDateTimeStart.millisecondsSinceEpoch ~/ 1000,
+        'endTime': _pickedDateTimeEnd.millisecondsSinceEpoch ~/ 1000
+      });
     } else if (_deviceID == '' && _userID != '') {
-      _body = jsonEncode({'userID': _userID, 'speed': _speed});
+      _body = jsonEncode({
+        'userID': _userID,
+        'speed': _speed,
+        'startTime': _pickedDateTimeStart.millisecondsSinceEpoch ~/ 1000,
+        'endTime': _pickedDateTimeEnd.millisecondsSinceEpoch ~/ 1000
+      });
     } else {
-      _body = jsonEncode({'deviceID': _deviceID, 'speed': _speed});
+      _body = jsonEncode({
+        'deviceID': _deviceID,
+        'speed': _speed,
+        'startTime': _pickedDateTimeStart.millisecondsSinceEpoch ~/ 1000,
+        'endTime': _pickedDateTimeEnd.millisecondsSinceEpoch ~/ 1000
+      });
     }
 
     return Api.getSpeedReport(_body).then(

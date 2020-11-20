@@ -288,7 +288,9 @@ class ReportScreenState extends State<ReportScreen> {
                                                 SpeedReportScreen(
                                                     _deviceID,
                                                     _speed,
-                                                    _vehicleModel),
+                                                    _vehicleModel,
+                                                    _pickedDateTimeStart,
+                                                    _pickedDateTimeEnd),
                                           ),
                                         );
                                       })
