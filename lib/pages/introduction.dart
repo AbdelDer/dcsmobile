@@ -167,7 +167,11 @@ class _IntroductionPageState extends State<IntroductionPage> {
   }
 
   toDashboard() {
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/dashboard', (Route<dynamic> route) => false);
+    if(Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    } else {
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/dashboard', (Route<dynamic> route) => false);
+    }
   }
 }

@@ -17,7 +17,7 @@ class ReportScreen extends StatefulWidget {
 
 class ReportScreenState extends State<ReportScreen> {
   DateTime _pickedDateTimeStart = DateTime.now();
-  DateTime _pickedDateTimeEnd = DateTime(DateTime.now().month + 1);
+  DateTime _pickedDateTimeEnd = DateTime.now().add(Duration(days: 1));
   var _vehicleModel = "choisir véhicule(s)";
   var _deviceID = "choisir véhicule(s)";
   var _selectedType;
@@ -127,6 +127,7 @@ class ReportScreenState extends State<ReportScreen> {
                 padding:
                     const EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
                 child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () async {
                     var result = await showDialog(
                         context: context,
@@ -170,6 +171,7 @@ class ReportScreenState extends State<ReportScreen> {
                 padding: EdgeInsets.only(top: 20, right: 20, left: 20),
                 child: Center(
                   child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: () async {
                       _pickDateTime("start");
                     },
@@ -206,6 +208,7 @@ class ReportScreenState extends State<ReportScreen> {
                   padding: EdgeInsets.only(top: 20, right: 20, left: 20),
                   child: Center(
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () async {
                         await _pickDateTime("end");
                       },

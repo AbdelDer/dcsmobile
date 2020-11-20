@@ -17,15 +17,15 @@ void main() {
       MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "Tracking App",
-        initialRoute: '/maintenance',
+        initialRoute: '/dashboard',
         navigatorObservers: [routeObserver],
         theme: ThemeData(
           primaryColor: Colors.deepOrange,
           accentColor: Colors.deepOrange,
         ),
         routes: {
-          // When navigating to the "/" rou
-          // te, build the FirstScreen widget.
+          // When navigating to the "/" route,
+          // build the FirstScreen widget.
           // When navigating to the "/second" route, build the SecondScreen widget.
           '/login': (context) => Login(),
           '/history': (context) => Position("all", "History"),
