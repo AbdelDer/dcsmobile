@@ -438,9 +438,10 @@ class _AlarmScreenState extends State<AlarmScreen> {
           : null;
       if(_create) {
         await Api.saveDeviceAlarmSettings(jsonEncode(alarm.toJson())).then((value) async{
-          _successDialog();
+          _scaffoldKey.currentState.showSnackBar(SnackBar(
+            content: Text("updated"),
+          ));
           await Future.delayed(Duration(seconds: 1), () {
-            Navigator.pop(context);
             Navigator.pop(context);
           });
         }).catchError((error) {
@@ -451,9 +452,10 @@ class _AlarmScreenState extends State<AlarmScreen> {
           if(value.status == Status.ERROR) {
             ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: value.message, type: 'info');
           } else {
-            _successDialog();
+            _scaffoldKey.currentState.showSnackBar(SnackBar(
+              content: Text("updated"),
+            ));
             await Future.delayed(Duration(seconds: 1), () {
-              Navigator.pop(context);
               Navigator.pop(context);
             });
           }

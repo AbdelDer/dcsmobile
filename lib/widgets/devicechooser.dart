@@ -22,9 +22,9 @@ class _DeviceChooserState extends State<DeviceChooser> {
   StreamController _streamController;
   Stream _stream;
 
-  double _modelFontSize = 24;
-  double _addressFontSize = 18;
-  double _detailsFontSize = 16;
+  double _modelFontSize = 14;
+  double _addressFontSize = 14;
+  double _detailsFontSize = 14;
 
   _DeviceChooserState(this._scaffoldKey);
 

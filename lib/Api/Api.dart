@@ -24,9 +24,9 @@ import 'HttpCustom.dart';
 class Api {
   static final httpClient = HttpClient();
 
-  // static final baseUrl = 'http://91.234.195.124:9090/api';
+  static final baseUrl = 'http://91.234.195.124:9090/api';
   // static final baseUrl = 'http://192.168.1.40:9090/api';
-  static final baseUrl = 'http://192.168.98.84:9090/api';
+  // static final baseUrl = 'http://192.168.98.84:9090/api';
 
   static Future<Response> login(params) async {
     await connected();
@@ -460,8 +460,7 @@ class Api {
     }
 
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
-    return Response.completed(
-        responseBody.map((alarm) => Alarm.fromJson(alarm)));
+    return Response.completed('added');
   }
 
   static Future<Response> updateDeviceAlarmSettings(body) async {

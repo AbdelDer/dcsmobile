@@ -62,7 +62,13 @@ class EventData {
     else if(_activityTime.contains(RegExp(r'^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$'))) {
       return _activityTime;
     }
-    else return DateTime.fromMillisecondsSinceEpoch(_timestamp - int.parse(_activityTime)).toString();
+    else {
+      Duration duration = Duration(seconds: _timestamp.toInt() - int.parse(_activityTime));
+      String twoDigits(int n) => n.toString().padLeft(2, "0");
+      String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+      String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+      return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+    }
   }
 
   String get timestampAsString {
@@ -217,7 +223,7 @@ class EventData {
         batteryVolts: json['vBatteryVolts'],
         oilLevel: json['oilLevel'],
         simPhoneNumber: json['simPhoneNumber'],
-        activityTime: json['activity_time'],
+        activityTime: json['activity_time'].toString(),
         late: json['late'],
         parked: json['parked']);
   }
