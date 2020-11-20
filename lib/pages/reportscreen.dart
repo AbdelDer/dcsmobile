@@ -9,6 +9,7 @@ import 'package:dcsmobile/pages/speedreportscreen.dart';
 import 'package:dcsmobile/widgets/devicechooser.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ReportScreen extends StatefulWidget {
   @override
@@ -16,8 +17,10 @@ class ReportScreen extends StatefulWidget {
 }
 
 class ReportScreenState extends State<ReportScreen> {
-  DateTime _pickedDateTimeStart = DateTime.now();
-  DateTime _pickedDateTimeEnd = DateTime.now().add(Duration(days: 1));
+  DateTime _pickedDateTimeStart = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
+  DateTime _pickedDateTimeEnd = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 23, 59, 59);
   var _vehicleModel = "choisir véhicule(s)";
   var _deviceID = "choisir véhicule(s)";
   var _selectedType;
@@ -243,9 +246,11 @@ class ReportScreenState extends State<ReportScreen> {
                   ),
                   onPressed: () async {
                     if (_pickedDateTimeEnd
-                            .difference(_pickedDateTimeStart)
-                            .inMilliseconds >
-                        0 && _deviceID != "choisir véhicule(s)" && _selectedType != null) {
+                                .difference(_pickedDateTimeStart)
+                                .inMilliseconds >
+                            0 &&
+                        _deviceID != "choisir véhicule(s)" &&
+                        _selectedType != null) {
                       if (_selectedType == "Rapport sommaire") {
                         Navigator.push(
                           context,
@@ -257,8 +262,7 @@ class ReportScreenState extends State<ReportScreen> {
                                 _pickedDateTimeEnd),
                           ),
                         );
-                      }
-                      else if (_selectedType == "Rapport de vitesse") {
+                      } else if (_selectedType == "Rapport de vitesse") {
                         TextEditingController _controller =
                             TextEditingController();
                         showDialog(
@@ -271,6 +275,11 @@ class ReportScreenState extends State<ReportScreen> {
                                 ),
                                 content: TextFormField(
                                   controller: _controller,
+                                  autofocus: true,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
+                                  ],
                                   decoration: InputDecoration(
                                     labelText: 'vitesse',
                                   ),
@@ -279,7 +288,8 @@ class ReportScreenState extends State<ReportScreen> {
                                   TextButton(
                                       child: Text('ok'),
                                       onPressed: () {
-                                        double _speed = double.parse(_controller.text);
+                                        double _speed =
+                                            double.parse(_controller.text);
                                         Navigator.pop(context);
                                         Navigator.push(
                                           context,
@@ -297,8 +307,7 @@ class ReportScreenState extends State<ReportScreen> {
                                 ],
                               );
                             });
-                      }
-                      else {
+                      } else {
                         ApiShowDialog.dialog(
                             scaffoldKey: _scaffoldKey,
                             message:
