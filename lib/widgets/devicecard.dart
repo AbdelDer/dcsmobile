@@ -1,3 +1,4 @@
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/pages/ActivityHistory.dart';
 import 'package:dcsmobile/pages/HistoryScreen.dart';
 import 'package:dcsmobile/pages/alarmscreen.dart';
@@ -57,7 +58,7 @@ class _DeviceCardState extends State<DeviceCard> {
                   children: _childrenWidgets(data[index]),
                   backgroundColor: Colors.transparent,
                   onExpansionChanged: (val) async {
-                    if (_option == "Commands") {
+                    if (_option == AppLocalizations.of(context).translate("Commands")) {
                       showDialog(
                           context: context,
                           builder: (context) {
@@ -72,7 +73,7 @@ class _DeviceCardState extends State<DeviceCard> {
                               deviceID: data[index].deviceID, option: _option),
                         ),
                       );
-                    } else if (_option == "History") {
+                    } else if (_option == AppLocalizations.of(context).translate("History")) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -89,7 +90,7 @@ class _DeviceCardState extends State<DeviceCard> {
                       //       return HistoryScreen(data[index].deviceID,
                       //           data[index].vehicleModel, _option);
                       //     });
-                    } else if (_option == "Alarms") {
+                    } else if (_option == AppLocalizations.of(context).translate("Alarms")) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(

@@ -1,4 +1,3 @@
-import 'package:dcsmobile/commons/FEDrawer.dart';
 import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/pages/Utils/VehicleListView.dart';
 import 'package:flutter/material.dart';
@@ -29,25 +28,36 @@ class _PositionState extends State<Position> {
   IconData _icon = Icons.search;
 
   _PositionState(this._description, this._option) {
-    if (_option == 'Report') {
-      _title = Text("Rapport");
-    } else if (_option == 'History') {
-      _title = Text("Historique");
-    } else if (_option == 'Alarms') {
-      _title = Text("Alarms");
-    } else if(_option == "Live"){
+    if (_option == "Live") {
       _title = Text("Position");
-    } else if(_option == "Commands"){
-      _title = Text("Commandes");
-    } else if(_option == "Maintenance"){
-      _title = Text("Maintenance");
+    } else {
+      _title = Text(_option);
     }
   }
 
+/*
+ void initTitle(BuildContext context) {
+    if (_option == 'Report') {
+      _title = Text(AppLocalizations.of(context).translate('Report'));
+    } else if (_option == 'History') {
+      _title = Text(AppLocalizations.of(context).translate('History'));
+    } else if (_option == 'Alarms') {
+      _title = Text(AppLocalizations.of(context).translate("Alarms"));
+    } else if (_option == "Live") {
+      _title = Text(AppLocalizations.of(context).translate("Position"));
+    } else if (_option == "Commands") {
+      _title = Text(AppLocalizations.of(context).translate("Commands"));
+    } else if (_option == "Maintenance") {
+      _title = Text(AppLocalizations.of(context).translate(key));
+    }
+  }
+ */
   @override
   void initState() {
+    super.initState();
     setState(() {
-      _deviceListView = VehicleListView(_scaffoldKey, _deviceListViewKey, _description, _option);
+      _deviceListView = VehicleListView(
+          _scaffoldKey, _deviceListViewKey, _description, _option);
     });
   }
 
@@ -90,7 +100,7 @@ class _PositionState extends State<Position> {
                   );
                 });
               } else {
-                setState((){
+                setState(() {
                   _icon = Icons.search;
                   if (_option == 'Report') {
                     _title = Text("Rapport");
@@ -98,9 +108,9 @@ class _PositionState extends State<Position> {
                     _title = Text("Historique");
                   } else if (_option == 'Alarms') {
                     _title = Text("Alarms");
-                  } else if(_option == "Live") {
+                  } else if (_option == "Live") {
                     _title = Text("Position");
-                  } else if(_option == "Commands") {
+                  } else if (_option == "Commands") {
                     _title = Text("Commandes");
                   }
                 });

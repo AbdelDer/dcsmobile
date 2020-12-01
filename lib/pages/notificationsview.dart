@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/Api/Response.dart';
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/models/notifications/filter.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
@@ -63,7 +64,7 @@ class _NotificationsViewState extends State<NotificationsView> {
         key: _scaffoldKey,
         appBar: AppBar(
           backgroundColor: Colors.deepOrange,
-          title: Text("Notifications"),
+          title: Text(AppLocalizations.of(context).translate("Notifications")),
           actions: [
             PopupMenuButton(
                 icon: Icon(
@@ -72,7 +73,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                   size: 30,
                 ),
                 color: Colors.white,
-                tooltip: 'filter',
+                tooltip: AppLocalizations.of(context).translate("Filter"),
                 itemBuilder: (BuildContext context) {
                   return _choices.map((choice) {
                     return PopupMenuItem<String>(

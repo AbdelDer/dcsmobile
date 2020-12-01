@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
-import 'package:dcsmobile/commons/FEDrawer.dart';
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/pages/reportscreen.dart';
 import 'package:dcsmobile/pages/subscriptionscreen.dart';
@@ -16,7 +16,6 @@ import 'commandsscreen.dart';
 import 'notificationsview.dart';
 
 class Dashboard extends StatefulWidget {
-
   final RouteObserver<PageRoute> _routeObserver;
 
   const Dashboard(this._routeObserver);
@@ -25,7 +24,8 @@ class Dashboard extends StatefulWidget {
   _DashboardState createState() => _DashboardState(_routeObserver);
 }
 
-class _DashboardState extends State<Dashboard> with RouteAware, WidgetsBindingObserver{
+class _DashboardState extends State<Dashboard>
+    with RouteAware, WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   MediaQueryData mediaQuery;
   bool useMobileLayout;
@@ -58,10 +58,10 @@ class _DashboardState extends State<Dashboard> with RouteAware, WidgetsBindingOb
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    switch(state){
+    switch (state) {
       case AppLifecycleState.resumed:
         //here if dashboard is displayed then we'll initialise the timer and streamController
-        if(ModalRoute.of(context).isCurrent) _setTimerAndStream();
+        if (ModalRoute.of(context).isCurrent) _setTimerAndStream();
         break;
       case AppLifecycleState.inactive:
         break;
@@ -117,7 +117,7 @@ class _DashboardState extends State<Dashboard> with RouteAware, WidgetsBindingOb
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
-          'Dashboard',
+          AppLocalizations.of(context).translate('Dashboard'),
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.deepOrange,
@@ -179,7 +179,7 @@ class _DashboardState extends State<Dashboard> with RouteAware, WidgetsBindingOb
       ApiShowDialog.dialog(
           scaffoldKey: _scaffoldKey, message: err, type: 'error');
     });
-    if(!_streamController.isClosed) {
+    if (!_streamController.isClosed) {
       _streamController.add(list);
     }
   }
@@ -283,7 +283,7 @@ class _DashboardState extends State<Dashboard> with RouteAware, WidgetsBindingOb
                       child: Padding(
                         padding: const EdgeInsets.only(right: 8.0, left: 8.0),
                         child: Text(
-                          '+ PLUS DE DETAILS',
+                          AppLocalizations.of(context).translate("More"),
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -334,7 +334,7 @@ class _DashboardState extends State<Dashboard> with RouteAware, WidgetsBindingOb
                               padding:
                                   const EdgeInsets.only(right: 8.0, left: 8.0),
                               child: Text(
-                                '+ PLUS DE DETAILS',
+                                AppLocalizations.of(context).translate("More"),
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),

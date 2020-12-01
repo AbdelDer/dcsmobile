@@ -6,6 +6,7 @@ import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/Api/Response.dart';
 import 'package:dcsmobile/commons/FEDrawer.dart';
 import 'package:dcsmobile/datepickertimeline/date_picker_timeline.dart';
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/models/activity.dart';
 import 'package:dcsmobile/pages/vehicleliveposition.dart';
@@ -54,6 +55,14 @@ class _ActivityHistoryState extends State<ActivityHistory> {
     _getHistoryTimeLine();
   }
 
+  String translate(key) {
+    try {
+      return AppLocalizations.of(context).translate(key);
+    } finally {
+      return key;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +74,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
             Align(
               alignment: Alignment.topLeft,
               child: Text(
-                "History",
+                translate('History'),
               ),
             ),
             Align(
@@ -140,11 +149,12 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                     return VehicleLivePosition.History(
                                       deviceID: this.deviceID,
                                       option: "History",
-                                      startTime:
-                                          _selectedDate.millisecondsSinceEpoch ~/
-                                              1000,
+                                      startTime: _selectedDate
+                                              .millisecondsSinceEpoch ~/
+                                          1000,
                                       endTime:
-                                          _endDate.millisecondsSinceEpoch ~/ 1000,
+                                          _endDate.millisecondsSinceEpoch ~/
+                                              1000,
                                     );
                                   },
                                 ),
@@ -240,9 +250,12 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                             return VehicleLivePosition.History(
                                               deviceID: this.deviceID,
                                               option: "History",
-                                              startTime:
-                                                  _timeline[index].startTime.toInt(),
-                                              endTime: _timeline[index].endTime.toInt(),
+                                              startTime: _timeline[index]
+                                                  .startTime
+                                                  .toInt(),
+                                              endTime: _timeline[index]
+                                                  .endTime
+                                                  .toInt(),
                                             );
                                           },
                                         ),
@@ -253,11 +266,13 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                         title: Row(
                                           children: [
                                             Text(
-                                              _timeline[index].startTimeAsString,
-                                              style:
-                                                  TextStyle(color: Colors.black),
+                                              _timeline[index]
+                                                  .startTimeAsString,
+                                              style: TextStyle(
+                                                  color: Colors.black),
                                             ),
-                                            _timeline[index].activity == "running"
+                                            _timeline[index].activity ==
+                                                    "running"
                                                 ? Padding(
                                                     padding:
                                                         const EdgeInsets.only(
@@ -294,10 +309,12 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                                     color: Colors.black),
                                               ),
                                             ),
-                                            _timeline[index].activity == "running"
+                                            _timeline[index].activity ==
+                                                    "running"
                                                 ? Padding(
                                                     padding:
-                                                        const EdgeInsets.all(8.0),
+                                                        const EdgeInsets.all(
+                                                            8.0),
                                                     child: SvgPicture.asset(
                                                       'assets/historytimeline/distance.svg',
                                                       color: Colors.orange,
@@ -307,7 +324,8 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                                     height: 0,
                                                     width: 0,
                                                   ),
-                                            _timeline[index].activity == "running"
+                                            _timeline[index].activity ==
+                                                    "running"
                                                 ? Padding(
                                                     padding:
                                                         const EdgeInsets.only(
@@ -322,10 +340,12 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                                     height: 0,
                                                     width: 0,
                                                   ),
-                                            _timeline[index].activity == "running"
+                                            _timeline[index].activity ==
+                                                    "running"
                                                 ? Padding(
                                                     padding:
-                                                        const EdgeInsets.all(8.0),
+                                                        const EdgeInsets.all(
+                                                            8.0),
                                                     child: SvgPicture.asset(
                                                       'assets/historytimeline/speedometer.svg',
                                                       color: Colors.orange,
@@ -335,7 +355,8 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                                     height: 0,
                                                     width: 0,
                                                   ),
-                                            _timeline[index].activity == "running"
+                                            _timeline[index].activity ==
+                                                    "running"
                                                 ? Padding(
                                                     padding:
                                                         const EdgeInsets.only(

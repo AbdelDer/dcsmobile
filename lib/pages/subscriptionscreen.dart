@@ -1,5 +1,6 @@
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/commons/FEDrawer.dart';
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/models/Subscription.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ class SubscriptionScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: Text('Abonnement'),
+          title: Text(AppLocalizations.of(context).translate('Subscription')),
           backgroundColor: Colors.deepOrange,
         ),
         drawer: FEDrawer(),

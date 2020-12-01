@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:dcsmobile/commons/FECommons.dart';
 import 'package:dcsmobile/commons/FEDrawer.dart';
 import 'package:dcsmobile/commons/fancyappbar.dart';
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HelpScreen extends StatefulWidget {
-
   final _title;
 
   HelpScreen(this._title) : super();
@@ -65,7 +65,7 @@ class _HelpScreenState extends State<HelpScreen> {
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
-                          'envoyer un email',
+                          AppLocalizations.of(context).translate("Send E-mail"),
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -98,7 +98,7 @@ class _HelpScreenState extends State<HelpScreen> {
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
-                          'Whatssap',
+                          AppLocalizations.of(context).translate('Whatssap'),
                           style: TextStyle(
                             color: Colors.white,
                           ),

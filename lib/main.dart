@@ -9,48 +9,118 @@ import 'package:dcsmobile/pages/Position.dart';
 import 'package:dcsmobile/pages/dashboard.dart';
 import 'package:dcsmobile/pages/introduction.dart';
 import 'package:dcsmobile/pages/login.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'lang/app_localizations.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 void main() {
-  runApp(
-      MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: "Tracking App",
-        initialRoute: '/dashboard',
-        navigatorObservers: [routeObserver],
-        theme: ThemeData(
-          primaryColor: Colors.deepOrange,
-          accentColor: Colors.deepOrange,
-        ),
-        routes: {
-          // When navigating to the "/" route,
-          // build the FirstScreen widget.
-          // When navigating to the "/second" route, build the SecondScreen widget.
-          '/login': (context) => Login(),
-          '/history': (context) => Position("all", "History"),
-          '/introduction': (context) => IntroductionPage(),
-          '/dashboard': (context) => Dashboard(routeObserver),
-          '/position': (context) => Position("all", "Live"),
-          '/alarm': (context) => Position("all", "Alarms"),
-          '/notifications': (context) => NotificationsView(),
-          '/help': (context) => HelpScreen("Assistance"),
-          '/report': (context) => ReportScreen(),
-          '/commands': (context) => CommandsScreen(),
-          '/maintenance': (context) => Position("all", "Maintenance"),
-          // '/activityhistory': (context) => ActivityHistory(deviceID: "demo3", vehicleModel: "citroen"),
-        },
-        // home: Home(),
-      )
-  );
+  runApp(EnteryPoint());
+}
+
+class EnteryPoint extends StatefulWidget {
+  const EnteryPoint({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  _EnteryPointState createState() => _EnteryPointState();
+}
+
+class _EnteryPointState extends State<EnteryPoint> {
+  AppLocalizations appLocalizations = AppLocalizations(Locale('fr'));
+
+  onLocaleChange(Locale l) {
+    setState(() {
+      appLocalizations.locale = l;
+      appLocalizations.delegate.load(l);
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      appLocalizations.locale = Locale('fr');
+      appLocalizations.delegate.load(Locale('fr'));
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      locale: appLocalizations?.locale ?? Locale('fr'),
+      debugShowCheckedModeBanner: false,
+      title: "Tracking App",
+      initialRoute: '/dashboard',
+      navigatorObservers: [routeObserver],
+      theme: ThemeData(
+        primaryColor: Colors.deepOrange,
+        accentColor: Colors.deepOrange,
+      ),
+      // List all of the app's supported locales here
+      supportedLocales: [
+        Locale('fr'),
+        Locale('en'),
+      ],
+      // These delegates make sure that the localization data for the proper language is loaded
+      localizationsDelegates: [
+        // THIS CLASS WILL BE ADDED LATER
+        // A class which loads the translations from JSON files
+        appLocalizations.delegate,
+        // Built-in localization of basic text for Material widgets
+        GlobalMaterialLocalizations.delegate,
+        // Built-in localization for text direction LTR/RTL
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      // Returns a locale which will be used by the app
+      localeResolutionCallback: (locale, supportedLocales) {
+        // Check if the current device locale is supported
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale.languageCode &&
+              supportedLocale.countryCode == locale.countryCode) {
+            return supportedLocale;
+          }
+        }
+        // If the locale of the device is not supported, use the first one
+        // from the list (English, in this case).
+        return supportedLocales.first;
+      },
+      routes: {
+        // When navigating to the "/" route,
+        // build the FirstScreen widget.
+        // When navigating to the "/second" route, build the SecondScreen widget.
+        '/login': (context) => Login(),
+        '/history': (context) => Position("all", "History"),
+        '/introduction': (context) => IntroductionPage(),
+        '/dashboard': (context) => Dashboard(routeObserver),
+        '/position': (context) => Position("all", "Live"),
+        '/alarm': (context) =>
+            Position("all", AppLocalizations.of(context).translate("Alarms")),
+        '/notifications': (context) => NotificationsView(),
+        '/help': (context) => HelpScreen("Assistance"),
+        '/report': (context) => ReportScreen(),
+        '/commands': (context) => CommandsScreen(),
+        '/maintenance': (context) => Position("all", "Maintenance"),
+        // '/activityhistory': (context) => ActivityHistory(deviceID: "demo3", vehicleModel: "citroen"),
+      },
+      // home: Home(),
+    );
+  }
 }
 
 class FEDrawer extends StatelessWidget {
   EncryptedSharedPreferences _preferences = EncryptedSharedPreferences();
   String _username;
 
+  String translate(context, key) {
+      return AppLocalizations.of(context).translate(key);
+  }
+
   getUsername() async {
-    if(_username == null || _username == '') {
+    if (_username == null || _username == '') {
       _username = await _preferences.getString("userID");
       if (_username == null || _username == '') {
         _username = await _preferences.getString("accountID");
@@ -82,7 +152,7 @@ class FEDrawer extends StatelessWidget {
                           return Align(
                             alignment: Alignment.bottomRight,
                             child: Text(
-                              'Logged as ${snapshot.data}',
+                              '${translate(context, 'Logged as')} ${snapshot.data}',
                               style: TextStyle(
                                 color: Colors.black,
                               ),
@@ -98,10 +168,10 @@ class FEDrawer extends StatelessWidget {
 //                  size: 100.0,
 //                  color: Colors.white,
 //                )
-            ),
+                ),
             ListTile(
               leading: Icon(Icons.dashboard),
-              title: Text('Tableau de bord'),
+              title: Text('${translate(context, 'Dashboard')}'),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -111,7 +181,7 @@ class FEDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.place),
-              title: Text('Position'),
+              title: Text('${translate(context, 'Position')}'),
               //NOTE: change this because constructor is changed
               onTap: () => Navigator.push(
                 context,
@@ -122,21 +192,24 @@ class FEDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.history),
-              title: Text('Historique'),
+              title: Text('${translate(context, 'History')}'),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Position("all", "History"),
+                  builder: (context) {
+                    print("traduction ${translate(context, "History")}");
+                    return Position("all", translate(context, "History"));
+                  },
                 ),
               ),
             ),
             ListTile(
               leading: Icon(Icons.group_work),
-              title: Text('Groupe de véhicules'),
+              title: Text('${translate(context, 'Vehicle group')}'),
             ),
             ListTile(
               leading: Icon(Icons.insert_drive_file),
-              title: Text('Rapport'),
+              title: Text('${translate(context, 'Report')}'),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -146,7 +219,7 @@ class FEDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.accessibility_new),
-              title: Text('Commandes'),
+              title: Text('${translate(context, 'Commands')}'),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -156,7 +229,7 @@ class FEDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.alarm),
-              title: Text('Notifications'),
+              title: Text(translate(context, 'Notifications')),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -166,7 +239,7 @@ class FEDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.notifications),
-              title: Text('Alarms'),
+              title: Text(translate(context, 'Alarms')),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -176,13 +249,13 @@ class FEDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.visibility),
-              title: Text('Radar'),
+              title: Text(translate(context, 'Radar')),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => Scaffold(
                     appBar: AppBar(
-                      title: Text("Radar"),
+                      title: Text(translate(context, 'Radar')),
                       backgroundColor: Colors.deepOrange,
                     ),
                     drawer: FEDrawer(),
@@ -192,7 +265,7 @@ class FEDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.report_problem),
-              title: Text('Maintenance'),
+              title: Text(translate(context, 'Maintenance')),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -202,7 +275,7 @@ class FEDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.subscriptions),
-              title: Text('Abonnement'),
+              title: Text(translate(context, 'Subscription')),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -212,17 +285,17 @@ class FEDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.live_help),
-              title: Text('Assistance'),
+              title: Text(translate(context, 'Help')),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => HelpScreen("Assistance"),
+                  builder: (context) => HelpScreen(translate(context, 'Help')),
                 ),
               ),
             ),
             ListTile(
               leading: Icon(Icons.search),
-              title: Text('guide'),
+              title: Text(translate(context, 'Guide')),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -232,13 +305,13 @@ class FEDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.exit_to_app),
-              title: Text('Déconnexion'),
+              title: Text(translate(context, 'Logout')),
               onTap: () => Navigator.of(context).pushNamedAndRemoveUntil(
                   '/login', (Route<dynamic> route) => false),
             ),
             ListTile(
               leading: Icon(Icons.close),
-              title: Text('Fermer'),
+              title: Text(translate(context, 'Close')),
               onTap: () => Navigator.of(context).pop(),
             ),
           ],

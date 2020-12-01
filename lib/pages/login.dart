@@ -1,6 +1,7 @@
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/animations/fadeanimation.dart';
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
@@ -50,7 +51,7 @@ class _LoginState extends State<Login> {
                   FadeAnimation(
                       1,
                       Text(
-                        "Login",
+                        AppLocalizations.of(context).translate("Login"),
                         style: TextStyle(color: Colors.white, fontSize: 40),
                       )),
                   SizedBox(
@@ -120,8 +121,9 @@ class _LoginState extends State<Login> {
                                         validator: (String value) {
                                           if (value.isEmpty) {
                                             return "Nom du Compte est obligatoire";
-                                          // } else if (value.contains(new RegExp(r"[0-9]|@|\+|-|\/|\*"))) {
-                                          } else if (value.contains(new RegExp(r"@|\+|-|\/|\*"))) {
+                                            // } else if (value.contains(new RegExp(r"[0-9]|@|\+|-|\/|\*"))) {
+                                          } else if (value.contains(
+                                              new RegExp(r"@|\+|-|\/|\*"))) {
                                             return "Nom du compte doit contenir seuelement des alphabets";
                                           }
                                           return null;
@@ -231,7 +233,8 @@ class _LoginState extends State<Login> {
                                 margin: EdgeInsets.symmetric(horizontal: 50),
                                 child: Center(
                                   child: Text(
-                                    "Login",
+                                    AppLocalizations.of(context)
+                                        .translate("Login"),
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
@@ -272,21 +275,22 @@ class _LoginState extends State<Login> {
       ];
       await Api.login(params).then((_) async {
         if (_.message != null && _.message.length != 0) {
-          ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: _.message, type: 'error');
+          ApiShowDialog.dialog(
+              scaffoldKey: _scaffoldKey, message: _.message, type: 'error');
         } else {
           await saveLoginInfo();
           //here if it's the first time the user uses the app we'll show a guide, else we will navigate to dashboard
-          if(showIntroduction) {
+          if (showIntroduction) {
             Navigator.of(context).pushNamedAndRemoveUntil(
                 '/introduction', (Route<dynamic> route) => false);
-          }
-          else {
+          } else {
             Navigator.of(context).pushNamedAndRemoveUntil(
                 '/dashboard', (Route<dynamic> route) => false);
           }
         }
       }).catchError((err) {
-        ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: err, type: 'error');
+        ApiShowDialog.dialog(
+            scaffoldKey: _scaffoldKey, message: err, type: 'error');
       });
     }
   }
@@ -310,13 +314,13 @@ class _LoginState extends State<Login> {
     if (pass == "") {
       showIntroduction = true;
     }
-    if(!error) {
+    if (!error) {
       _login([accountID, userID, pass]);
     }
   }
 
   //here we store login data (username, password, account)
-  saveLoginInfo() async{
+  saveLoginInfo() async {
 //    await encryptedSharedPreferences.clear();
     if (_usernameController.text != '') {
       //here we do Api query to get groupid of user because we need it in all other pages
@@ -330,8 +334,7 @@ class _LoginState extends State<Login> {
       await encryptedSharedPreferences.setString(
           "userID", _usernameController.text);
     } else {
-      await encryptedSharedPreferences.setString(
-          "userID", '');
+      await encryptedSharedPreferences.setString("userID", '');
     }
     await encryptedSharedPreferences.setString(
         "accountID", _accountController.text);

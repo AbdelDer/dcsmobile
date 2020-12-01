@@ -4,6 +4,7 @@ import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/Api/Response.dart';
 import 'package:dcsmobile/commons/FEDrawer.dart';
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/pages/Utils/VehicleListView.dart';
 import 'package:dcsmobile/pages/commandsdialog.dart';
@@ -80,7 +81,8 @@ class _CommandsScreenState extends State<CommandsScreen>
               } else {
                 setState(() {
                   _icon = Icons.search;
-                  _title = Text("Commandes");
+                  _title =
+                      Text(AppLocalizations.of(context).translate("Commands"));
                 });
                 setState(() {
                   if (_selectedIndex == 0) {
@@ -136,8 +138,12 @@ class _CommandsScreenState extends State<CommandsScreen>
                   stream: _stream,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      if(snapshot.data.status == Status.ERROR) {
-                        return Center(child: Text(snapshot.data.message, style: TextStyle(fontSize: 20),));
+                      if (snapshot.data.status == Status.ERROR) {
+                        return Center(
+                            child: Text(
+                          snapshot.data.message,
+                          style: TextStyle(fontSize: 20),
+                        ));
                       }
                       return ListView.builder(
                           itemCount: snapshot.data.responseBody.length,
@@ -155,7 +161,14 @@ class _CommandsScreenState extends State<CommandsScreen>
                                   showDialog(
                                       context: context,
                                       builder: (context) {
-                                        return CommandsDialog(snapshot.data.responseBody[index].vehicleModel, snapshot.data.responseBody[index].simPhoneNumber, snapshot.data.responseBody[index].late ?? true);
+                                        return CommandsDialog(
+                                            snapshot.data.responseBody[index]
+                                                .vehicleModel,
+                                            snapshot.data.responseBody[index]
+                                                .simPhoneNumber,
+                                            snapshot.data.responseBody[index]
+                                                    .late ??
+                                                true);
                                       });
                                 },
                                 leading: Image.asset(
@@ -165,7 +178,8 @@ class _CommandsScreenState extends State<CommandsScreen>
                                 title: Row(children: <Widget>[
                                   Icon(Icons.directions_car),
                                   Text(
-                                    snapshot.data.responseBody[index].vehicleModel,
+                                    snapshot
+                                        .data.responseBody[index].vehicleModel,
                                     style: TextStyle(
                                         fontSize: _modelFontSize,
                                         color: Colors.black),
@@ -176,7 +190,8 @@ class _CommandsScreenState extends State<CommandsScreen>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     FutureBuilder(
-                                      future: snapshot.data.responseBody[index].address,
+                                      future: snapshot
+                                          .data.responseBody[index].address,
                                       builder: (context, snapshot) {
                                         return Text(
                                           '${snapshot.data}',
@@ -222,10 +237,11 @@ class _CommandsScreenState extends State<CommandsScreen>
   @override
   void initState() {
     super.initState();
-    _title = Text("Commandes");
-    _tabController = TabController(length: 2, vsync: this, initialIndex: initIndex);
+    _title = Text(AppLocalizations.of(context).translate("Commands"));
+    _tabController =
+        TabController(length: 2, vsync: this, initialIndex: initIndex);
     _selectedIndex = initIndex;
-    if(initIndex == 1) {
+    if (initIndex == 1) {
       fetchData("");
     }
     _tabController.addListener(() async {
@@ -237,7 +253,7 @@ class _CommandsScreenState extends State<CommandsScreen>
       }
       setState(() {
         _icon = Icons.search;
-        _title = Text("Commandes");
+        _title = Text(AppLocalizations.of(context).translate("Commands"));
       });
     });
     _streamController = StreamController.broadcast();

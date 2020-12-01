@@ -1,4 +1,5 @@
 import 'package:dcsmobile/charts/donutautolabelchart.dart';
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
@@ -89,7 +90,7 @@ class _CustomSwipperState extends State<CustomSwipper> {
             children: [
               Center(
                 child: Text(
-                  'Alarmes',
+                  AppLocalizations.of(context).translate('Alarms'),
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 20,
@@ -109,14 +110,14 @@ class _CustomSwipperState extends State<CustomSwipper> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '0- Speed',
+                          '0- ${AppLocalizations.of(context).translate('Speed')}',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
                           ),
                         ),
                         Text(
-                          '0- Geozone',
+                          '0- ${AppLocalizations.of(context).translate('Geozone')}',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,

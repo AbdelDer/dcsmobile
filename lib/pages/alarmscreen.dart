@@ -4,6 +4,7 @@ import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/Api/Response.dart';
 import 'package:dcsmobile/commons/FEDrawer.dart';
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/models/alarm.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
@@ -53,6 +54,14 @@ class _AlarmScreenState extends State<AlarmScreen> {
     super.initState();
   }
 
+  String translate(key) {
+    try {
+      return AppLocalizations.of(context).translate(key);
+    } finally {
+      return key;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,7 +72,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
             Align(
               alignment: Alignment.topLeft,
               child: Text(
-                "Alarms",
+                translate("Alarms"),
               ),
             ),
             Align(
@@ -93,7 +102,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                         size: 40,
                       ),
                       title: Text(
-                        "Device",
+                        translate("Device"),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -108,7 +117,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                     ListTile(
                       leading: Image.asset('assets/alarm/speed.png'),
                       title: Text(
-                        "Speed",
+                        translate("Speed"),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -140,7 +149,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                         });
                       },
                       title: Text(
-                        'Start Up',
+                        translate('Start Up'),
                         style: GoogleFonts.roboto(
                           fontSize: 17,
                           color: Colors.black,
@@ -159,7 +168,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                         });
                       },
                       title: Text(
-                        'Battery',
+                        translate('Battery'),
                         style: GoogleFonts.roboto(
                           fontSize: 17,
                           color: Colors.black,
@@ -178,7 +187,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                         });
                       },
                       title: Text(
-                        'Disconnect',
+                        translate('Disconnect'),
                         style: GoogleFonts.roboto(
                           fontSize: 17,
                           color: Colors.black,
@@ -196,7 +205,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                         });
                       },
                       title: Text(
-                        'Bonnet',
+                        translate('Bonnet'),
                         style: GoogleFonts.roboto(
                           fontSize: 17,
                           color: Colors.black,
@@ -214,7 +223,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                         });
                       },
                       title: Text(
-                        'Towing',
+                        translate('Towing'),
                         style: GoogleFonts.roboto(
                           fontSize: 17,
                           color: Colors.black,
@@ -232,7 +241,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                         });
                       },
                       title: Text(
-                        'Crash',
+                        translate('Crash'),
                         style: GoogleFonts.roboto(
                           fontSize: 17,
                           color: Colors.black,
@@ -250,7 +259,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                         });
                       },
                       title: Text(
-                        'Driver',
+                        translate('Driver'),
                         style: GoogleFonts.roboto(
                           fontSize: 17,
                           color: Colors.black,
@@ -261,7 +270,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                     ListTile(
                       leading: Image.asset('assets/alarm/temp.png'),
                       title: Text(
-                        "Temperature Min",
+                        translate('MIN Temp'),
                         style: GoogleFonts.roboto(
                           fontSize: 17,
                           color: Colors.black,
@@ -288,7 +297,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                     ListTile(
                       leading: Image.asset('assets/alarm/temp.png'),
                       title: Text(
-                        "Temperature Max",
+                        translate('MAX Temp'),
                         style: GoogleFonts.roboto(
                           fontSize: 17,
                           color: Colors.black,
@@ -322,7 +331,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                           children: [
                             Image.asset('assets/alarm/save.png'),
                             Text(
-                              'Save',
+                              translate('Save'),
                               style: GoogleFonts.roboto(
                                 fontSize: 17,
                                 color: Colors.black,
@@ -415,7 +424,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                 color: Colors.deepOrange,
                 child: Center(
                     child: Text(
-                  'entrez une valeur supérieure à 0 et inférieure à 140',
+                  translate('speedErrMsg'),
                   style: TextStyle(
                       fontSize: 17,
                       color: Colors.white,
@@ -436,31 +445,38 @@ class _AlarmScreenState extends State<AlarmScreen> {
       alarm.minTemp = _tempMinController.value.text != ""
           ? double.parse(_tempMinController.value.text)
           : null;
-      if(_create) {
-        await Api.saveDeviceAlarmSettings(jsonEncode(alarm.toJson())).then((value) async{
+      if (_create) {
+        await Api.saveDeviceAlarmSettings(jsonEncode(alarm.toJson()))
+            .then((value) async {
           _scaffoldKey.currentState.showSnackBar(SnackBar(
-            content: Text("updated"),
+            content: Text(translate("Updated")),
           ));
           await Future.delayed(Duration(seconds: 1), () {
             Navigator.pop(context);
           });
         }).catchError((error) {
-          ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: error, type: 'error');
+          ApiShowDialog.dialog(
+              scaffoldKey: _scaffoldKey, message: error, type: 'error');
         });
       } else {
-        await Api.updateDeviceAlarmSettings(jsonEncode(alarm.toJson())).then((value) async{
-          if(value.status == Status.ERROR) {
-            ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: value.message, type: 'info');
+        await Api.updateDeviceAlarmSettings(jsonEncode(alarm.toJson()))
+            .then((value) async {
+          if (value.status == Status.ERROR) {
+            ApiShowDialog.dialog(
+                scaffoldKey: _scaffoldKey,
+                message: value.message,
+                type: 'info');
           } else {
             _scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text("updated"),
+              content: Text(translate("Updated")),
             ));
             await Future.delayed(Duration(seconds: 1), () {
               Navigator.pop(context);
             });
           }
         }).catchError((error) {
-          ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: error, type: 'error');
+          ApiShowDialog.dialog(
+              scaffoldKey: _scaffoldKey, message: error, type: 'error');
         });
       }
     }
@@ -468,9 +484,12 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
   void _initFormFields() {
     setState(() {
-      _speedController.value = TextEditingValue(text: alarm.maxSpeed?.toString() ?? '');
-      _tempMinController.value = TextEditingValue(text: alarm.minTemp?.toString() ?? '');
-      _tempMaxController.value = TextEditingValue(text: alarm.maxTemp?.toString() ?? '');
+      _speedController.value =
+          TextEditingValue(text: alarm.maxSpeed?.toString() ?? '');
+      _tempMinController.value =
+          TextEditingValue(text: alarm.minTemp?.toString() ?? '');
+      _tempMaxController.value =
+          TextEditingValue(text: alarm.maxTemp?.toString() ?? '');
     });
   }
 
@@ -494,13 +513,13 @@ class _AlarmScreenState extends State<AlarmScreen> {
                   margin: EdgeInsets.symmetric(horizontal: 50),
                   child: Center(
                       child: Text(
-                        'Succès',
-                        style: TextStyle(
-                            fontSize: 17,
-                            color: Colors.green.shade300,
-                            decoration: TextDecoration.none,
-                            fontWeight: FontWeight.bold),
-                      )),
+                    translate("Success"),
+                    style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.green.shade300,
+                        decoration: TextDecoration.none,
+                        fontWeight: FontWeight.bold),
+                  )),
                 ),
               ),
             ),
