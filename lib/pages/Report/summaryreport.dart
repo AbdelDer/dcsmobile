@@ -4,6 +4,7 @@ import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/Api/Response.dart';
 import 'package:dcsmobile/commons/FEDrawer.dart';
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/models/summaryreport.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
@@ -53,7 +54,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
             Align(
               alignment: Alignment.topLeft,
               child: Text(
-                "Rapport sommaire",
+                AppLocalizations.of(context).translate("Summary report"),
               ),
             ),
             Align(
@@ -77,7 +78,6 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
               // return ApiShowDialog.dialog(scaffoldKey: _scaffoldKey,
               //     message: snapshot.error,
               //     type: 'error');
-              print(snapshot.error);
               return SizedBox();
             } else if (snapshot.hasData) {
               return Padding(
@@ -92,11 +92,11 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
                       leading: Image.asset('assets/report/calendar.png'),
                       tileColor: _cardColor,
                       title: Text(
-                        'FROM: ${_pickedDateTimeStart.year}-${_pickedDateTimeStart.month}-${_pickedDateTimeStart.day} ${_pickedDateTimeStart.hour}:${_pickedDateTimeStart.minute}',
+                        '${AppLocalizations.of(context).translate("From")}: ${_pickedDateTimeStart.year}-${_pickedDateTimeStart.month}-${_pickedDateTimeStart.day} ${_pickedDateTimeStart.hour}:${_pickedDateTimeStart.minute}',
                         style: TextStyle(fontSize: _fontSize),
                       ),
                       subtitle: Text(
-                        'TO: ${_pickedDateTimeEnd.year}-${_pickedDateTimeEnd.month}-${_pickedDateTimeEnd.day} ${_pickedDateTimeEnd.hour}:${_pickedDateTimeEnd.minute}',
+                        '${AppLocalizations.of(context).translate("To")}: ${_pickedDateTimeEnd.year}-${_pickedDateTimeEnd.month}-${_pickedDateTimeEnd.day} ${_pickedDateTimeEnd.hour}:${_pickedDateTimeEnd.minute}',
                         style:
                             TextStyle(fontSize: _fontSize, color: Colors.black),
                       ),
@@ -109,7 +109,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
                       tileColor: _cardColor,
                       leading: Image.asset('assets/report/car.png'),
                       title: Text(
-                        'Device',
+                        '${AppLocalizations.of(context).translate("Device")}',
                         style: TextStyle(fontSize: _fontSize),
                       ),
                       subtitle: Text(
@@ -126,7 +126,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
                       tileColor: _cardColor,
                       leading: Image.asset('assets/report/odometer.png'),
                       title: Text(
-                        'ODOMETER START',
+                        'ODOMETER ${AppLocalizations.of(context).translate("Start")}',
                         style: TextStyle(fontSize: _fontSize),
                       ),
                       subtitle: Text(
@@ -143,7 +143,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
                       tileColor: _cardColor,
                       leading: Image.asset('assets/report/odometer.png'),
                       title: Text(
-                        'ODOMETER END',
+                        'ODOMETER ${AppLocalizations.of(context).translate("End")}',
                         style: TextStyle(fontSize: _fontSize),
                       ),
                       subtitle: Text(
@@ -160,7 +160,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
                       tileColor: _cardColor,
                       leading: Image.asset('assets/report/car.png'),
                       title: Text(
-                        'DISTANCE',
+                        '${AppLocalizations.of(context).translate("Distance")}',
                         style: TextStyle(fontSize: _fontSize),
                       ),
                       subtitle: Text(
@@ -177,7 +177,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
                       tileColor: _cardColor,
                       leading: Image.asset('assets/report/speed.png'),
                       title: Text(
-                        'SPEED MAX',
+                        '${AppLocalizations.of(context).translate("SPEED MAX")}',
                         style: TextStyle(fontSize: _fontSize),
                       ),
                       subtitle: Text(
@@ -194,7 +194,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
                       tileColor: _cardColor,
                       leading: Image.asset('assets/report/speed.png'),
                       title: Text(
-                        'SPEED AVG',
+                        '${AppLocalizations.of(context).translate("SPEED AVG")}',
                         style: TextStyle(fontSize: _fontSize),
                       ),
                       subtitle: Text(
@@ -211,7 +211,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
                       tileColor: _cardColor,
                       leading: Image.asset('assets/report/running.png'),
                       title: Text(
-                        'Vehicle Running Time',
+                        '${AppLocalizations.of(context).translate("Vehicle running time")}',
                         style: TextStyle(fontSize: _fontSize),
                       ),
                       subtitle: Text(
@@ -228,7 +228,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
                       tileColor: _cardColor,
                       leading: Image.asset('assets/report/stop.png'),
                       title: Text(
-                        'STOPS',
+                        '${AppLocalizations.of(context).translate("Stops")}',
                         style: TextStyle(fontSize: _fontSize),
                       ),
                       subtitle: Text(
@@ -245,7 +245,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
                       tileColor: _cardColor,
                       leading: Image.asset('assets/report/parking.png'),
                       title: Text(
-                        'PARKING',
+                        '${AppLocalizations.of(context).translate("Parked")}',
                         style: TextStyle(fontSize: _fontSize),
                       ),
                       subtitle: Text(

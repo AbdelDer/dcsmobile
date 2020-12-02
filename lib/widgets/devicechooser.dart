@@ -1,13 +1,12 @@
 import 'dart:async';
 
 import 'package:dcsmobile/Api/Api.dart';
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 
 class DeviceChooser extends StatefulWidget {
-  
   final GlobalKey<ScaffoldState> _scaffoldKey;
-
 
   DeviceChooser(this._scaffoldKey);
 
@@ -78,15 +77,14 @@ class _DeviceChooserState extends State<DeviceChooser> {
                         hintText: "chercher un véhicule",
                         hintStyle: TextStyle(color: Colors.grey),
                         border: InputBorder.none),
-                    onChanged: (context) async{
+                    onChanged: (context) async {
                       // _formKey.currentState.validate();
-                        await _fetchDevices();
+                      await _fetchDevices();
                     },
                     validator: (String value) {
                       if (value.isEmpty) {
                         return "Nom du véhicule est obligatoire";
-                      } else if (value
-                          .contains(new RegExp(r"@|\+|-|\/|\*"))) {
+                      } else if (value.contains(new RegExp(r"@|\+|-|\/|\*"))) {
                         return "Nom du véhicule doit contenir seuelement des alphabets ou des chiffres";
                       }
                       return null;
@@ -105,7 +103,7 @@ class _DeviceChooserState extends State<DeviceChooser> {
                   title: Row(children: <Widget>[
                     Icon(Icons.directions_car),
                     Text(
-                      "Tous les véhicules",
+                      "${AppLocalizations.of(context).translate("All vehicles")}",
                       style: TextStyle(
                           fontSize: _modelFontSize, color: Colors.black),
                     )
@@ -122,30 +120,34 @@ class _DeviceChooserState extends State<DeviceChooser> {
                   //     message: '${snapshot.error}',
                   //     type: 'error');
                 } else if (snapshot.hasData) {
-                    return ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context, [snapshot.data[index].vehicleModel, snapshot.data[index].deviceID]);
-                            },
-                            child: Card(
-                              color: Colors.white,
-                              child: ListTile(
-                                title: Row(children: <Widget>[
-                                  Icon(Icons.directions_car),
-                                  Text(
-                                    snapshot.data[index].vehicleModel,
-                                    style: TextStyle(
-                                        fontSize: _modelFontSize, color: Colors.black),
-                                  )
-                                ]),
-                              ),
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context, [
+                              snapshot.data[index].vehicleModel,
+                              snapshot.data[index].deviceID
+                            ]);
+                          },
+                          child: Card(
+                            color: Colors.white,
+                            child: ListTile(
+                              title: Row(children: <Widget>[
+                                Icon(Icons.directions_car),
+                                Text(
+                                  snapshot.data[index].vehicleModel,
+                                  style: TextStyle(
+                                      fontSize: _modelFontSize,
+                                      color: Colors.black),
+                                )
+                              ]),
                             ),
-                          );
-                        });
+                          ),
+                        );
+                      });
                 } else if (snapshot.connectionState == ConnectionState.none) {
                   // ApiShowDialog.dialog(
                   //     scaffoldKey: _scaffoldKey,

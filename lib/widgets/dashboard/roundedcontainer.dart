@@ -1,3 +1,4 @@
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class RoundedContainer extends StatefulWidget {
@@ -24,11 +25,11 @@ class _RoundedContainerState extends State<RoundedContainer> {
   double _widthContainer;
   double _fontSize;
 
-  _RoundedContainerState(this.colors, this.maxSubject, this.maxValue, this.model);
+  _RoundedContainerState(
+      this.colors, this.maxSubject, this.maxValue, this.model);
 
   @override
   Widget build(BuildContext context) {
-
     if (MediaQuery.of(context).orientation == Orientation.portrait &&
         MediaQuery.of(context).size.shortestSide >= 600) {
       _heightContainer = 180;
@@ -72,7 +73,7 @@ class _RoundedContainerState extends State<RoundedContainer> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 Text(
-                  "MAX",
+                  "${AppLocalizations.of(context).translate("Max")}",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: _fontSize,

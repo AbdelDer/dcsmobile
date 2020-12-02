@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/commons/FEDrawer.dart';
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/pages/Report/summaryreport.dart';
 import 'package:dcsmobile/pages/speedreportscreen.dart';
@@ -19,8 +20,8 @@ class ReportScreen extends StatefulWidget {
 class ReportScreenState extends State<ReportScreen> {
   DateTime _pickedDateTimeStart = DateTime(
       DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
-  DateTime _pickedDateTimeEnd = DateTime(
-      DateTime.now().year, DateTime.now().month, DateTime.now().day, 23, 59, 59);
+  DateTime _pickedDateTimeEnd = DateTime(DateTime.now().year,
+      DateTime.now().month, DateTime.now().day, 23, 59, 59);
   var _vehicleModel = "choisir véhicule(s)";
   var _deviceID = "choisir véhicule(s)";
   var _selectedType;
@@ -36,7 +37,7 @@ class ReportScreenState extends State<ReportScreen> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("Rapport"),
+        title: Text(AppLocalizations.of(context).translate("Report")),
         backgroundColor: Colors.deepOrange,
       ),
       drawer: FEDrawer(),
@@ -49,7 +50,7 @@ class ReportScreenState extends State<ReportScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 80.0),
                 child: Text(
-                  "Rapport",
+                  AppLocalizations.of(context).translate("Report"),
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -68,56 +69,61 @@ class ReportScreenState extends State<ReportScreen> {
                       });
                     },
                     hint: Text(
-                      "Choisissez le type du rapport",
+                      AppLocalizations.of(context)
+                          .translate("Choose the type of report"),
                       style: _textStyle,
                     ),
                     value: _selectedType,
                     items: [
                       DropdownMenuItem(
                         child: Text(
-                          "Rapport de consommation",
+                          AppLocalizations.of(context)
+                              .translate("Consumption report"),
                           style: _textStyle,
                         ),
                         value: "Rapport de consommation",
                       ),
                       DropdownMenuItem(
                         child: Text(
-                          "Maintenance",
+                          AppLocalizations.of(context).translate("Maintenance"),
                           style: _textStyle,
                         ),
                         value: "Maintenance",
                       ),
                       DropdownMenuItem(
                         child: Text(
-                          "Rapport sommaire",
+                          AppLocalizations.of(context)
+                              .translate("Summary report"),
                           style: _textStyle,
                         ),
                         value: "Rapport sommaire",
                       ),
                       DropdownMenuItem(
                         child: Text(
-                          "Rapport de vitesse",
+                          AppLocalizations.of(context)
+                              .translate("Speed report"),
                           style: _textStyle,
                         ),
                         value: "Rapport de vitesse",
                       ),
                       DropdownMenuItem(
                         child: Text(
-                          "Température",
+                          AppLocalizations.of(context).translate("Temperature"),
                           style: _textStyle,
                         ),
                         value: "Température",
                       ),
                       DropdownMenuItem(
                         child: Text(
-                          "Probe",
+                          AppLocalizations.of(context).translate("Probe"),
                           style: _textStyle,
                         ),
                         value: "Probe",
                       ),
                       DropdownMenuItem(
                         child: Text(
-                          "Comportement du conducteur",
+                          AppLocalizations.of(context)
+                              .translate("Driver behavior"),
                           style: _textStyle,
                         ),
                         value: "Comportement du conducteur",
@@ -163,7 +169,7 @@ class ReportScreenState extends State<ReportScreen> {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text(
-                    "Date début:",
+                    "${AppLocalizations.of(context).translate("Start date")}:",
                     style: TextStyle(
                       color: Colors.blueAccent,
                     ),
@@ -199,7 +205,7 @@ class ReportScreenState extends State<ReportScreen> {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text(
-                    "Date fin:",
+                    "${AppLocalizations.of(context).translate("End date")}:",
                     style: TextStyle(
                       color: Colors.blueAccent,
                     ),
@@ -239,7 +245,7 @@ class ReportScreenState extends State<ReportScreen> {
                 child: RaisedButton(
                   color: Colors.deepOrange,
                   child: Text(
-                    'Valider',
+                    AppLocalizations.of(context).translate("Validate"),
                     style: TextStyle(
                       color: Colors.white,
                     ),
@@ -270,7 +276,8 @@ class ReportScreenState extends State<ReportScreen> {
                             builder: (context) {
                               return AlertDialog(
                                 title: Text(
-                                  'vitesse',
+                                  AppLocalizations.of(context)
+                                      .translate("Speed"),
                                   style: TextStyle(color: Colors.blue),
                                 ),
                                 content: TextFormField(
@@ -278,15 +285,18 @@ class ReportScreenState extends State<ReportScreen> {
                                   autofocus: true,
                                   keyboardType: TextInputType.number,
                                   inputFormatters: [
-                                    FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp("[0-9.]")),
                                   ],
                                   decoration: InputDecoration(
-                                    labelText: 'vitesse',
+                                    labelText: AppLocalizations.of(context)
+                                        .translate("Speed"),
                                   ),
                                 ),
                                 actions: <Widget>[
                                   TextButton(
-                                      child: Text('ok'),
+                                      child: Text(AppLocalizations.of(context)
+                                          .translate("Validate")),
                                       onPressed: () {
                                         double _speed =
                                             double.parse(_controller.text);
@@ -360,8 +370,8 @@ class ReportScreenState extends State<ReportScreen> {
       initialDate: DateTime.now(),
       helpText: 'Choisir une date',
       // Can be used as title
-      cancelText: 'annuler',
-      confirmText: 'ok',
+      cancelText: AppLocalizations.of(context).translate("Cancel"),
+      confirmText: AppLocalizations.of(context).translate("Validate"),
       fieldLabelText: 'date',
       fieldHintText: 'Mois/Jour/Année',
     );
@@ -373,8 +383,8 @@ class ReportScreenState extends State<ReportScreen> {
       initialTime: TimeOfDay.now(),
       helpText: 'Choisir une heure',
       // Can be used as title
-      cancelText: 'annuler',
-      confirmText: 'ok',
+      cancelText: AppLocalizations.of(context).translate("Cancel"),
+      confirmText: AppLocalizations.of(context).translate("Validate"),
     );
     if (t != null) {
       time = t;

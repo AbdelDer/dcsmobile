@@ -4,6 +4,7 @@ import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/Api/Response.dart';
 import 'package:dcsmobile/commons/FEDrawer.dart';
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/models/summaryreport.dart';
 import 'package:dcsmobile/widgets/devicecard.dart';
@@ -21,9 +22,12 @@ class SpeedReportScreen extends StatefulWidget {
       this._pickedDateTimeStart, this._pickedDateTimeEnd);
 
   @override
-  _SpeedReportScreenState createState() =>
-      _SpeedReportScreenState(this._deviceID, this._speed, this._vehicleModel,
-          this._pickedDateTimeStart, this._pickedDateTimeEnd);
+  _SpeedReportScreenState createState() => _SpeedReportScreenState(
+      this._deviceID,
+      this._speed,
+      this._vehicleModel,
+      this._pickedDateTimeStart,
+      this._pickedDateTimeEnd);
 }
 
 class _SpeedReportScreenState extends State<SpeedReportScreen> {
@@ -55,7 +59,7 @@ class _SpeedReportScreenState extends State<SpeedReportScreen> {
             Align(
               alignment: Alignment.topLeft,
               child: Text(
-                "Rapport Vitesse",
+                AppLocalizations.of(context).translate("Speed report"),
               ),
             ),
             Align(

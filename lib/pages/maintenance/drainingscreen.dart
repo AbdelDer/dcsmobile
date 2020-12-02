@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/Api/Response.dart';
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/models/draining.dart';
 import 'package:dcsmobile/widgets/customdatepicker.dart';
@@ -88,7 +89,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
             Align(
               alignment: Alignment.topLeft,
               child: Text(
-                "Draining",
+                "${AppLocalizations.of(context).translate("DRAINING")}",
               ),
             ),
             Align(
@@ -139,7 +140,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
                                 actions: <Widget>[
                                   FlatButton(
                                     child: Text(
-                                      "Cancel",
+                                      '${AppLocalizations.of(context).translate("Cancel")}',
                                       style: TextStyle(color: Colors.black),
                                     ),
                                     onPressed: () {
@@ -148,7 +149,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
                                   ),
                                   FlatButton(
                                     child: Text(
-                                      "Delete",
+                                      "${AppLocalizations.of(context).translate("Delete")}",
                                       style: TextStyle(color: Colors.red),
                                     ),
                                     onPressed: () async {
@@ -222,7 +223,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
               color: Colors.white,
             ),
             Text(
-              " Edit",
+              "${AppLocalizations.of(context).translate("Edit")}",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
@@ -248,7 +249,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
               color: Colors.white,
             ),
             Text(
-              " Delete",
+              "${AppLocalizations.of(context).translate("Delete")}",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
@@ -431,7 +432,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
                           children: [
                             FlatButton(
                               child: Text(
-                                "close",
+                                "${AppLocalizations.of(context).translate("Close")}",
                                 style: TextStyle(
                                     color: Colors.deepOrange, fontSize: 18),
                               ),
@@ -446,7 +447,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
                                 color: Colors.black,
                               ),
                               label: Text(
-                                "Save",
+                                "${AppLocalizations.of(context).translate("Validate")}",
                                 style: TextStyle(color: Colors.black),
                               ),
                               onPressed: () async {
@@ -497,7 +498,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
         }
         await _getDrainingData();
         _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text("updated"),
+          content: Text("${AppLocalizations.of(context).translate("Updated")}"),
         ));
         Navigator.of(context).pop();
       }
@@ -532,7 +533,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
         }
         await _getDrainingData();
         _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text("updated"),
+          content: Text("${AppLocalizations.of(context).translate("Updated")}"),
         ));
         Navigator.of(context).pop();
       }
@@ -545,18 +546,16 @@ class _DrainingScreenState extends State<DrainingScreen> {
   _deleteDraining(id) async {
     await Api.deleteDraining(id).then((value) {
       if (value.status == Status.ERROR) {
-        print(value);
         _scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(value.message),
         ));
       } else {
         _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text("removed"),
+          content: Text("${AppLocalizations.of(context).translate("Removed")}"),
         ));
         _getDrainingData();
       }
     }).catchError((error) {
-      print('error is $error');
       ApiShowDialog.dialog(
           scaffoldKey: _scaffoldKey, message: error.toString(), type: 'error');
     });

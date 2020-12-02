@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -22,11 +23,14 @@ class AppLocalizations {
   Map<String, String> _localizedStrings;
 
   Future<bool> load() async {
+    final EncryptedSharedPreferences encryptedSharedPreferences =
+        EncryptedSharedPreferences();
+    final String lang = await encryptedSharedPreferences.getString("lang");
+    locale = Locale(lang == "" ? 'en' : lang);
     // Load the language JSON file from the "lang" folder
     String jsonString =
         await rootBundle.loadString('lang/${locale.languageCode}.json');
     Map<String, dynamic> jsonMap = json.decode(jsonString);
-    print('jsonmap is $jsonMap');
     _localizedStrings = jsonMap.map((key, value) {
       return MapEntry(key, value.toString());
     });

@@ -370,7 +370,6 @@ class Api {
 
     // return Response.completed(
     //     responseBody.map((alarm) => Alarm.fromJson(alarm)));
-    print(responseBody);
     return Response.completed(Alarm.fromJson(responseBody));
   }
 
@@ -512,7 +511,7 @@ class Api {
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
     if (httpResponse.statusCode != 201) {
-      if(responseBody['message'] != null) {
+      if (responseBody['message'] != null) {
         return Response.error(responseBody['message']);
       }
       return Response.error('try another time');
@@ -530,8 +529,6 @@ class Api {
         .catchError((err) => throw ('erreur lié au serveur'));
 
     // var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
-    print(httpCustom.url);
-    print(httpResponse.body);
 
     if (httpResponse.statusCode != 200) {
       // return Response.error(responseBody['message']);
@@ -552,7 +549,7 @@ class Api {
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
     if (httpResponse.statusCode != 200) {
-      if(responseBody['message'] != null) {
+      if (responseBody['message'] != null) {
         return Response.error(responseBody['message']);
       }
       return Response.error('try another time');
@@ -592,7 +589,7 @@ class Api {
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
     if (httpResponse.statusCode != 201) {
-      if(responseBody['message'] != null) {
+      if (responseBody['message'] != null) {
         return Response.error(responseBody['message']);
       }
       return Response.error('try another time');
@@ -604,8 +601,7 @@ class Api {
 
   static Future<Response> deleteTechnicalVisit(id) async {
     await connected();
-    var httpCustom =
-        HttpCustom(url: '$baseUrl/delete/technicalVisit/$id');
+    var httpCustom = HttpCustom(url: '$baseUrl/delete/technicalVisit/$id');
 
     final httpResponse = await httpCustom
         .delete()
@@ -633,7 +629,7 @@ class Api {
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
     if (httpResponse.statusCode != 200) {
-      if(responseBody['message'] != null) {
+      if (responseBody['message'] != null) {
         return Response.error(responseBody['message']);
       }
       return Response.error('try another time');
@@ -671,7 +667,7 @@ class Api {
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
     if (httpResponse.statusCode != 201) {
-      if(responseBody['message'] != null) {
+      if (responseBody['message'] != null) {
         return Response.error(responseBody['message']);
       }
       return Response.error('try another time');
@@ -709,7 +705,7 @@ class Api {
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
     if (httpResponse.statusCode != 200) {
-      if(responseBody['message'] != null) {
+      if (responseBody['message'] != null) {
         return Response.error(responseBody['message']);
       }
       return Response.error('try another time');
@@ -747,7 +743,7 @@ class Api {
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
     if (httpResponse.statusCode != 201) {
-      if(responseBody['message'] != null) {
+      if (responseBody['message'] != null) {
         return Response.error(responseBody['message']);
       }
       return Response.error('try another time');
@@ -785,7 +781,7 @@ class Api {
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
     if (httpResponse.statusCode != 200) {
-      if(responseBody['message'] != null) {
+      if (responseBody['message'] != null) {
         return Response.error(responseBody['message']);
       }
       return Response.error('try another time');

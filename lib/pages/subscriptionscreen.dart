@@ -20,7 +20,7 @@ class SubscriptionScreen extends StatelessWidget {
             future: getDevicesSubscription(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                if(snapshot.data.message != null) {
+                if (snapshot.data.message != null) {
                   return Center(
                     child: Text(
                       snapshot.data.message,
@@ -29,16 +29,23 @@ class SubscriptionScreen extends StatelessWidget {
                       ),
                     ),
                   );
-                }else {
+                } else {
                   return ListView.builder(
                       itemCount: snapshot.data.responseBody.length,
                       itemBuilder: (context, index) {
                         return Card(
                           color: snapshot.data.responseBody[index].color,
                           child: ListTile(
-                            leading: Icon(Icons.directions_car, color: Colors.black,),
-                            title: Text(snapshot.data.responseBody[index].vehicleModel, style: TextStyle(color: Colors.black),),
-                            trailing: Text('${snapshot.data.responseBody[index].subscriptionTime.toString()} jours'),
+                            leading: Icon(
+                              Icons.directions_car,
+                              color: Colors.black,
+                            ),
+                            title: Text(
+                              snapshot.data.responseBody[index].vehicleModel,
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            trailing: Text(
+                                '${snapshot.data.responseBody[index].subscriptionTime.toString()} jours'),
                           ),
                         );
                       });
@@ -60,9 +67,7 @@ class SubscriptionScreen extends StatelessWidget {
     await Api.getDevicesSubscription().then((value) {
       subscriptionDetails = value;
       // print('${value.data}');
-    }).catchError((error) {
-      print('error is $error');
-    });
+    }).catchError((error) {});
     return subscriptionDetails;
   }
 }

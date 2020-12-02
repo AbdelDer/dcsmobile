@@ -6,9 +6,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 
+typedef void LocaleChangeCallback(Locale locale);
+
 class Login extends StatefulWidget {
+  final LocaleChangeCallback onLocaleChange;
+
+  const Login({Key key, this.onLocaleChange}) : super(key: key);
   @override
-  _LoginState createState() => _LoginState();
+  _LoginState createState() => _LoginState(this.onLocaleChange);
 }
 
 class _LoginState extends State<Login> {
@@ -20,6 +25,11 @@ class _LoginState extends State<Login> {
   final EncryptedSharedPreferences encryptedSharedPreferences =
       EncryptedSharedPreferences();
   var showIntroduction = false;
+
+  final LocaleChangeCallback onLocaleChange;
+  bool enLang = true;
+
+  _LoginState(this.onLocaleChange);
 
   @override
   void initState() {
@@ -43,22 +53,56 @@ class _LoginState extends State<Login> {
             SizedBox(
               height: 80,
             ),
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  FadeAnimation(
-                      1,
-                      Text(
-                        AppLocalizations.of(context).translate("Login"),
-                        style: TextStyle(color: Colors.white, fontSize: 40),
-                      )),
-                  SizedBox(
-                    height: 10,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      FadeAnimation(
+                          1,
+                          Text(
+                            AppLocalizations.of(context).translate("Login"),
+                            style: TextStyle(color: Colors.white, fontSize: 40),
+                          )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                GestureDetector(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 20.0),
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            left: 1.5,
+                            top: 2.5,
+                            child: Icon(
+                              Icons.translate,
+                              color: Colors.black54,
+                            ),
+                          ),
+                          Icon(
+                            Icons.translate,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                    onTap: () async {
+                      String local;
+                      setState(() {
+                        enLang = !enLang;
+                        local = enLang ? 'en' : 'fr';
+                        widget.onLocaleChange(Locale(local));
+                      });
+                      await encryptedSharedPreferences.setString("lang", local);
+                    }),
+              ],
             ),
             SizedBox(height: 20),
             Expanded(
@@ -101,17 +145,21 @@ class _LoginState extends State<Login> {
                                       child: TextFormField(
                                         controller: _accountController,
                                         decoration: InputDecoration(
-                                            labelText: "Compte",
+                                            labelText:
+                                                AppLocalizations.of(context)
+                                                    .translate("Account"),
                                             errorStyle: TextStyle(
                                               color: Colors.red,
-                                              fontSize: 16,
+                                              fontSize: 12,
                                               fontWeight: FontWeight.bold,
                                             ),
                                             labelStyle: TextStyle(
                                               color: Colors.black,
                                               fontSize: 18,
                                             ),
-                                            hintText: "Compte",
+                                            hintText:
+                                                AppLocalizations.of(context)
+                                                    .translate("Account"),
                                             hintStyle:
                                                 TextStyle(color: Colors.grey),
                                             border: InputBorder.none),
@@ -120,11 +168,13 @@ class _LoginState extends State<Login> {
                                         },
                                         validator: (String value) {
                                           if (value.isEmpty) {
-                                            return "Nom du Compte est obligatoire";
+                                            return AppLocalizations.of(context)
+                                                .translate("Empty Name");
                                             // } else if (value.contains(new RegExp(r"[0-9]|@|\+|-|\/|\*"))) {
                                           } else if (value.contains(
                                               new RegExp(r"@|\+|-|\/|\*"))) {
-                                            return "Nom du compte doit contenir seuelement des alphabets";
+                                            return AppLocalizations.of(context)
+                                                .translate("Name Caracters");
                                           }
                                           return null;
                                         },
@@ -139,17 +189,21 @@ class _LoginState extends State<Login> {
                                       child: TextFormField(
                                         controller: _usernameController,
                                         decoration: InputDecoration(
-                                            labelText: "Utilisateur",
+                                            labelText:
+                                                AppLocalizations.of(context)
+                                                    .translate("User"),
                                             errorStyle: TextStyle(
                                               color: Colors.red,
-                                              fontSize: 16,
+                                              fontSize: 12,
                                               fontWeight: FontWeight.bold,
                                             ),
                                             labelStyle: TextStyle(
                                               color: Colors.black,
                                               fontSize: 18,
                                             ),
-                                            hintText: "Utilisateur",
+                                            hintText:
+                                                AppLocalizations.of(context)
+                                                    .translate("User"),
                                             hintStyle:
                                                 TextStyle(color: Colors.grey),
                                             border: InputBorder.none),
@@ -159,11 +213,13 @@ class _LoginState extends State<Login> {
                                         validator: (String value) {
                                           /*if (value.isEmpty) {
                                             return "nom d'utilisateur est obligatoire";
-                                          }*/
-                                          /*else if (value.contains(new RegExp(
+                                          }
+                                          else*/
+                                          if (value.contains(new RegExp(
                                               r"[0-9]|@|\+|-|\/|\*"))) {
-                                            return "Nom d'utlisateur doit contenir seuelement des alphabets";
-                                          }*/
+                                            return AppLocalizations.of(context)
+                                                .translate("Name Caracters");
+                                          }
                                           return null;
                                         },
                                       ),
@@ -178,23 +234,28 @@ class _LoginState extends State<Login> {
                                         controller: _passwordController,
                                         obscureText: true,
                                         decoration: InputDecoration(
-                                            labelText: "Mot de passe",
+                                            labelText:
+                                                AppLocalizations.of(context)
+                                                    .translate("Password"),
                                             errorStyle: TextStyle(
                                               color: Colors.red,
-                                              fontSize: 16,
+                                              fontSize: 12,
                                               fontWeight: FontWeight.bold,
                                             ),
                                             labelStyle: TextStyle(
                                               color: Colors.black,
                                               fontSize: 18,
                                             ),
-                                            hintText: "Mot de passe",
+                                            hintText:
+                                                AppLocalizations.of(context)
+                                                    .translate("Password"),
                                             hintStyle:
                                                 TextStyle(color: Colors.grey),
                                             border: InputBorder.none),
                                         validator: (String value) {
                                           if (value.isEmpty) {
-                                            return "Mot de passe est obligatoire";
+                                            return AppLocalizations.of(context)
+                                                .translate("Empty Pass");
                                           }
                                           return null;
                                         },

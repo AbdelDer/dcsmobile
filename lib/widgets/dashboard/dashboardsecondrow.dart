@@ -1,8 +1,6 @@
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/widgets/dashboard/roundedcontainer.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
-import '../../animations/fadeanimation.dart';
 
 class DashboardSecondRow extends StatefulWidget {
   final maxSpeed;
@@ -141,7 +139,7 @@ class _DashboardSecondRowState extends State<DashboardSecondRow> {
               Colors.deepOrange.shade300,
               Colors.deepOrange.shade400,
             ],
-            maxSubject: "Kilometrage",
+            maxSubject: AppLocalizations.of(context).translate("Distance"),
             maxValue: maxDistance['maxDistance']?.toStringAsFixed(2),
             model: maxDistance['vehicleModel']),
         RoundedContainer(
@@ -149,7 +147,7 @@ class _DashboardSecondRowState extends State<DashboardSecondRow> {
               Colors.deepOrange.shade400,
               Colors.deepOrange.shade500,
             ],
-            maxSubject: "Vitesse",
+            maxSubject: AppLocalizations.of(context).translate("Speed"),
             maxValue: maxSpeed['maxSpeed']?.toStringAsFixed(2),
             model: maxSpeed['vehicleModel']),
         RoundedContainer(
@@ -157,7 +155,8 @@ class _DashboardSecondRowState extends State<DashboardSecondRow> {
               Colors.deepOrange.shade500,
               Colors.deepOrange.shade600,
             ],
-            maxSubject: "T. en Marche",
+            maxSubject:
+                AppLocalizations.of(context).translate("Vehicle running time"),
             maxValue: runningTimeAsString(maxRunningTime['maxRunningTime']),
             model: maxRunningTime['vehicleModel']),
       ],

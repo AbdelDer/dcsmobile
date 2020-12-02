@@ -70,18 +70,18 @@ class _CustomSwipperState extends State<CustomSwipper> {
             iconPrevious: Icons.arrow_back,
           ),
           itemBuilder: (context, index) {
-            return customContainer(index);
+            return customContainer(index, context);
           },
           itemCount: 5),
     );
   }
 
-  Container customContainer(index) {
+  Container customContainer(index, context) {
     if (index == 0) {
-        return Container(
-            color: Colors.white,
-            child: DonutAutoLabelChart.withSampleData(data));
-      } else if (index == 1) {
+      return Container(
+          color: Colors.white,
+          child: DonutAutoLabelChart.withSampleData(data, context));
+    } else if (index == 1) {
       return Container(
         color: Colors.white,
         child: Padding(
@@ -103,7 +103,10 @@ class _CustomSwipperState extends State<CustomSwipper> {
               ),
               Row(
                 children: [
-                  Icon(Icons.error, size: 120,),
+                  Icon(
+                    Icons.error,
+                    size: 120,
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(left: 40.0),
                     child: Column(
@@ -124,21 +127,21 @@ class _CustomSwipperState extends State<CustomSwipper> {
                           ),
                         ),
                         Text(
-                          '0- GPS low battery',
+                          '0- ${AppLocalizations.of(context).translate("Low battery GPS")}',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
                           ),
                         ),
                         Text(
-                          '47- Start-up',
+                          '47- ${AppLocalizations.of(context).translate("Start UP")}',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
                           ),
                         ),
                         Text(
-                          '0- Open hood',
+                          '0- ${AppLocalizations.of(context).translate("Open hood")}',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -162,7 +165,7 @@ class _CustomSwipperState extends State<CustomSwipper> {
             children: [
               Center(
                 child: Text(
-                  'Distance Totale',
+                  '${AppLocalizations.of(context).translate("Total Distance")}',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 20,
@@ -176,11 +179,14 @@ class _CustomSwipperState extends State<CustomSwipper> {
               Center(
                 child: Row(
                   children: [
-                    Icon(Icons.airport_shuttle, size: 120,),
+                    Icon(
+                      Icons.airport_shuttle,
+                      size: 120,
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40.0),
                       child: Text(
-                        '120 KM/J',
+                        '120 ${AppLocalizations.of(context).translate("KM/D")}',
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -203,7 +209,7 @@ class _CustomSwipperState extends State<CustomSwipper> {
             children: [
               Center(
                 child: Text(
-                  'EVACUATION',
+                  '${AppLocalizations.of(context).translate("DRAINING")}',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 20,
@@ -217,11 +223,14 @@ class _CustomSwipperState extends State<CustomSwipper> {
               Center(
                 child: Row(
                   children: [
-                    Icon(Icons.directions_car, size: 120,),
+                    Icon(
+                      Icons.directions_car,
+                      size: 120,
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40.0),
                       child: Text(
-                        'aucune donée',
+                        '${AppLocalizations.of(context).translate("No Data")}',
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -244,7 +253,7 @@ class _CustomSwipperState extends State<CustomSwipper> {
             children: [
               Center(
                 child: Text(
-                  'CONSOMMATION TOTALE PARC',
+                  '${AppLocalizations.of(context).translate("TOTAL PARK CONSUMPTION")}',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 20,
@@ -258,11 +267,14 @@ class _CustomSwipperState extends State<CustomSwipper> {
               Center(
                 child: Row(
                   children: [
-                    Icon(Icons.local_parking, size: 120,),
+                    Icon(
+                      Icons.local_parking,
+                      size: 120,
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40.0),
                       child: Text(
-                        'aucune donée',
+                        '${AppLocalizations.of(context).translate("No Data")}',
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -279,7 +291,7 @@ class _CustomSwipperState extends State<CustomSwipper> {
     }
     return Container(
       child: Text(
-        "something's wrong",
+        "${AppLocalizations.of(context).translate("Wrong")}",
         style: TextStyle(color: Colors.red.shade900),
       ),
       color: Colors.white,

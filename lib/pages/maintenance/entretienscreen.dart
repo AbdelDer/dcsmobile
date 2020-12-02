@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/Api/Response.dart';
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/models/entretien.dart';
 import 'package:dcsmobile/widgets/customdatepicker.dart';
@@ -87,7 +88,7 @@ class _EntretienScreenState extends State<EntretienScreen> {
             Align(
               alignment: Alignment.topLeft,
               child: Text(
-                "Entretien",
+                AppLocalizations.of(context).translate("Entretien"),
               ),
             ),
             Align(
@@ -138,7 +139,8 @@ class _EntretienScreenState extends State<EntretienScreen> {
                                 actions: <Widget>[
                                   FlatButton(
                                     child: Text(
-                                      "Cancel",
+                                      AppLocalizations.of(context)
+                                          .translate("Cancel"),
                                       style: TextStyle(color: Colors.black),
                                     ),
                                     onPressed: () {
@@ -147,7 +149,8 @@ class _EntretienScreenState extends State<EntretienScreen> {
                                   ),
                                   FlatButton(
                                     child: Text(
-                                      "Delete",
+                                      AppLocalizations.of(context)
+                                          .translate("Delete"),
                                       style: TextStyle(color: Colors.red),
                                     ),
                                     onPressed: () async {
@@ -221,7 +224,7 @@ class _EntretienScreenState extends State<EntretienScreen> {
               color: Colors.white,
             ),
             Text(
-              " Edit",
+              AppLocalizations.of(context).translate("Edit"),
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
@@ -247,7 +250,7 @@ class _EntretienScreenState extends State<EntretienScreen> {
               color: Colors.white,
             ),
             Text(
-              " Delete",
+              AppLocalizations.of(context).translate("Delete"),
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
@@ -277,159 +280,162 @@ class _EntretienScreenState extends State<EntretienScreen> {
       backgroundColor: Colors.transparent,
       elevation: 0.0,
       child: StatefulBuilder(
-        key: _dialogKey,
-        builder: (context, snapshot) {
-          return Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            // color: Colors.white,
-            // height: 350,
-            // width: 250,
-            child: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        keyboardType: TextInputType.text,
-                        controller: _entretienController,
-                        decoration: InputDecoration(
-                          border: new OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              const Radius.circular(10.0),
+          key: _dialogKey,
+          builder: (context, snapshot) {
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              // color: Colors.white,
+              // height: 350,
+              // width: 250,
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          keyboardType: TextInputType.text,
+                          controller: _entretienController,
+                          decoration: InputDecoration(
+                            border: new OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(10.0),
+                              ),
+                            ),
+                            labelText: "Entretien name",
+                            hintText: "Entretien name",
+                            errorStyle: TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          labelText: "Entretien name",
-                          hintText: "Entretien name",
-                          errorStyle: TextStyle(
+                          validator: (String value) {
+                            if (value.isEmpty) {
+                              return "Entretien name is necessary";
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            _formKey.currentState.validate();
+                          },
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp("[a-zA-Z0-9]")),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CustomTextFieldDatePicker(
+                            labelText: 'date',
+                            lastDate: DateTime.now(),
+                            firstDate:
+                                DateTime.now().subtract(Duration(days: 365)),
+                            initialDate: data != null
+                                ? DateTime.fromMillisecondsSinceEpoch(
+                                    data.timestamp * 1000)
+                                : DateTime.now().subtract(Duration(minutes: 1)),
+                            onDateChanged: (date) {
+                              _timestampChose =
+                                  date.millisecondsSinceEpoch / 1000;
+                            }),
+                      ),
+                      Visibility(
+                        visible: errorMsgVisibility,
+                        child: Text(
+                          "this date already exists",
+                          style: TextStyle(
+                            fontSize: 14,
                             color: Colors.red,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return "Entretien name is necessary";
-                          }
-                          return null;
-                        },
-                        onChanged: (value) {
-                          _formKey.currentState.validate();
-                        },
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
-                        ],
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CustomTextFieldDatePicker(
-                          labelText: 'date',
-                          lastDate: DateTime.now(),
-                          firstDate: DateTime.now().subtract(Duration(days: 365)),
-                          initialDate: data != null
-                              ? DateTime.fromMillisecondsSinceEpoch(
-                                  data.timestamp * 1000)
-                              : DateTime.now().subtract(Duration(minutes: 1)),
-                          onDateChanged: (date) {
-                            _timestampChose = date.millisecondsSinceEpoch / 1000;
-                          }),
-                    ),
-                    Visibility(
-                      visible: errorMsgVisibility,
-                      child: Text(
-                        "this date already exists",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.red,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          controller: _priceController,
+                          decoration: InputDecoration(
+                            border: new OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(10.0),
+                              ),
+                            ),
+                            labelText: "Price",
+                            hintText: "Price",
+                            errorStyle: TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          validator: (String value) {
+                            if (value.isEmpty) {
+                              return "Price is necessary";
+                            } else if (double.parse(value) < 0) {
+                              return "Price should be greater then zero";
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            _formKey.currentState.validate();
+                          },
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
+                          ],
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        controller: _priceController,
-                        decoration: InputDecoration(
-                          border: new OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              const Radius.circular(10.0),
+                      Center(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            FlatButton(
+                              child: Text(
+                                "close",
+                                style: TextStyle(
+                                    color: Colors.deepOrange, fontSize: 18),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
                             ),
-                          ),
-                          labelText: "Price",
-                          hintText: "Price",
-                          errorStyle: TextStyle(
-                            color: Colors.red,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return "Price is necessary";
-                          }else if(double.parse(value) < 0) {
-                            return "Price should be greater then zero";
-                          }
-                          return null;
-                        },
-                        onChanged: (value) {
-                          _formKey.currentState.validate();
-                        },
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
-                        ],
-                      ),
-                    ),
-                    Center(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          FlatButton(
-                            child: Text(
-                              "close",
-                              style:
-                                  TextStyle(color: Colors.deepOrange, fontSize: 18),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          FlatButton.icon(
-                            color: Colors.white,
-                            icon: Icon(
-                              Icons.save_alt,
-                              color: Colors.black,
-                            ),
-                            label: Text(
-                              "Save",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            onPressed: () async {
-                              if (_formKey.currentState.validate()) {
-                                if (data != null) {
-                                  await _updateEntretien(data?.id);
-                                } else {
-                                  await _saveEntretien();
+                            FlatButton.icon(
+                              color: Colors.white,
+                              icon: Icon(
+                                Icons.save_alt,
+                                color: Colors.black,
+                              ),
+                              label: Text(
+                                AppLocalizations.of(context)
+                                    .translate("Validate"),
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              onPressed: () async {
+                                if (_formKey.currentState.validate()) {
+                                  if (data != null) {
+                                    await _updateEntretien(data?.id);
+                                  } else {
+                                    await _saveEntretien();
+                                  }
                                 }
-                              }
-                            },
-                          )
-                        ],
+                              },
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        }
-      ),
+            );
+          }),
     );
   }
 
@@ -441,9 +447,10 @@ class _EntretienScreenState extends State<EntretienScreen> {
         _timestampChose,
         double.parse(_priceController.value.text));
 
-    await Api.updateEntretien(jsonEncode(entretien.toJson())).then((value) async {
+    await Api.updateEntretien(jsonEncode(entretien.toJson()))
+        .then((value) async {
       if (value.status == Status.ERROR) {
-        if(value.message.contains('date')){
+        if (value.message.contains('date')) {
           _dialogKey.currentState.setState(() {
             errorMsgVisibility = true;
           });
@@ -471,7 +478,7 @@ class _EntretienScreenState extends State<EntretienScreen> {
         double.parse(_priceController.value.text));
     await Api.saveEntretien(jsonEncode(entretien.toJson())).then((value) async {
       if (value.status == Status.ERROR) {
-        if(value.message.contains('date')) {
+        if (value.message.contains('date')) {
           _dialogKey.currentState.setState(() {
             errorMsgVisibility = true;
           });
@@ -484,7 +491,7 @@ class _EntretienScreenState extends State<EntretienScreen> {
         });
         await _getEntretienData();
         _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text("updated"),
+          content: Text(AppLocalizations.of(context).translate("Updated")),
         ));
         Navigator.of(context).pop();
       }
@@ -502,12 +509,11 @@ class _EntretienScreenState extends State<EntretienScreen> {
         ));
       } else {
         _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text("removed"),
+          content: Text(AppLocalizations.of(context).translate("Removed")),
         ));
         _getEntretienData();
       }
     }).catchError((error) {
-      print('error is $error');
       ApiShowDialog.dialog(
           scaffoldKey: _scaffoldKey, message: error.toString(), type: 'error');
     });

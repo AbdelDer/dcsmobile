@@ -411,14 +411,13 @@ class _NotificationsViewState extends State<NotificationsView> {
                           side: BorderSide(color: Colors.deepOrange)),
                       padding: const EdgeInsets.symmetric(horizontal: 60),
                       child: Text(
-                        'ok',
+                        AppLocalizations.of(context).translate("Validate"),
                         style: TextStyle(color: Colors.white),
                       ),
                       color: Colors.deepOrange,
                       onPressed: () async {
                         Navigator.pop(context);
                         await _getNotifications();
-                        print(_choicesToJson());
                       }),
                 ],
               ),
@@ -564,7 +563,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "time: ",
+                                                    "${AppLocalizations.of(context).translate("Time")}: ",
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
@@ -589,7 +588,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "latitude: ",
+                                                    "${AppLocalizations.of(context).translate("Latitude")}: ",
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
@@ -614,7 +613,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "longitude: ",
+                                                    "${AppLocalizations.of(context).translate("Longitude")}: ",
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
@@ -639,7 +638,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "oil level: ",
+                                                    "${AppLocalizations.of(context).translate("Oil level")}: ",
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
@@ -664,7 +663,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "status: ",
+                                                    "${AppLocalizations.of(context).translate("Status")}: ",
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
@@ -672,7 +671,8 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                         color: Colors.black),
                                                   ),
                                                   Text(
-                                                    "en marche",
+                                                    AppLocalizations.of(context)
+                                                        .translate("Moving"),
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
@@ -689,7 +689,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "battery: ",
+                                                    "${AppLocalizations.of(context).translate("Battery")}: ",
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
@@ -714,7 +714,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "engine temp: ",
+                                                    "${AppLocalizations.of(context).translate("Engine temp")}: ",
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
@@ -739,7 +739,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "Signal: ",
+                                                    "${AppLocalizations.of(context).translate("Signal")}: ",
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:

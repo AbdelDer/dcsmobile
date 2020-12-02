@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:math' as math;
 
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
 import 'package:geodesy/geodesy.dart' as gdesy;
 
@@ -23,19 +24,21 @@ class VehicleLivePosition extends StatefulWidget {
   int startTime;
   int endTime;
 
-  VehicleLivePosition({Key key, @required this.deviceID, @required this.option}) : super(key: key);
+  VehicleLivePosition({Key key, @required this.deviceID, @required this.option})
+      : super(key: key);
 
   VehicleLivePosition.History(
       {@required this.deviceID,
-        @required this.option,
-        @required this.startTime,
-        @required this.endTime});
+      @required this.option,
+      @required this.startTime,
+      @required this.endTime});
 
   @override
   _VehicleLivePositionState createState() {
-    if(option == "History") {
-      return _VehicleLivePositionState.History(deviceID, option, startTime, endTime);
-    }else {
+    if (option == "History") {
+      return _VehicleLivePositionState.History(
+          deviceID, option, startTime, endTime);
+    } else {
       return _VehicleLivePositionState(this.deviceID, this.option);
     }
   }
@@ -68,7 +71,8 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
 
   _VehicleLivePositionState(this._deviceID, this._option);
 
-  _VehicleLivePositionState.History(this._deviceID, this._option, this._startTime, this._endTime);
+  _VehicleLivePositionState.History(
+      this._deviceID, this._option, this._startTime, this._endTime);
 
   @override
   void initState() {
@@ -98,7 +102,8 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
   _positionDetails() async {
     if (_option == "History") {
       Timer.run(() async {
-        await Api.getHistory(this._deviceID, this._startTime, this._endTime).then((r) async {
+        await Api.getHistory(this._deviceID, this._startTime, this._endTime)
+            .then((r) async {
           for (EventData ed in r.responseBody) {
             await Future.delayed(Duration(milliseconds: 1000));
             _setData(ed);
@@ -207,7 +212,8 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                       size: 35,
                     ),
                     color: Colors.white,
-                    tooltip: 'map style',
+                    tooltip:
+                        AppLocalizations.of(context).translate("Map style"),
                     itemBuilder: (BuildContext context) {
                       return _choices.map((choice) {
                         return PopupMenuItem<String>(
@@ -276,7 +282,8 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                                 "${data.vehicleModel}",
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none, color: Colors.deepOrange),
+                                    decoration: TextDecoration.none,
+                                    color: Colors.deepOrange),
                               ),
                             ),
                           ),
@@ -287,16 +294,18 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                           Row(
                             children: [
                               Text(
-                                "speed: ",
+                                "${AppLocalizations.of(context).translate("Speed")}: ",
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none, color: Colors.black),
+                                    decoration: TextDecoration.none,
+                                    color: Colors.black),
                               ),
                               Text(
-                                "${data.speedKPH} km/h",
+                                "${data.speedKPH.toStringAsFixed(2)} km/h",
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none, color: Colors.deepOrange),
+                                    decoration: TextDecoration.none,
+                                    color: Colors.deepOrange),
                               ),
                             ],
                           ),
@@ -307,16 +316,18 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                           Row(
                             children: [
                               Text(
-                                "time: ",
+                                "${AppLocalizations.of(context).translate("Time")}: ",
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none, color: Colors.black),
+                                    decoration: TextDecoration.none,
+                                    color: Colors.black),
                               ),
                               Text(
                                 data.timestampAsString,
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none, color: Colors.deepOrange),
+                                    decoration: TextDecoration.none,
+                                    color: Colors.deepOrange),
                               ),
                             ],
                           ),
@@ -327,16 +338,18 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                           Row(
                             children: [
                               Text(
-                                "latitude: ",
+                                "${AppLocalizations.of(context).translate("Latitude")}: ",
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none, color: Colors.black),
+                                    decoration: TextDecoration.none,
+                                    color: Colors.black),
                               ),
                               Text(
                                 "${data.latitude}",
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none, color: Colors.deepOrange),
+                                    decoration: TextDecoration.none,
+                                    color: Colors.deepOrange),
                               ),
                             ],
                           ),
@@ -347,16 +360,18 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                           Row(
                             children: [
                               Text(
-                                "longitude: ",
+                                "${AppLocalizations.of(context).translate("Longitude")}: ",
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none, color: Colors.black),
+                                    decoration: TextDecoration.none,
+                                    color: Colors.black),
                               ),
                               Text(
                                 "${data.longitude}",
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none, color: Colors.deepOrange),
+                                    decoration: TextDecoration.none,
+                                    color: Colors.deepOrange),
                               ),
                             ],
                           ),
@@ -367,16 +382,18 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                           Row(
                             children: [
                               Text(
-                                "oil level: ",
+                                "${AppLocalizations.of(context).translate("Oil level")}: ",
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none, color: Colors.black),
+                                    decoration: TextDecoration.none,
+                                    color: Colors.black),
                               ),
                               Text(
                                 "${data.oilLevel} L",
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none, color: Colors.deepOrange),
+                                    decoration: TextDecoration.none,
+                                    color: Colors.deepOrange),
                               ),
                             ],
                           ),
@@ -387,12 +404,19 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                           Row(
                             children: [
                               Text(
-                                "status: ",
+                                "${AppLocalizations.of(context).translate("Status")}: ",
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none, color: Colors.black),
+                                    decoration: TextDecoration.none,
+                                    color: Colors.black),
                               ),
-                              Text("en marche", style: TextStyle(fontSize: _dialogTextSize, decoration: TextDecoration.none, color: Colors.deepOrange),),
+                              Text(
+                                "${AppLocalizations.of(context).translate("Moving")}",
+                                style: TextStyle(
+                                    fontSize: _dialogTextSize,
+                                    decoration: TextDecoration.none,
+                                    color: Colors.deepOrange),
+                              ),
                             ],
                           ),
                           Divider(
@@ -402,16 +426,18 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                           Row(
                             children: [
                               Text(
-                                "battery: ",
+                                "${AppLocalizations.of(context).translate("Battery")}: ",
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none, color: Colors.black),
+                                    decoration: TextDecoration.none,
+                                    color: Colors.black),
                               ),
                               Text(
                                 "${data.batteryVolts} V",
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none, color: Colors.deepOrange),
+                                    decoration: TextDecoration.none,
+                                    color: Colors.deepOrange),
                               ),
                             ],
                           ),
@@ -422,16 +448,18 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                           Row(
                             children: [
                               Text(
-                                "engine temp: ",
+                                "${AppLocalizations.of(context).translate("Engine temp")}: ",
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none, color: Colors.black),
+                                    decoration: TextDecoration.none,
+                                    color: Colors.black),
                               ),
                               Text(
                                 "${data.engineTemp} °C",
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none, color: Colors.deepOrange),
+                                    decoration: TextDecoration.none,
+                                    color: Colors.deepOrange),
                               ),
                             ],
                           ),
@@ -442,10 +470,11 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                           Row(
                             children: [
                               Text(
-                                "Signal: ",
+                                "${AppLocalizations.of(context).translate("Signal")}: ",
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none, color: Colors.black),
+                                    decoration: TextDecoration.none,
+                                    color: Colors.black),
                               ),
                               Icon(
                                 Icons.signal_wifi_4_bar_outlined,

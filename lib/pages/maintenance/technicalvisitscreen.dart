@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/Api/Response.dart';
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/models/technicalvisit.dart';
 import 'package:dcsmobile/widgets/customdatepicker.dart';
@@ -94,7 +95,7 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
             Align(
               alignment: Alignment.topLeft,
               child: Text(
-                "Technical Visit",
+                AppLocalizations.of(context).translate("Technical Visit"),
               ),
             ),
             Align(
@@ -145,7 +146,8 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
                                 actions: <Widget>[
                                   FlatButton(
                                     child: Text(
-                                      "Cancel",
+                                      AppLocalizations.of(context)
+                                          .translate("Cancel"),
                                       style: TextStyle(color: Colors.black),
                                     ),
                                     onPressed: () {
@@ -154,7 +156,8 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
                                   ),
                                   FlatButton(
                                     child: Text(
-                                      "Delete",
+                                      AppLocalizations.of(context)
+                                          .translate("Delete"),
                                       style: TextStyle(color: Colors.red),
                                     ),
                                     onPressed: () async {
@@ -227,7 +230,7 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
               color: Colors.white,
             ),
             Text(
-              " Edit",
+              AppLocalizations.of(context).translate("Edit"),
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
@@ -253,7 +256,7 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
               color: Colors.white,
             ),
             Text(
-              " Delete",
+              AppLocalizations.of(context).translate("Delete"),
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
@@ -284,158 +287,171 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
       backgroundColor: Colors.transparent,
       elevation: 0.0,
       child: StatefulBuilder(
-        key: _dialogKey,
-        builder: (context, snapshot) {
-          return Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            // color: Colors.white,
-            // height: 350,
-            // width: 250,
-            child: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        keyboardType: TextInputType.text,
-                        controller: _nameController,
-                        decoration: InputDecoration(
-                          border: new OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              const Radius.circular(10.0),
+          key: _dialogKey,
+          builder: (context, snapshot) {
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              // color: Colors.white,
+              // height: 350,
+              // width: 250,
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          keyboardType: TextInputType.text,
+                          controller: _nameController,
+                          decoration: InputDecoration(
+                            border: new OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(10.0),
+                              ),
+                            ),
+                            labelText: "Technical visit",
+                            hintText: "Technical visit",
+                            errorStyle: TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          labelText: "Technical visit",
-                          hintText: "Technical visit",
-                          errorStyle: TextStyle(
-                            color: Colors.red,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return "a name is necessary";
-                          }
-                          return null;
-                        },
-                        onChanged: (value) {
-                          _formKey.currentState.validate();
-                        },
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CustomTextFieldDatePicker(
-                        labelText: 'start Date',
-                          lastDate: DateTime.now(),
-                          firstDate: DateTime.now().subtract(Duration(days: 365)),
-                          initialDate: data != null
-                              ? DateTime.fromMillisecondsSinceEpoch(
-                                  data.timestampStart * 1000)
-                              : DateTime.now().subtract(Duration(minutes: 1)),
-                          onDateChanged: (date) {
-                            _timestampStartChose =
-                                date.millisecondsSinceEpoch / 1000;
-                          }),
-                    ),
-                    Visibility(
-                        visible: errorTimestampStartVisibility,
-                        child: Text(
-                          errorTimestampStartMsg,
-                          style: TextStyle(fontSize: 14, color: Colors.red, ),
-                        )),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CustomTextFieldDatePicker(
-                          labelText: 'end date',
-                          lastDate: DateTime.now().add(Duration(days: 740)),
-                          firstDate: DateTime.now().subtract(Duration(days: 365)),
-                          initialDate: data != null
-                              ? DateTime.fromMillisecondsSinceEpoch(
-                                  data.timestampEnd * 1000)
-                              : DateTime.now().subtract(Duration(minutes: 1)),
-                          onDateChanged: (date) {
-                            _timestampEndChose =
-                                date.millisecondsSinceEpoch / 1000;
-                            if(errorTimestampEndVisibility) {
-                              _dialogKey.currentState.setState(() {
-                                errorTimestampEndVisibility = !errorTimestampEndVisibility;
-                              });
+                          validator: (String value) {
+                            if (value.isEmpty) {
+                              return "a name is necessary";
                             }
-                          }),
-                    ),
-                    Visibility(
-                        visible: errorTimestampEndVisibility,
-                        child: Text(
-                          errorTimestampEndMsg,
-                          style: TextStyle(fontSize: 14, color: Colors.red, ),
-                        )),
-                    Center(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          FlatButton(
-                            child: Text(
-                              "close",
-                              style:
-                                  TextStyle(color: Colors.deepOrange, fontSize: 18),
+                            return null;
+                          },
+                          onChanged: (value) {
+                            _formKey.currentState.validate();
+                          },
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp("[a-zA-Z0-9]")),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CustomTextFieldDatePicker(
+                            labelText: 'start Date',
+                            lastDate: DateTime.now(),
+                            firstDate:
+                                DateTime.now().subtract(Duration(days: 365)),
+                            initialDate: data != null
+                                ? DateTime.fromMillisecondsSinceEpoch(
+                                    data.timestampStart * 1000)
+                                : DateTime.now().subtract(Duration(minutes: 1)),
+                            onDateChanged: (date) {
+                              _timestampStartChose =
+                                  date.millisecondsSinceEpoch / 1000;
+                            }),
+                      ),
+                      Visibility(
+                          visible: errorTimestampStartVisibility,
+                          child: Text(
+                            errorTimestampStartMsg,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.red,
                             ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          FlatButton.icon(
-                            color: Colors.white,
-                            icon: Icon(
-                              Icons.save_alt,
-                              color: Colors.black,
-                            ),
-                            label: Text(
-                              "Save",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            onPressed: () async {
-                              if (_formKey.currentState.validate() &&
-                                  _timestampEndChose > _timestampStartChose) {
-                                if(errorTimestampEndVisibility) {
-                                  _dialogKey.currentState.setState(() {
-                                    errorTimestampEndVisibility = !errorTimestampEndVisibility;
-                                  });
-                                }
-                                if (data != null) {
-                                  await _updateTechnicalVisit(data?.id);
-                                } else {
-                                  await _saveTechnicalVisit();
-                                }
-                              } else if(_timestampEndChose <= _timestampStartChose){
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CustomTextFieldDatePicker(
+                            labelText: 'end date',
+                            lastDate: DateTime.now().add(Duration(days: 740)),
+                            firstDate:
+                                DateTime.now().subtract(Duration(days: 365)),
+                            initialDate: data != null
+                                ? DateTime.fromMillisecondsSinceEpoch(
+                                    data.timestampEnd * 1000)
+                                : DateTime.now().subtract(Duration(minutes: 1)),
+                            onDateChanged: (date) {
+                              _timestampEndChose =
+                                  date.millisecondsSinceEpoch / 1000;
+                              if (errorTimestampEndVisibility) {
                                 _dialogKey.currentState.setState(() {
-                                  errorTimestampEndMsg = "date end should be greater then start date";
-                                  errorTimestampEndVisibility = true;
+                                  errorTimestampEndVisibility =
+                                      !errorTimestampEndVisibility;
                                 });
                               }
-                            },
-                          )
-                        ],
+                            }),
                       ),
-                    ),
-                  ],
+                      Visibility(
+                          visible: errorTimestampEndVisibility,
+                          child: Text(
+                            errorTimestampEndMsg,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.red,
+                            ),
+                          )),
+                      Center(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            FlatButton(
+                              child: Text(
+                                AppLocalizations.of(context).translate("Close"),
+                                style: TextStyle(
+                                    color: Colors.deepOrange, fontSize: 18),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            FlatButton.icon(
+                              color: Colors.white,
+                              icon: Icon(
+                                Icons.save_alt,
+                                color: Colors.black,
+                              ),
+                              label: Text(
+                                AppLocalizations.of(context)
+                                    .translate("Validate"),
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              onPressed: () async {
+                                if (_formKey.currentState.validate() &&
+                                    _timestampEndChose > _timestampStartChose) {
+                                  if (errorTimestampEndVisibility) {
+                                    _dialogKey.currentState.setState(() {
+                                      errorTimestampEndVisibility =
+                                          !errorTimestampEndVisibility;
+                                    });
+                                  }
+                                  if (data != null) {
+                                    await _updateTechnicalVisit(data?.id);
+                                  } else {
+                                    await _saveTechnicalVisit();
+                                  }
+                                } else if (_timestampEndChose <=
+                                    _timestampStartChose) {
+                                  _dialogKey.currentState.setState(() {
+                                    errorTimestampEndMsg =
+                                        "date end should be greater then start date";
+                                    errorTimestampEndVisibility = true;
+                                  });
+                                }
+                              },
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        }
-      ),
+            );
+          }),
     );
   }
 
@@ -446,11 +462,11 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
         .then((value) async {
       if (value.status == Status.ERROR) {
         _dialogKey.currentState.setState(() {
-          if(value.message.contains('date start')) {
+          if (value.message.contains('date start')) {
             errorTimestampStartVisibility = true;
             errorTimestampEndVisibility = false;
             errorTimestampStartMsg = "start date already exists";
-          } else if(value.message.contains('date end')) {
+          } else if (value.message.contains('date end')) {
             errorTimestampStartVisibility = false;
             errorTimestampEndVisibility = true;
             errorTimestampEndMsg = "end date already exists";
@@ -466,7 +482,7 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
         _nameController.value = TextEditingValue(text: '');
         await _getTechnicalVisitData();
         _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text("updated"),
+          content: Text(AppLocalizations.of(context).translate("Updated")),
         ));
         Navigator.of(context).pop();
       }
@@ -483,11 +499,11 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
         .then((value) async {
       if (value.status == Status.ERROR) {
         _dialogKey.currentState.setState(() {
-          if(value.message.contains('date start')) {
+          if (value.message.contains('date start')) {
             errorTimestampStartVisibility = true;
             errorTimestampEndVisibility = false;
             errorTimestampStartMsg = "start date already exists";
-          } else if(value.message.contains('date end')) {
+          } else if (value.message.contains('date end')) {
             errorTimestampStartVisibility = false;
             errorTimestampEndVisibility = true;
             errorTimestampEndMsg = "end date already exists";
@@ -503,7 +519,7 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
         _nameController.value = TextEditingValue(text: '');
         await _getTechnicalVisitData();
         _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text("updated"),
+          content: Text(AppLocalizations.of(context).translate("Updated")),
         ));
         Navigator.of(context).pop();
       }
@@ -521,12 +537,11 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
         ));
       } else {
         _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text("removed"),
+          content: Text(AppLocalizations.of(context).translate("Removed")),
         ));
         _getTechnicalVisitData();
       }
     }).catchError((error) {
-      print('error is $error');
       ApiShowDialog.dialog(
           scaffoldKey: _scaffoldKey, message: error.toString(), type: 'error');
     });

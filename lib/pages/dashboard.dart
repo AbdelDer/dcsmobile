@@ -201,7 +201,8 @@ class _DashboardState extends State<Dashboard>
                         onTap: () => _handleOnTap('all'),
                         child: DashboardBtn(
                           quantity: data['firstRow']['all'],
-                          description: 'all',
+                          description:
+                              AppLocalizations.of(context).translate("All"),
                           color: Colors.blue,
                         ),
                       ),
@@ -211,7 +212,8 @@ class _DashboardState extends State<Dashboard>
                         onTap: () => _handleOnTap('En marche'),
                         child: DashboardBtn(
                           quantity: data['firstRow']['moving'],
-                          description: 'En marche',
+                          description:
+                              AppLocalizations.of(context).translate("Moving"),
                           color: Colors.green,
                         ),
                       ),
@@ -221,7 +223,8 @@ class _DashboardState extends State<Dashboard>
                         onTap: () => _handleOnTap('En parking'),
                         child: DashboardBtn(
                           quantity: data['firstRow']['parked'],
-                          description: 'En parking',
+                          description:
+                              AppLocalizations.of(context).translate("Parked"),
                           color: Colors.white,
                         ),
                       ),
@@ -235,7 +238,8 @@ class _DashboardState extends State<Dashboard>
                         onTap: () => _handleOnTap('late'),
                         child: DashboardBtn(
                           quantity: data['firstRow']['late'],
-                          description: 'En retard',
+                          description:
+                              AppLocalizations.of(context).translate("Late"),
                           color: Colors.yellow,
                         ),
                       ),
@@ -245,7 +249,8 @@ class _DashboardState extends State<Dashboard>
                         onTap: () => _handleOnTap('renewal'),
                         child: DashboardBtn(
                           quantity: data['firstRow']['renewal'],
-                          description: 'Renouvellement',
+                          description:
+                              AppLocalizations.of(context).translate("Renewal"),
                           color: Colors.brown,
                         ),
                       ),
@@ -256,7 +261,8 @@ class _DashboardState extends State<Dashboard>
                         child: DashboardBtn(
                           // quantity: data['Alerte'],
                           quantity: 0,
-                          description: 'Alerte',
+                          description:
+                              AppLocalizations.of(context).translate("Alerts"),
                           color: Colors.red,
                         ),
                       ),

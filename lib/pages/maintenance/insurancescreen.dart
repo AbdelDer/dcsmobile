@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/Api/Response.dart';
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/models/insurance.dart';
 import 'package:dcsmobile/widgets/customdatepicker.dart';
@@ -93,7 +94,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
             Align(
               alignment: Alignment.topLeft,
               child: Text(
-                "Insurance",
+                AppLocalizations.of(context).translate("Insurance"),
               ),
             ),
             Align(
@@ -144,7 +145,8 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                                 actions: <Widget>[
                                   FlatButton(
                                     child: Text(
-                                      "Cancel",
+                                      AppLocalizations.of(context)
+                                          .translate("Cancel"),
                                       style: TextStyle(color: Colors.black),
                                     ),
                                     onPressed: () {
@@ -153,7 +155,8 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                                   ),
                                   FlatButton(
                                     child: Text(
-                                      "Delete",
+                                      AppLocalizations.of(context)
+                                          .translate("Delete"),
                                       style: TextStyle(color: Colors.red),
                                     ),
                                     onPressed: () async {
@@ -226,7 +229,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
               color: Colors.white,
             ),
             Text(
-              " Edit",
+              AppLocalizations.of(context).translate("Edit"),
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
@@ -252,7 +255,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
               color: Colors.white,
             ),
             Text(
-              " Delete",
+              AppLocalizations.of(context).translate("Delete"),
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
@@ -396,7 +399,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                           children: [
                             FlatButton(
                               child: Text(
-                                "close",
+                                AppLocalizations.of(context).translate("Close"),
                                 style: TextStyle(
                                     color: Colors.deepOrange, fontSize: 18),
                               ),
@@ -411,7 +414,8 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                                 color: Colors.black,
                               ),
                               label: Text(
-                                "Save",
+                                AppLocalizations.of(context)
+                                    .translate("Validate"),
                                 style: TextStyle(color: Colors.black),
                               ),
                               onPressed: () async {
@@ -457,11 +461,11 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
         .then((value) async {
       if (value.status == Status.ERROR) {
         _dialogKey.currentState.setState(() {
-          if(value.message.contains('date start')) {
+          if (value.message.contains('date start')) {
             errorTimestampStartVisibility = true;
             errorTimestampEndVisibility = false;
             errorTimestampStartMsg = "start date already exists";
-          } else if(value.message.contains('date end')) {
+          } else if (value.message.contains('date end')) {
             errorTimestampStartVisibility = false;
             errorTimestampEndVisibility = true;
             errorTimestampEndMsg = "end date already exists";
@@ -477,7 +481,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
         _nameController.value = TextEditingValue(text: '');
         await _getInsuranceData();
         _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text("updated"),
+          content: Text(AppLocalizations.of(context).translate("Updated")),
         ));
         Navigator.of(context).pop();
       }
@@ -493,11 +497,11 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
     await Api.saveInsurance(jsonEncode(insurance.toJson())).then((value) async {
       if (value.status == Status.ERROR) {
         _dialogKey.currentState.setState(() {
-          if(value.message.contains('date start')) {
+          if (value.message.contains('date start')) {
             errorTimestampStartVisibility = true;
             errorTimestampEndVisibility = false;
             errorTimestampStartMsg = "start date already exists";
-          } else if(value.message.contains('date end')) {
+          } else if (value.message.contains('date end')) {
             errorTimestampStartVisibility = false;
             errorTimestampEndVisibility = true;
             errorTimestampEndMsg = "end date already exists";
@@ -513,7 +517,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
         _nameController.value = TextEditingValue(text: '');
         await _getInsuranceData();
         _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text("updated"),
+          content: Text(AppLocalizations.of(context).translate("Updated")),
         ));
         Navigator.of(context).pop();
       }
@@ -531,12 +535,11 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
         ));
       } else {
         _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text("removed"),
+          content: Text(AppLocalizations.of(context).translate("Removed")),
         ));
         _getInsuranceData();
       }
     }).catchError((error) {
-      print('error is $error');
       ApiShowDialog.dialog(
           scaffoldKey: _scaffoldKey, message: error.toString(), type: 'error');
     });

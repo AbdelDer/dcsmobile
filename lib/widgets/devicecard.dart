@@ -58,7 +58,8 @@ class _DeviceCardState extends State<DeviceCard> {
                   children: _childrenWidgets(data[index]),
                   backgroundColor: Colors.transparent,
                   onExpansionChanged: (val) async {
-                    if (_option == AppLocalizations.of(context).translate("Commands")) {
+                    if (_option ==
+                        AppLocalizations.of(context).translate("Commands")) {
                       showDialog(
                           context: context,
                           builder: (context) {
@@ -73,7 +74,8 @@ class _DeviceCardState extends State<DeviceCard> {
                               deviceID: data[index].deviceID, option: _option),
                         ),
                       );
-                    } else if (_option == AppLocalizations.of(context).translate("History")) {
+                    } else if (_option ==
+                        AppLocalizations.of(context).translate("History")) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -90,7 +92,8 @@ class _DeviceCardState extends State<DeviceCard> {
                       //       return HistoryScreen(data[index].deviceID,
                       //           data[index].vehicleModel, _option);
                       //     });
-                    } else if (_option == AppLocalizations.of(context).translate("Alarms")) {
+                    } else if (_option ==
+                        AppLocalizations.of(context).translate("Alarms")) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -204,7 +207,7 @@ class _DeviceCardState extends State<DeviceCard> {
             label: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                "DRAINING",
+                "${AppLocalizations.of(context).translate("DRAINING")}",
                 style: TextStyle(color: Colors.black),
               ),
             ),
@@ -252,7 +255,7 @@ class _DeviceCardState extends State<DeviceCard> {
             label: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                "TECHNICAL\nVISIT",
+                "${AppLocalizations.of(context).translate("Technical Visit")}",
                 style: TextStyle(color: Colors.black),
               ),
             ),
@@ -281,7 +284,7 @@ class _DeviceCardState extends State<DeviceCard> {
             label: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                "INSURANCE",
+                "${AppLocalizations.of(context).translate("Insurance")}",
                 style: TextStyle(color: Colors.black),
               ),
             ),
@@ -310,7 +313,7 @@ class _DeviceCardState extends State<DeviceCard> {
             label: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                "ENTRETIRNS",
+                "${AppLocalizations.of(context).translate("Entretiens")}",
                 style: TextStyle(color: Colors.black),
               ),
             ),

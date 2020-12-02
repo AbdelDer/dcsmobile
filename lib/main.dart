@@ -29,7 +29,9 @@ class EnteryPoint extends StatefulWidget {
 }
 
 class _EnteryPointState extends State<EnteryPoint> {
-  AppLocalizations appLocalizations = AppLocalizations(Locale('fr'));
+  final EncryptedSharedPreferences encryptedSharedPreferences =
+      EncryptedSharedPreferences();
+  AppLocalizations appLocalizations = AppLocalizations(Locale('en'));
 
   onLocaleChange(Locale l) {
     setState(() {
@@ -39,22 +41,12 @@ class _EnteryPointState extends State<EnteryPoint> {
   }
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    setState(() {
-      appLocalizations.locale = Locale('fr');
-      appLocalizations.delegate.load(Locale('fr'));
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      locale: appLocalizations?.locale ?? Locale('fr'),
+      locale: appLocalizations.locale ?? Locale('en'),
       debugShowCheckedModeBanner: false,
       title: "Tracking App",
-      initialRoute: '/dashboard',
+      initialRoute: '/login',
       navigatorObservers: [routeObserver],
       theme: ThemeData(
         primaryColor: Colors.deepOrange,
@@ -92,7 +84,9 @@ class _EnteryPointState extends State<EnteryPoint> {
         // When navigating to the "/" route,
         // build the FirstScreen widget.
         // When navigating to the "/second" route, build the SecondScreen widget.
-        '/login': (context) => Login(),
+        '/login': (context) => Login(
+              onLocaleChange: onLocaleChange,
+            ),
         '/history': (context) => Position("all", "History"),
         '/introduction': (context) => IntroductionPage(),
         '/dashboard': (context) => Dashboard(routeObserver),
@@ -106,17 +100,22 @@ class _EnteryPointState extends State<EnteryPoint> {
         '/maintenance': (context) => Position("all", "Maintenance"),
         // '/activityhistory': (context) => ActivityHistory(deviceID: "demo3", vehicleModel: "citroen"),
       },
-      // home: Home(),
     );
   }
 }
 
-class FEDrawer extends StatelessWidget {
+class FEDrawer extends StatefulWidget {
+  @override
+  _FEDrawerState createState() => _FEDrawerState();
+}
+
+class _FEDrawerState extends State<FEDrawer> {
   EncryptedSharedPreferences _preferences = EncryptedSharedPreferences();
+
   String _username;
 
   String translate(context, key) {
-      return AppLocalizations.of(context).translate(key);
+    return AppLocalizations.of(context).translate(key);
   }
 
   getUsername() async {
@@ -197,7 +196,6 @@ class FEDrawer extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) {
-                    print("traduction ${translate(context, "History")}");
                     return Position("all", translate(context, "History"));
                   },
                 ),

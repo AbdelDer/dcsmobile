@@ -1,4 +1,5 @@
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class DonutAutoLabelChart extends StatelessWidget {
@@ -8,9 +9,9 @@ class DonutAutoLabelChart extends StatelessWidget {
   DonutAutoLabelChart(this.seriesList, {this.animate});
 
   /// Creates a [PieChart] with sample data and no transition.
-  factory DonutAutoLabelChart.withSampleData(receivedData) {
+  factory DonutAutoLabelChart.withSampleData(receivedData, context) {
     return new DonutAutoLabelChart(
-      _createSampleData(receivedData),
+      _createSampleData(receivedData, context),
       // Disable animations for image tests.
       animate: false,
     );
@@ -64,27 +65,36 @@ class DonutAutoLabelChart extends StatelessWidget {
 
   /// Create one series with sample hard coded data.
   static List<charts.Series<VehicleStatus, String>> _createSampleData(
-      receivedData) {
+      receivedData, context) {
     var data;
     if (receivedData != null) {
-      if(receivedData['firstRow']['moving'] == 0 && receivedData['firstRow']['parked'] == 0) {
+      if (receivedData['firstRow']['moving'] == 0 &&
+          receivedData['firstRow']['parked'] == 0) {
         data = [
           //TODO: change renewal with all
-          new VehicleStatus("all", num.parse(receivedData['firstRow']['all'].toString()) ?? 0,
+          new VehicleStatus(
+              "all",
+              num.parse(receivedData['firstRow']['all'].toString()) ?? 0,
               Colors.orangeAccent.shade200),
         ];
-      }else {
+      } else {
         data = [
-          new VehicleStatus("En marche", num.parse(receivedData['firstRow']['moving'].toString()) ?? 0,
+          new VehicleStatus(
+              AppLocalizations.of(context).translate("Moving"),
+              num.parse(receivedData['firstRow']['moving'].toString()) ?? 0,
               Colors.orangeAccent.shade200),
-          new VehicleStatus("En parking", num.parse(receivedData['firstRow']['parked'].toString()) ?? 0,
+          new VehicleStatus(
+              AppLocalizations.of(context).translate("Parked"),
+              num.parse(receivedData['firstRow']['parked'].toString()) ?? 0,
               Colors.deepOrange.shade200),
         ];
       }
     } else {
       data = [
-        new VehicleStatus("En marche", 0, Colors.orangeAccent.shade200),
-        new VehicleStatus("En parking", 0, Colors.deepOrange.shade200),
+        new VehicleStatus(AppLocalizations.of(context).translate("Moving"), 0,
+            Colors.orangeAccent.shade200),
+        new VehicleStatus(AppLocalizations.of(context).translate("Parked"), 0,
+            Colors.deepOrange.shade200),
       ];
     }
 

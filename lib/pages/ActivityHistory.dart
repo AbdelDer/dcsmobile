@@ -30,8 +30,8 @@ class _ActivityHistoryState extends State<ActivityHistory> {
   final String vehicleModel;
 
   DatePickerController _controller = DatePickerController();
-  DateTime _selectedDate = DateTime(2020, 10, 3);
-  DateTime _endDate = DateTime(2020, 10, 3, 23, 59, 59);
+  DateTime _selectedDate = DateTime.now();
+  DateTime _endDate = DateTime.now().subtract(Duration(days: 30));
 
   StreamController _streamController;
   Stream _stream;
@@ -56,11 +56,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
   }
 
   String translate(key) {
-    try {
-      return AppLocalizations.of(context).translate(key);
-    } finally {
-      return key;
-    }
+    return AppLocalizations.of(context).translate(key);
   }
 
   @override
@@ -95,15 +91,12 @@ class _ActivityHistoryState extends State<ActivityHistory> {
             color: Colors.deepOrange,
             height: 100,
             child: DatePicker(
-              //TODO: give this datetime DateTime.now().subtract(Duration(days: 30)), instead
-              DateTime(2020, 10, 3),
-              daysCount: 365,
-              // daysCount: 31,
+              DateTime.now().subtract(Duration(days: 30)),
+              daysCount: 31,
               width: 60,
               height: 80,
               controller: _controller,
-              //TODO: change initialSelectedDateValue to DateTime.now(),
-              initialSelectedDate: _selectedDate,
+              initialSelectedDate: DateTime.now(),
               selectionColor: Colors.deepOrange,
               selectedTextColor: Colors.white,
               onDateChange: (date) {
