@@ -359,7 +359,10 @@ class Api {
     final httpResponse = await httpCustom
         .post()
         .catchError((err) => throw ('erreur lié au serveur'));
-
+    print(httpResponse);
+    print(httpResponse.body);
+    print(httpResponse.bodyBytes);
+    if (httpResponse.bodyBytes.isEmpty) throw ('404');
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 
     if (httpResponse.statusCode == 404) {
@@ -369,7 +372,7 @@ class Api {
     }
 
     // return Response.completed(
-    //     responseBody.map((alarm) => Alarm.fromJson(alarm)));
+    //     responseBody.map((alarm) => Alarm.fromJson(alarm)));$
     return Response.completed(Alarm.fromJson(responseBody));
   }
 
