@@ -1,15 +1,13 @@
 class Entretien {
   num _id;
   String _deviceID;
-  String _entretienName;
+  String _name;
   num _timestamp;
   double _price;
 
-  Entretien(this._id, this._deviceID, this._entretienName, this._timestamp,
-      this._price);
+  Entretien(this._id, this._deviceID, this._name, this._timestamp, this._price);
 
-  Entretien.withoutID(
-      this._deviceID, this._entretienName, this._timestamp, this._price);
+  Entretien.withoutID(this._deviceID, this._name, this._timestamp, this._price);
 
   String get deviceID => _deviceID;
 
@@ -18,7 +16,7 @@ class Entretien {
   }
 
   factory Entretien.fromJson(Map<dynamic, dynamic> json) {
-    return Entretien(json["id"], json["deviceID"], json["entretienName"],
+    return Entretien(json["id"], json["deviceID"], json["name"],
         json["timestamp"], json["price"]);
   }
 
@@ -28,14 +26,14 @@ class Entretien {
         "id": _id,
         "deviceID": _deviceID,
         "timestamp": _timestamp,
-        "entretienName": _entretienName,
+        "name": _name,
         "price": _price,
       };
     } else {
       return {
         "deviceID": _deviceID,
         "timestamp": _timestamp,
-        "entretienName": _entretienName,
+        "name": _name,
         "price": _price
       };
     }
@@ -53,10 +51,10 @@ class Entretien {
     _timestamp = value;
   }
 
-  String get entretienName => _entretienName;
+  String get name => _name;
 
-  set entretienName(String value) {
-    _entretienName = value;
+  set name(String value) {
+    _name = value;
   }
 
   num get id => _id;

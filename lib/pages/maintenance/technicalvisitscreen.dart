@@ -188,7 +188,7 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
                           color: Colors.black,
                         ),
                         title: Text(
-                          snapshot.data.responseBody[index].technicalVisitName,
+                          snapshot.data.responseBody[index].name,
                           style: TextStyle(color: Colors.black),
                         ),
                         subtitle: Text(
@@ -276,7 +276,7 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
   Widget _dialog({data}) {
     //editing case
     if (data != null) {
-      _nameController.value = TextEditingValue(text: data.technicalVisitName);
+      _nameController.value = TextEditingValue(text: data.name);
       _timestampStartChose = data.timestampStart;
       _timestampEndChose = data.timestampEnd;
     }

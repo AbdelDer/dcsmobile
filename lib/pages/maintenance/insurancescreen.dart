@@ -187,7 +187,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                           color: Colors.black,
                         ),
                         title: Text(
-                          snapshot.data.responseBody[index].insuranceName,
+                          snapshot.data.responseBody[index].name,
                           style: TextStyle(color: Colors.black),
                         ),
                         subtitle: Text(
@@ -275,7 +275,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
   Widget _dialog({data}) {
     //editing case
     if (data != null) {
-      _nameController.value = TextEditingValue(text: data.insuranceName);
+      _nameController.value = TextEditingValue(text: data.name);
       _timestampStartChose = data.timestampStart;
       _timestampEndChose = data.timestampEnd;
     }

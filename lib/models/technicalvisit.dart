@@ -1,15 +1,15 @@
 class TechnicalVisit {
   num _id;
   String _deviceID;
-  String _technicalVisitName;
+  String _name;
   num _timestampStart;
   num _timestampEnd;
 
-  TechnicalVisit(this._id, this._deviceID, this._technicalVisitName,
-      this._timestampStart, this._timestampEnd);
+  TechnicalVisit(this._id, this._deviceID, this._name, this._timestampStart,
+      this._timestampEnd);
 
-  TechnicalVisit.withoutID(this._deviceID, this._technicalVisitName,
-      this._timestampStart, this._timestampEnd);
+  TechnicalVisit.withoutID(
+      this._deviceID, this._name, this._timestampStart, this._timestampEnd);
 
   String get deviceID => _deviceID;
 
@@ -18,12 +18,8 @@ class TechnicalVisit {
   }
 
   factory TechnicalVisit.fromJson(Map<dynamic, dynamic> json) {
-    return TechnicalVisit(
-        json["id"],
-        json["deviceID"],
-        json["technicalVisitName"],
-        json["timestampStart"],
-        json["timestampEnd"]);
+    return TechnicalVisit(json["id"], json["deviceID"], json["name"],
+        json["timestampStart"], json["timestampEnd"]);
   }
 
   Map<String, dynamic> toJson() {
@@ -33,14 +29,14 @@ class TechnicalVisit {
         "deviceID": _deviceID,
         "timestampStart": _timestampStart,
         "timestampEnd": _timestampEnd,
-        "technicalVisitName": _technicalVisitName
+        "name": _name
       };
-    }else {
+    } else {
       return {
         "deviceID": _deviceID,
         "timestampStart": _timestampStart,
         "timestampEnd": _timestampEnd,
-        "technicalVisitName": _technicalVisitName
+        "name": _name
       };
     }
   }
@@ -57,11 +53,12 @@ class TechnicalVisit {
     _timestampStart = value;
   }
 
-  String get technicalVisitName => _technicalVisitName;
+  String get name => _name;
 
-  set technicalVisitName(String value) {
-    _technicalVisitName = value;
+  set name(String value) {
+    _name = value;
   }
+
   num get id => _id;
 
   set id(num value) {

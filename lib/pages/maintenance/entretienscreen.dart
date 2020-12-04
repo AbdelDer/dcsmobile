@@ -182,7 +182,7 @@ class _EntretienScreenState extends State<EntretienScreen> {
                           color: Colors.black,
                         ),
                         title: Text(
-                          snapshot.data.responseBody[index].entretienName,
+                          snapshot.data.responseBody[index].name,
                           style: TextStyle(color: Colors.black),
                         ),
                         subtitle: Text(
@@ -270,7 +270,7 @@ class _EntretienScreenState extends State<EntretienScreen> {
   Widget _dialog({data}) {
     //editing case
     if (data != null) {
-      _entretienController.value = TextEditingValue(text: data.entretienName);
+      _entretienController.value = TextEditingValue(text: data.name);
       _priceController.value = TextEditingValue(text: '${data.price}');
     }
     return Dialog(

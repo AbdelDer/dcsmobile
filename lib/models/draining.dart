@@ -1,16 +1,16 @@
 class Draining {
   num _id;
   String _deviceID;
-  String _drainingName;
+  String _name;
   num _timestamp;
   double _kmStart;
   double _kmEnd;
 
-  Draining(this._id, this._deviceID, this._drainingName, this._timestamp,
-      this._kmStart, this._kmEnd);
+  Draining(this._id, this._deviceID, this._name, this._timestamp, this._kmStart,
+      this._kmEnd);
 
-  Draining.withoutID(this._deviceID, this._drainingName, this._timestamp,
-      this._kmStart, this._kmEnd);
+  Draining.withoutID(
+      this._deviceID, this._name, this._timestamp, this._kmStart, this._kmEnd);
 
   String get deviceID => _deviceID;
 
@@ -19,7 +19,7 @@ class Draining {
   }
 
   factory Draining.fromJson(Map<dynamic, dynamic> json) {
-    return Draining(json["id"], json["deviceID"], json["drainingName"],
+    return Draining(json["id"], json["deviceID"], json["name"],
         json["timestamp"], json["kmStart"], json["kmEnd"]);
   }
 
@@ -29,25 +29,25 @@ class Draining {
         "id": _id,
         "deviceID": _deviceID,
         "timestamp": _timestamp,
-        "drainingName": _drainingName,
+        "name": _name,
         "kmStart": _kmStart,
         "kmEnd": _kmEnd
       };
-    }else {
+    } else {
       return {
         "deviceID": _deviceID,
         "timestamp": _timestamp,
-        "drainingName": _drainingName,
+        "name": _name,
         "kmStart": _kmStart,
         "kmEnd": _kmEnd
       };
     }
   }
 
-  String get drainingName => _drainingName;
+  String get name => _name;
 
-  set drainingName(String value) {
-    _drainingName = value;
+  set name(String value) {
+    _name = value;
   }
 
   num get timestamp => _timestamp;

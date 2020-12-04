@@ -181,7 +181,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
                           color: Colors.black,
                         ),
                         title: Text(
-                          snapshot.data.responseBody[index].drainingName,
+                          snapshot.data.responseBody[index].name,
                           style: TextStyle(color: Colors.black),
                         ),
                         subtitle: Text(
@@ -269,7 +269,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
   Widget _dialog({data}) {
     //editing case
     if (data != null) {
-      _drainingController.value = TextEditingValue(text: data.drainingName);
+      _drainingController.value = TextEditingValue(text: data.name);
       _kmStartController.value = TextEditingValue(text: '${data.kmStart}');
       _kmEndController.value = TextEditingValue(text: '${data.kmEnd}');
     }

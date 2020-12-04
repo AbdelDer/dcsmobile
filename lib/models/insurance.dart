@@ -1,15 +1,15 @@
 class Insurance {
   num _id;
   String _deviceID;
-  String _InsuranceName;
+  String _name;
   num _timestampStart;
   num _timestampEnd;
 
-  Insurance(this._id, this._deviceID, this._InsuranceName,
-      this._timestampStart, this._timestampEnd);
+  Insurance(this._id, this._deviceID, this._name, this._timestampStart,
+      this._timestampEnd);
 
-  Insurance.withoutID(this._deviceID, this._InsuranceName,
-      this._timestampStart, this._timestampEnd);
+  Insurance.withoutID(
+      this._deviceID, this._name, this._timestampStart, this._timestampEnd);
 
   String get deviceID => _deviceID;
 
@@ -18,12 +18,8 @@ class Insurance {
   }
 
   factory Insurance.fromJson(Map<dynamic, dynamic> json) {
-    return Insurance(
-        json["id"],
-        json["deviceID"],
-        json["insuranceName"],
-        json["timestampStart"],
-        json["timestampEnd"]);
+    return Insurance(json["id"], json["deviceID"], json["name"],
+        json["timestampStart"], json["timestampEnd"]);
   }
 
   Map<String, dynamic> toJson() {
@@ -33,14 +29,14 @@ class Insurance {
         "deviceID": _deviceID,
         "timestampStart": _timestampStart,
         "timestampEnd": _timestampEnd,
-        "insuranceName": _InsuranceName
+        "name": _name
       };
-    }else {
+    } else {
       return {
         "deviceID": _deviceID,
         "timestampStart": _timestampStart,
         "timestampEnd": _timestampEnd,
-        "insuranceName": _InsuranceName
+        "name": _name
       };
     }
   }
@@ -57,11 +53,12 @@ class Insurance {
     _timestampStart = value;
   }
 
-  String get insuranceName => _InsuranceName;
+  String get name => _name;
 
-  set insuranceName(String value) {
-    _InsuranceName = value;
+  set name(String value) {
+    _name = value;
   }
+
   num get id => _id;
 
   set id(num value) {
