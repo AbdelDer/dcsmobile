@@ -144,18 +144,46 @@ class _DeviceCardState extends State<DeviceCard> {
                         },
                       ),
                       _option == "speedReport"
-                          ? Text(
-                              "${data[index].timestampAsString} ${data[index].speedKPH} Km/h",
-                              style: TextStyle(
-                                fontSize: _detailsFontSize,
-                                color: Colors.black,
+                          ? RichText(
+                              text: TextSpan(
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: _detailsFontSize,
+                                ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text:
+                                          "${data[index].timestampAsString} "),
+                                  TextSpan(
+                                      text: "| ",
+                                      style: TextStyle(
+                                        color: Colors.deepOrange.shade900,
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                  TextSpan(
+                                      text: "${data[index].speedKPH} Km/h")
+                                ],
                               ),
                             )
-                          : Text(
-                              "${data[index].timestampAsString} ${data[index].distanceKM} Km/J",
-                              style: TextStyle(
-                                fontSize: _detailsFontSize,
-                                color: Colors.black,
+                          : RichText(
+                              text: TextSpan(
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: _detailsFontSize,
+                                ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text:
+                                          "${data[index].timestampAsString} "),
+                                  TextSpan(
+                                      text: "| ",
+                                      style: TextStyle(
+                                        color: Colors.deepOrange.shade900,
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                  TextSpan(
+                                      text: "${data[index].distanceKM} Km/J")
+                                ],
                               ),
                             ),
                     ],
