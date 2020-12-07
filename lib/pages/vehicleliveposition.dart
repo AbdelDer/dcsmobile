@@ -212,10 +212,25 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     PopupMenuButton(
-                        icon: Icon(
-                          Icons.more_vert,
-                          color: Colors.green.shade700,
-                          size: 35,
+                        icon: Container(
+                          width: 80,
+                          height: 80,
+                          decoration: new BoxDecoration(
+                            color: Colors.greenAccent,
+                            borderRadius: new BorderRadius.only(
+                              topLeft: const Radius.circular(30.0),
+                              topRight: const Radius.circular(30.0),
+                              bottomLeft: const Radius.circular(30.0),
+                              bottomRight: const Radius.circular(30.0),
+                            ),
+                          ),
+                          child: Center(
+                            child: Icon(
+                              Icons.more_vert,
+                              color: Colors.green.shade700,
+                              size: 25,
+                            ),
+                          ),
                         ),
                         color: Colors.white,
                         tooltip:
@@ -248,9 +263,26 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                           });
                         }),
                     IconButton(
-                      icon: Icon(
-                        Icons.share,
-                        color: Colors.green.shade700,
+                      icon: Container(
+                        width: 45,
+                        height: 40,
+                        decoration: new BoxDecoration(
+                          color: Colors.greenAccent,
+                          borderRadius: new BorderRadius.only(
+                            topLeft: const Radius.circular(25.0),
+                            topRight: const Radius.circular(25.0),
+                            bottomLeft: const Radius.circular(25.0),
+                            bottomRight: const Radius.circular(25.0),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 4.0),
+                          child: Icon(
+                            Icons.share,
+                            color: Colors.green.shade700,
+                            size: 20,
+                          ),
+                        ),
                       ),
                       onPressed: () async {
                         String body =
