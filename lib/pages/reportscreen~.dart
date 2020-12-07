@@ -258,7 +258,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       gradient: LinearGradient(
                           begin: Alignment.topRight,
                           end: Alignment.bottomLeft,
-                          colors: [Colors.green, Colors.orange]),
+                          colors: [Colors.green, Colors.green]),
                       color: Colors.cyanAccent,
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [

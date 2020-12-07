@@ -19,7 +19,7 @@ class Subscription {
     if(subscriptionTime <= 0) {
       return Colors.red;
     } else if(subscriptionTime <= 30) {
-      return Colors.orange;
+      return Colors.green;
     } else {
       return Colors.green;
     }

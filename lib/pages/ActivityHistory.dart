@@ -188,7 +188,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                       'assets/historytimeline/distance.svg',
                                       height: 30,
                                       width: 30,
-                                      color: Colors.orange,
+                                      color: Colors.green,
                                     ),
                                   ),
                                   Padding(
@@ -310,7 +310,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                                             8.0),
                                                     child: SvgPicture.asset(
                                                       'assets/historytimeline/distance.svg',
-                                                      color: Colors.orange,
+                                                      color: Colors.green,
                                                     ),
                                                   )
                                                 : SizedBox(
@@ -341,7 +341,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                                             8.0),
                                                     child: SvgPicture.asset(
                                                       'assets/historytimeline/speedometer.svg',
-                                                      color: Colors.orange,
+                                                      color: Colors.green,
                                                     ),
                                                   )
                                                 : SizedBox(

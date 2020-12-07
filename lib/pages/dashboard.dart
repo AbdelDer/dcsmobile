@@ -278,12 +278,12 @@ class _DashboardState extends State<Dashboard>
               Expanded(
                   child: Divider(
                 thickness: 2,
-                color: Colors.orangeAccent,
+                color: Colors.greenAccent,
               )),
               GestureDetector(
                   child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.orange,
+                        color: Colors.green,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
@@ -306,7 +306,7 @@ class _DashboardState extends State<Dashboard>
               Expanded(
                   child: Divider(
                 thickness: 2,
-                color: Colors.orangeAccent,
+                color: Colors.greenAccent,
               )),
             ]),
           ),
@@ -328,12 +328,12 @@ class _DashboardState extends State<Dashboard>
                     Expanded(
                         child: Divider(
                       thickness: 2,
-                      color: Colors.orangeAccent,
+                      color: Colors.greenAccent,
                     )),
                     GestureDetector(
                         child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.orange,
+                              color: Colors.green,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Padding(
@@ -357,7 +357,7 @@ class _DashboardState extends State<Dashboard>
                     Expanded(
                         child: Divider(
                       thickness: 2,
-                      color: Colors.orangeAccent,
+                      color: Colors.greenAccent,
                     )),
                   ]),
                 ),

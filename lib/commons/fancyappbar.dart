@@ -57,7 +57,7 @@ class _FancyAppBarState extends State<FancyAppBar> {
             end: Alignment.bottomRight,
             colors: [
               Colors.greenAccent.shade200,
-              Colors.orangeAccent.shade200
+              Colors.greenAccent.shade200
             ]),
         boxShadow: [
           BoxShadow(color: Colors.black, blurRadius: 5.0),

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:math' as math;
@@ -17,6 +18,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class VehicleLivePosition extends StatefulWidget {
   final deviceID;
@@ -205,42 +207,69 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
               padding: const EdgeInsets.only(top: 20.0),
               child: Align(
                 alignment: Alignment.topRight,
-                child: PopupMenuButton(
-                    icon: Icon(
-                      Icons.more_vert,
-                      color: Colors.green.shade700,
-                      size: 35,
-                    ),
-                    color: Colors.white,
-                    tooltip:
-                        AppLocalizations.of(context).translate("Map style"),
-                    itemBuilder: (BuildContext context) {
-                      return _choices.map((choice) {
-                        return PopupMenuItem<String>(
-                          value: choice,
-                          child: Text(choice),
-                        );
-                      }).toList();
-                    },
-                    onSelected: (choice) {
-                      setState(() {
-                        switch (choice) {
-                          // "normal", "hybrid", "satellite", "terrain"
-                          case "normal":
-                            _mapType = MapType.normal;
-                            break;
-                          case "hybrid":
-                            _mapType = MapType.hybrid;
-                            break;
-                          case "satellite":
-                            _mapType = MapType.satellite;
-                            break;
-                          case "terrain":
-                            _mapType = MapType.terrain;
-                            break;
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    PopupMenuButton(
+                        icon: Icon(
+                          Icons.more_vert,
+                          color: Colors.green.shade700,
+                          size: 35,
+                        ),
+                        color: Colors.white,
+                        tooltip:
+                            AppLocalizations.of(context).translate("Map style"),
+                        itemBuilder: (BuildContext context) {
+                          return _choices.map((choice) {
+                            return PopupMenuItem<String>(
+                              value: choice,
+                              child: Text(choice),
+                            );
+                          }).toList();
+                        },
+                        onSelected: (choice) {
+                          setState(() {
+                            switch (choice) {
+                              // "normal", "hybrid", "satellite", "terrain"
+                              case "normal":
+                                _mapType = MapType.normal;
+                                break;
+                              case "hybrid":
+                                _mapType = MapType.hybrid;
+                                break;
+                              case "satellite":
+                                _mapType = MapType.satellite;
+                                break;
+                              case "terrain":
+                                _mapType = MapType.terrain;
+                                break;
+                            }
+                          });
+                        }),
+                    IconButton(
+                      icon: Icon(
+                        Icons.share,
+                        color: Colors.green.shade700,
+                      ),
+                      onPressed: () async {
+                        String body =
+                            "http://maps.google.com/?q=${_marker.position.latitude},${_marker.position.longitude}";
+
+                        //if body contains space change it with %20
+                        if (Platform.isAndroid) {
+                          var uri = 'sms:?body=$body';
+                          await launch(uri);
+                        } else if (Platform.isIOS) {
+                          // iOS
+                          // phoneNumber = phoneNumber.replaceAll('+212', '00');
+                          var uri = 'sms:&body=$body';
+                          await launch(uri);
                         }
-                      });
-                    }),
+                      },
+                    )
+                  ],
+                ),
               ),
             ),
           ],
@@ -478,7 +507,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                               ),
                               Icon(
                                 Icons.signal_wifi_4_bar_outlined,
-                                color: Colors.deepOrange,
+                                color: Colors.green.shade700,
                               ),
                             ],
                           ),

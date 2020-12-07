@@ -71,7 +71,7 @@ class _PositionState extends State<Position> {
         actions: <Widget>[
           InkResponse(
             containedInkWell: true,
-            splashColor: Colors.orange.shade900,
+            splashColor: Colors.green.shade900,
             borderRadius: BorderRadius.all(Radius.circular(10)),
             radius: 10,
             child: Padding(

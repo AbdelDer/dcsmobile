@@ -75,7 +75,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
         actions: [
           IconButton(
             splashColor: Colors.green,
-            highlightColor: Colors.orangeAccent.shade400,
+            highlightColor: Colors.greenAccent.shade400,
             icon: Icon(
               Icons.add,
               color: Colors.white,
