@@ -45,7 +45,7 @@ class SubscriptionScreen extends StatelessWidget {
                               style: TextStyle(color: Colors.black),
                             ),
                             trailing: Text(
-                                '${snapshot.data.responseBody[index].subscriptionTime.toString()} jours'),
+                                '${snapshot.data.responseBody[index].days} jours'),
                           ),
                         );
                       });

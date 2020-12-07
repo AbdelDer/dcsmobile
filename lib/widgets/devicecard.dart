@@ -112,10 +112,15 @@ class _DeviceCardState extends State<DeviceCard> {
                         data[index].iconPath(),
                         width: 30,
                       ),
-                      Text(
-                        data[index].activityTime(),
-                        style: TextStyle(fontSize: 15),
-                      ),
+                      _option == "speedReport"
+                          ? SizedBox(
+                              height: 0,
+                              width: 0,
+                            )
+                          : Text(
+                              data[index].activityTime(),
+                              style: TextStyle(fontSize: 15),
+                            ),
                     ],
                   ),
                   title: Row(children: <Widget>[
@@ -160,8 +165,7 @@ class _DeviceCardState extends State<DeviceCard> {
                                         color: Colors.green.shade900,
                                         fontWeight: FontWeight.bold,
                                       )),
-                                  TextSpan(
-                                      text: "${data[index].speedKPH} Km/h")
+                                  TextSpan(text: "${data[index].speedKPH.toStringAsFixed(2)} Km/h")
                                 ],
                               ),
                             )
