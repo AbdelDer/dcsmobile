@@ -28,22 +28,25 @@ class SummaryReport {
   int get stops => _stops;
 
   String runningTime() {
-    return '${_runningTimeInMinutes.inHours}:${_runningTimeInMinutes.inMinutes.remainder(60)}';
+    return format(_runningTimeInMinutes);
   }
 
-  SummaryReport(this._parkingTimes, this._stops, this._speedAvg, this._odometerStart, this._odometerEnd,
+  format(Duration d) => d.toString().split('.').first.padLeft(8, "0");
+
+  SummaryReport(this._parkingTimes, this._stops, this._speedAvg,
+      this._odometerStart, this._odometerEnd,
       this._distance, this._speedMax, this._runningTimeInMinutes);
 
   factory SummaryReport.fromJson(Map<String, dynamic> json) {
     return SummaryReport(
-      json['_parkingTimes'],
-      json['stops'],
-      json['speedAvg'],
-      json['odometerStart'],
-      json['odometerEnd'],
-      json['distance'],
-      json['speedMax'],
-      Duration(minutes: json['runningTime'] ?? 0)
+        json['_parkingTimes'],
+        json['stops'],
+        json['speedAvg'],
+        json['odometerStart'],
+        json['odometerEnd'],
+        json['distance'],
+        json['speedMax'],
+        Duration(milliseconds: json['runningTime'] ?? 0)
     );
   }
 }

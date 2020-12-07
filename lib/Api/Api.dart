@@ -24,9 +24,8 @@ import 'HttpCustom.dart';
 class Api {
   static final httpClient = HttpClient();
 
-  static final baseUrl = 'https://geotech-gps.com:9090/api';
-  // static final baseUrl = 'http://192.168.1.40:9090/api';
-  // static final baseUrl = 'http://192.168.98.84:9090/api';
+  // static final baseUrl = 'https://geotech-gps.com:9090/api';
+  static final baseUrl = 'http://192.168.42.44:9090/api';
 
   static Future<Response> login(params) async {
     await connected();
