@@ -135,7 +135,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
     final byteData = await rootBundle.load("assets/icons/car.png");
     _carPin = byteData.buffer.asUint8List();
     final codec = await ui.instantiateImageCodec(_carPin,
-        targetWidth: 50, targetHeight: 50);
+        targetWidth: 80, targetHeight: 80);
     final ui.FrameInfo frameInfo = await codec.getNextFrame();
     _carPin = (await frameInfo.image.toByteData(format: ui.ImageByteFormat.png))
         .buffer

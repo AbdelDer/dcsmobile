@@ -30,8 +30,8 @@ class _ActivityHistoryState extends State<ActivityHistory> {
   final String vehicleModel;
 
   DatePickerController _controller = DatePickerController();
-  DateTime _selectedDate = DateTime.now();
-  DateTime _endDate = DateTime.now().subtract(Duration(days: 30));
+  DateTime _selectedDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime _endDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 23, 59, 59);
 
   StreamController _streamController;
   Stream _stream;
@@ -52,7 +52,10 @@ class _ActivityHistoryState extends State<ActivityHistory> {
     super.initState();
     _streamController = StreamController();
     _stream = _streamController.stream;
-    _getHistoryTimeLine();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _controller.jumpToSelection();
+      _getHistoryTimeLine();
+    });
   }
 
   String translate(key) {
@@ -393,8 +396,8 @@ class _ActivityHistoryState extends State<ActivityHistory> {
   _getHistoryTimeLine() {
     var body = jsonEncode({
       "deviceID": deviceID,
-      "startTime": (_selectedDate.millisecondsSinceEpoch / 1000).toString(),
-      "endTime": (_endDate.millisecondsSinceEpoch / 1000).toString()
+      "startTime": (_selectedDate.millisecondsSinceEpoch ~/ 1000).toString(),
+      "endTime": (_endDate.millisecondsSinceEpoch ~/ 1000).toString()
     });
     Api.getHistoryTimeLine(body).then((value) {
       _timeline = [];
