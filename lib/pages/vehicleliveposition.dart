@@ -260,7 +260,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
         color: Colors.greenAccent,
         width: 2);
     final infoWindow = InfoWindow(
-        snippet: "Speed: ${data.speedKPH} Km/h more...",
+        snippet: "Speed: ${data.speedKPH.toStringAsFixed(2)} Km/h more...",
         title: "${data.vehicleModel}",
         onTap: () {
           showDialog(
@@ -411,7 +411,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                                     color: Colors.black),
                               ),
                               Text(
-                                "${AppLocalizations.of(context).translate("Moving")}",
+                                "${AppLocalizations.of(context).translate(data.speedKPH > 3 ? "Moving" : "Parked")}",
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
                                     decoration: TextDecoration.none,
@@ -478,7 +478,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                               ),
                               Icon(
                                 Icons.signal_wifi_4_bar_outlined,
-                                color: Colors.green,
+                                color: Colors.deepOrange,
                               ),
                             ],
                           ),
