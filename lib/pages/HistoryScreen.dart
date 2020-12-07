@@ -116,7 +116,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   ),
                 );
               },
-              color: Colors.deepOrange,
+              color: Colors.green,
             ),
           ),
         ),

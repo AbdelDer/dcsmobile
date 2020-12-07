@@ -38,7 +38,7 @@ class ReportScreenState extends State<ReportScreen> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).translate("Report")),
-        backgroundColor: Colors.deepOrange,
+        backgroundColor: Colors.green,
       ),
       drawer: FEDrawer(),
       backgroundColor: Colors.white,
@@ -243,7 +243,7 @@ class ReportScreenState extends State<ReportScreen> {
                   top: 20,
                 ),
                 child: RaisedButton(
-                  color: Colors.deepOrange,
+                  color: Colors.green,
                   child: Text(
                     AppLocalizations.of(context).translate("Validate"),
                     style: TextStyle(
@@ -358,7 +358,7 @@ class ReportScreenState extends State<ReportScreen> {
       /*builder: (context, child) {
         return Theme(
           data: ThemeData(
-            dialogBackgroundColor: Colors.deepOrange,
+            dialogBackgroundColor: Colors.green,
             buttonColor: Colors.white
           ),// This will change to light theme.
           child: child,

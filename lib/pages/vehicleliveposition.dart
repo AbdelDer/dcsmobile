@@ -208,7 +208,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                 child: PopupMenuButton(
                     icon: Icon(
                       Icons.more_vert,
-                      color: Colors.deepOrange.shade700,
+                      color: Colors.green.shade700,
                       size: 35,
                     ),
                     color: Colors.white,
@@ -257,7 +257,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
     final customPolyline = Polyline(
         polylineId: PolylineId("custom"),
         points: _route,
-        color: Colors.deepOrangeAccent,
+        color: Colors.greenAccent,
         width: 2);
     final infoWindow = InfoWindow(
         snippet: "Speed: ${data.speedKPH} Km/h more...",
@@ -283,7 +283,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
                                     decoration: TextDecoration.none,
-                                    color: Colors.deepOrange),
+                                    color: Colors.green),
                               ),
                             ),
                           ),
@@ -305,7 +305,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
                                     decoration: TextDecoration.none,
-                                    color: Colors.deepOrange),
+                                    color: Colors.green),
                               ),
                             ],
                           ),
@@ -327,7 +327,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
                                     decoration: TextDecoration.none,
-                                    color: Colors.deepOrange),
+                                    color: Colors.green),
                               ),
                             ],
                           ),
@@ -349,7 +349,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
                                     decoration: TextDecoration.none,
-                                    color: Colors.deepOrange),
+                                    color: Colors.green),
                               ),
                             ],
                           ),
@@ -371,7 +371,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
                                     decoration: TextDecoration.none,
-                                    color: Colors.deepOrange),
+                                    color: Colors.green),
                               ),
                             ],
                           ),
@@ -393,7 +393,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
                                     decoration: TextDecoration.none,
-                                    color: Colors.deepOrange),
+                                    color: Colors.green),
                               ),
                             ],
                           ),
@@ -415,7 +415,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
                                     decoration: TextDecoration.none,
-                                    color: Colors.deepOrange),
+                                    color: Colors.green),
                               ),
                             ],
                           ),
@@ -437,7 +437,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
                                     decoration: TextDecoration.none,
-                                    color: Colors.deepOrange),
+                                    color: Colors.green),
                               ),
                             ],
                           ),
@@ -459,7 +459,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                                 style: TextStyle(
                                     fontSize: _dialogTextSize,
                                     decoration: TextDecoration.none,
-                                    color: Colors.deepOrange),
+                                    color: Colors.green),
                               ),
                             ],
                           ),
@@ -478,7 +478,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                               ),
                               Icon(
                                 Icons.signal_wifi_4_bar_outlined,
-                                color: Colors.deepOrange,
+                                color: Colors.green,
                               ),
                             ],
                           ),

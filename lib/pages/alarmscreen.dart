@@ -84,7 +84,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
             )
           ],
         ),
-        backgroundColor: Colors.deepOrange,
+        backgroundColor: Colors.green,
       ),
       drawer: FEDrawer(),
       backgroundColor: Colors.white,
@@ -141,7 +141,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                     ),
                     SwitchListTile(
                       secondary: Image.asset('assets/alarm/startup.png'),
-                      activeColor: Colors.deepOrangeAccent,
+                      activeColor: Colors.greenAccent,
                       value: alarm.startUp,
                       onChanged: (bool value) {
                         setState(() {
@@ -160,7 +160,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                     SwitchListTile(
                       secondary:
                           Image.asset('assets/alarm/battery&disconnect.png'),
-                      activeColor: Colors.deepOrangeAccent,
+                      activeColor: Colors.greenAccent,
                       value: alarm.battery,
                       onChanged: (bool newValue) {
                         setState(() {
@@ -179,7 +179,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                     SwitchListTile(
                       secondary:
                           Image.asset('assets/alarm/battery&disconnect.png'),
-                      activeColor: Colors.deepOrangeAccent,
+                      activeColor: Colors.greenAccent,
                       value: alarm.disconnect,
                       onChanged: (bool newValue) {
                         setState(() {
@@ -197,7 +197,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                     ),
                     SwitchListTile(
                       secondary: Image.asset('assets/alarm/bonnet.png'),
-                      activeColor: Colors.deepOrangeAccent,
+                      activeColor: Colors.greenAccent,
                       value: alarm.bonnet,
                       onChanged: (bool newValue) {
                         setState(() {
@@ -215,7 +215,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                     ),
                     SwitchListTile(
                       secondary: Image.asset('assets/alarm/towing.png'),
-                      activeColor: Colors.deepOrangeAccent,
+                      activeColor: Colors.greenAccent,
                       value: alarm.towing,
                       onChanged: (bool newValue) {
                         setState(() {
@@ -233,7 +233,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                     ),
                     SwitchListTile(
                       secondary: Image.asset('assets/alarm/crash.png'),
-                      activeColor: Colors.deepOrangeAccent,
+                      activeColor: Colors.greenAccent,
                       value: alarm.crash,
                       onChanged: (bool newValue) {
                         setState(() {
@@ -251,7 +251,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                     ),
                     SwitchListTile(
                       secondary: Image.asset('assets/alarm/driver.png'),
-                      activeColor: Colors.deepOrangeAccent,
+                      activeColor: Colors.greenAccent,
                       value: alarm.driver,
                       onChanged: (bool newValue) {
                         setState(() {
@@ -421,7 +421,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
       showBottomSheet(
           context: context,
           builder: (context) => Container(
-                color: Colors.deepOrange,
+                color: Colors.green,
                 child: Center(
                     child: Text(
                   translate('speedErrMsg'),

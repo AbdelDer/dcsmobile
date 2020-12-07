@@ -120,7 +120,7 @@ class _DashboardState extends State<Dashboard>
           AppLocalizations.of(context).translate('Dashboard'),
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.deepOrange,
+        backgroundColor: Colors.green,
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 10),
@@ -381,6 +381,7 @@ class _DashboardState extends State<Dashboard>
         MaterialPageRoute(
           builder: (context) => CommandsScreen(
             initIndex: 1,
+            title: AppLocalizations.of(context).translate("Commands"),
           ),
         ),
       );

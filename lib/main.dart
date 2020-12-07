@@ -49,8 +49,8 @@ class _EnteryPointState extends State<EnteryPoint> {
       initialRoute: '/login',
       navigatorObservers: [routeObserver],
       theme: ThemeData(
-        primaryColor: Colors.deepOrange,
-        accentColor: Colors.deepOrange,
+        primaryColor: Colors.green,
+        accentColor: Colors.green,
       ),
       // List all of the app's supported locales here
       supportedLocales: [
@@ -96,7 +96,7 @@ class _EnteryPointState extends State<EnteryPoint> {
         '/notifications': (context) => NotificationsView(),
         '/help': (context) => HelpScreen("Assistance"),
         '/report': (context) => ReportScreen(),
-        '/commands': (context) => CommandsScreen(),
+        '/commands': (context) => CommandsScreen(title: AppLocalizations.of(context).translate("Commands"),),
         '/maintenance': (context) => Position("all", "Maintenance"),
         // '/activityhistory': (context) => ActivityHistory(deviceID: "demo3", vehicleModel: "citroen"),
       },
@@ -221,7 +221,7 @@ class _FEDrawerState extends State<FEDrawer> {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CommandsScreen(),
+                  builder: (context) => CommandsScreen(title: AppLocalizations.of(context).translate("Commands"),),
                 ),
               ),
             ),
@@ -254,7 +254,7 @@ class _FEDrawerState extends State<FEDrawer> {
                   builder: (context) => Scaffold(
                     appBar: AppBar(
                       title: Text(translate(context, 'Radar')),
-                      backgroundColor: Colors.deepOrange,
+                      backgroundColor: Colors.green,
                     ),
                     drawer: FEDrawer(),
                   ),

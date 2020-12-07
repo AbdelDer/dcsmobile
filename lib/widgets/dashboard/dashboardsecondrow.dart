@@ -73,8 +73,8 @@ class _DashboardSecondRowState extends State<DashboardSecondRow> {
     //                 duration: Duration(milliseconds: 500),
     //                 child: RoundedContainer(
     //                     colors: [
-    //                       Colors.deepOrange.shade300,
-    //                       Colors.deepOrange.shade400
+    //                       Colors.green.shade300,
+    //                       Colors.green.shade400
     //                     ],
     //                     maxSubject: "Kilometrage",
     //                     maxValue: maxDistance['maxDistance'],
@@ -85,8 +85,8 @@ class _DashboardSecondRowState extends State<DashboardSecondRow> {
     //                 duration: Duration(milliseconds: 500),
     //                 child: RoundedContainer(
     //                     colors: [
-    //                       Colors.deepOrange.shade400,
-    //                       Colors.deepOrange.shade500
+    //                       Colors.green.shade400,
+    //                       Colors.green.shade500
     //                     ],
     //                     maxSubject: "Vitesse",
     //                     maxValue: maxSpeed['maxSpeed'],
@@ -97,8 +97,8 @@ class _DashboardSecondRowState extends State<DashboardSecondRow> {
     //                 duration: Duration(milliseconds: 500),
     //                 child: RoundedContainer(
     //                     colors: [
-    //                       Colors.deepOrange.shade500,
-    //                       Colors.deepOrange.shade600
+    //                       Colors.green.shade500,
+    //                       Colors.green.shade600
     //                     ],
     //                     maxSubject: "T. en Marche",
     //                     maxValue: runningTimeAsString(maxRunningTime['maxRunningTime']),
@@ -136,24 +136,24 @@ class _DashboardSecondRowState extends State<DashboardSecondRow> {
       children: <Widget>[
         RoundedContainer(
             colors: [
-              Colors.deepOrange.shade300,
-              Colors.deepOrange.shade400,
+              Colors.green.shade300,
+              Colors.green.shade400,
             ],
             maxSubject: AppLocalizations.of(context).translate("Distance"),
             maxValue: maxDistance['maxDistance']?.toStringAsFixed(2),
             model: maxDistance['vehicleModel']),
         RoundedContainer(
             colors: [
-              Colors.deepOrange.shade400,
-              Colors.deepOrange.shade500,
+              Colors.green.shade400,
+              Colors.green.shade500,
             ],
             maxSubject: AppLocalizations.of(context).translate("Speed"),
             maxValue: maxSpeed['maxSpeed']?.toStringAsFixed(2),
             model: maxSpeed['vehicleModel']),
         RoundedContainer(
             colors: [
-              Colors.deepOrange.shade500,
-              Colors.deepOrange.shade600,
+              Colors.green.shade500,
+              Colors.green.shade600,
             ],
             maxSubject:
                 AppLocalizations.of(context).translate("Vehicle running time"),

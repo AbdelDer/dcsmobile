@@ -120,7 +120,7 @@ class _ReportViewState extends State<ReportView> {
     double _heightContainer;
     double _widthContainer;
     double _fontSize;
-    var colors = [Colors.deepOrange.shade300, Colors.deepOrange.shade400];
+    var colors = [Colors.green.shade300, Colors.green.shade400];
     if (MediaQuery.of(context).orientation == Orientation.portrait &&
         MediaQuery.of(context).size.shortestSide >= 600) {
       _heightContainer = 210;

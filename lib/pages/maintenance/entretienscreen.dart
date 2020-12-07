@@ -68,7 +68,7 @@ class _EntretienScreenState extends State<EntretienScreen> {
       appBar: AppBar(
         actions: [
           IconButton(
-            splashColor: Colors.deepOrange,
+            splashColor: Colors.green,
             highlightColor: Colors.orangeAccent.shade400,
             icon: Icon(
               Icons.add,
@@ -400,7 +400,7 @@ class _EntretienScreenState extends State<EntretienScreen> {
                               child: Text(
                                 "close",
                                 style: TextStyle(
-                                    color: Colors.deepOrange, fontSize: 18),
+                                    color: Colors.green, fontSize: 18),
                               ),
                               onPressed: () {
                                 Navigator.of(context).pop();

@@ -28,7 +28,7 @@ class _HelpScreenState extends State<HelpScreen> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.deepOrange,
+        backgroundColor: Colors.green,
         title: Text('$_title'),
       ),
       backgroundColor: Colors.white,

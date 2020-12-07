@@ -157,7 +157,7 @@ class _DeviceCardState extends State<DeviceCard> {
                                   TextSpan(
                                       text: "| ",
                                       style: TextStyle(
-                                        color: Colors.deepOrange.shade900,
+                                        color: Colors.green.shade900,
                                         fontWeight: FontWeight.bold,
                                       )),
                                   TextSpan(
@@ -178,7 +178,7 @@ class _DeviceCardState extends State<DeviceCard> {
                                   TextSpan(
                                       text: "| ",
                                       style: TextStyle(
-                                        color: Colors.deepOrange.shade900,
+                                        color: Colors.green.shade900,
                                         fontWeight: FontWeight.bold,
                                       )),
                                   TextSpan(
@@ -229,7 +229,7 @@ class _DeviceCardState extends State<DeviceCard> {
           child: RaisedButton.icon(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18.0),
-                side: BorderSide(color: Colors.deepOrange)),
+                side: BorderSide(color: Colors.green)),
             padding: const EdgeInsets.symmetric(horizontal: 60),
             icon: Image.asset('assets/maintenance/draining.png'),
             label: Padding(
@@ -258,7 +258,7 @@ class _DeviceCardState extends State<DeviceCard> {
         //   child: RaisedButton.icon(
         //     shape: RoundedRectangleBorder(
         //         borderRadius: BorderRadius.circular(18.0),
-        //         side: BorderSide(color: Colors.deepOrange)),
+        //         side: BorderSide(color: Colors.green)),
         //     padding: const EdgeInsets.symmetric(horizontal: 60),
         //     icon: Image.asset('assets/maintenance/document.png'),
         //     label: Padding(
@@ -277,7 +277,7 @@ class _DeviceCardState extends State<DeviceCard> {
           child: RaisedButton.icon(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18.0),
-                side: BorderSide(color: Colors.deepOrange)),
+                side: BorderSide(color: Colors.green)),
             padding: const EdgeInsets.symmetric(horizontal: 60),
             icon: Image.asset('assets/maintenance/visit.png'),
             label: Padding(
@@ -306,7 +306,7 @@ class _DeviceCardState extends State<DeviceCard> {
           child: RaisedButton.icon(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18.0),
-                side: BorderSide(color: Colors.deepOrange)),
+                side: BorderSide(color: Colors.green)),
             padding: const EdgeInsets.symmetric(horizontal: 60),
             icon: Image.asset('assets/maintenance/insurance.png'),
             label: Padding(
@@ -335,7 +335,7 @@ class _DeviceCardState extends State<DeviceCard> {
           child: RaisedButton.icon(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18.0),
-                side: BorderSide(color: Colors.deepOrange)),
+                side: BorderSide(color: Colors.green)),
             padding: const EdgeInsets.symmetric(horizontal: 60),
             icon: Image.asset('assets/maintenance/entretien.png'),
             label: Padding(

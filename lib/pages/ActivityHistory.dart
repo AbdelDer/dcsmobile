@@ -88,7 +88,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
         mainAxisSize: MainAxisSize.max,
         children: [
           Container(
-            color: Colors.deepOrange,
+            color: Colors.green,
             height: 100,
             child: DatePicker(
               DateTime.now().subtract(Duration(days: 30)),
@@ -97,7 +97,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
               height: 80,
               controller: _controller,
               initialSelectedDate: DateTime.now(),
-              selectionColor: Colors.deepOrange,
+              selectionColor: Colors.green,
               selectedTextColor: Colors.white,
               onDateChange: (date) {
                 if (_selectedDate != date) {
@@ -179,7 +179,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                       endIndent: 10,
                                       indent: 10,
                                       thickness: 2,
-                                      color: Colors.deepOrange,
+                                      color: Colors.green,
                                     ),
                                   ),
                                   Padding(
@@ -204,7 +204,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                       endIndent: 10,
                                       indent: 10,
                                       thickness: 2,
-                                      color: Colors.deepOrange,
+                                      color: Colors.green,
                                     ),
                                   ),
                                   Padding(

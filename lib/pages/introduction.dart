@@ -158,7 +158,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
       dotsDecorator: DotsDecorator(
           size: const Size.square(10.0),
           activeSize: const Size(20.0, 10.0),
-          activeColor: Colors.deepOrange,
+          activeColor: Colors.green,
           color: Colors.black26,
           spacing: const EdgeInsets.symmetric(horizontal: 3.0),
           activeShape: RoundedRectangleBorder(

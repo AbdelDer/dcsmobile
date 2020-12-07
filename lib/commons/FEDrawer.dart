@@ -149,7 +149,7 @@ class FEDrawerOld extends StatelessWidget {
                   builder: (context) => Scaffold(
                     appBar: AppBar(
                       title: Text("Radar"),
-                      backgroundColor: Colors.deepOrange,
+                      backgroundColor: Colors.green,
                     ),
                     drawer: FEDrawer(),
                   ),
@@ -165,7 +165,7 @@ class FEDrawerOld extends StatelessWidget {
                   builder: (context) => Scaffold(
                     appBar: AppBar(
                       title: Text("Maintenance"),
-                      backgroundColor: Colors.deepOrange,
+                      backgroundColor: Colors.green,
                     ),
                     drawer: FEDrawer(),
                   ),

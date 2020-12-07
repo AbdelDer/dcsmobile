@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/Api/Response.dart';
-import 'package:dcsmobile/commons/FEDrawer.dart';
 import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/pages/Utils/VehicleListView.dart';
@@ -12,11 +11,13 @@ import 'package:flutter/material.dart';
 
 class CommandsScreen extends StatefulWidget {
   final initIndex;
+  final title;
 
-  CommandsScreen({this.initIndex = 0});
+  CommandsScreen({this.initIndex = 0, @required this.title});
 
   @override
-  _CommandsScreenState createState() => _CommandsScreenState(initIndex);
+  _CommandsScreenState createState() =>
+      _CommandsScreenState(initIndex, this.title);
 }
 
 class _CommandsScreenState extends State<CommandsScreen>
@@ -31,15 +32,16 @@ class _CommandsScreenState extends State<CommandsScreen>
   TabController _tabController;
   int _selectedIndex;
   final initIndex;
+  final titleString;
 
-  _CommandsScreenState(this.initIndex);
+  _CommandsScreenState(this.initIndex, this.titleString);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.deepOrange,
+        backgroundColor: Colors.green,
         title: _title,
         actions: <Widget>[
           InkResponse(
@@ -109,9 +111,11 @@ class _CommandsScreenState extends State<CommandsScreen>
           indicatorColor: Colors.white,
           controller: _tabController,
           tabs: [
-            Tab(text: 'all'),
             Tab(
-              text: 'En retard',
+              text: AppLocalizations.of(context).translate("All"),
+            ),
+            Tab(
+              text: AppLocalizations.of(context).translate("Late"),
             )
           ],
         ),
@@ -237,7 +241,7 @@ class _CommandsScreenState extends State<CommandsScreen>
   @override
   void initState() {
     super.initState();
-    _title = Text(AppLocalizations.of(context).translate("Commands"));
+    _title = Text(titleString);
     _tabController =
         TabController(length: 2, vsync: this, initialIndex: initIndex);
     _selectedIndex = initIndex;
@@ -253,7 +257,7 @@ class _CommandsScreenState extends State<CommandsScreen>
       }
       setState(() {
         _icon = Icons.search;
-        _title = Text(AppLocalizations.of(context).translate("Commands"));
+        _title = Text(titleString);
       });
     });
     _streamController = StreamController.broadcast();

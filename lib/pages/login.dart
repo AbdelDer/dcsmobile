@@ -46,7 +46,7 @@ class _LoginState extends State<Login> {
         decoration: BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.topCenter,
-                colors: [Colors.deepOrange, Colors.orange])),
+                colors: [Colors.green, Colors.orange])),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -279,7 +279,7 @@ class _LoginState extends State<Login> {
                                         begin: Alignment.topRight,
                                         end: Alignment.bottomLeft,
                                         colors: [
-                                          Colors.deepOrange,
+                                          Colors.green,
                                           Colors.orange
                                         ]),
                                     color: Colors.cyanAccent,

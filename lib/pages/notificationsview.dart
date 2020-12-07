@@ -63,7 +63,7 @@ class _NotificationsViewState extends State<NotificationsView> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          backgroundColor: Colors.deepOrange,
+          backgroundColor: Colors.green,
           title: Text(AppLocalizations.of(context).translate("Notifications")),
           actions: [
             PopupMenuButton(
@@ -286,7 +286,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                           decoration: BoxDecoration(
                                             color: Colors.white,
                                             border: Border.all(
-                                              color: Colors.deepOrange,
+                                              color: Colors.green,
                                               width: _devices
                                                       .elementAt(index)
                                                       .selected
@@ -312,13 +312,13 @@ class _NotificationsViewState extends State<NotificationsView> {
                         RaisedButton(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.deepOrange)),
+                                side: BorderSide(color: Colors.green)),
                             padding: const EdgeInsets.symmetric(horizontal: 60),
                             child: Text(
                               'ok',
                               style: TextStyle(color: Colors.white),
                             ),
-                            color: Colors.deepOrange,
+                            color: Colors.green,
                             onPressed: () async {
                               Navigator.pop(context);
                               await _getNotifications();
@@ -381,7 +381,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         border: Border.all(
-                                          color: Colors.deepOrange,
+                                          color: Colors.green,
                                           width: _eventFilters
                                                   .elementAt(index)
                                                   .filterValue
@@ -408,13 +408,13 @@ class _NotificationsViewState extends State<NotificationsView> {
                   RaisedButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18.0),
-                          side: BorderSide(color: Colors.deepOrange)),
+                          side: BorderSide(color: Colors.green)),
                       padding: const EdgeInsets.symmetric(horizontal: 60),
                       child: Text(
                         AppLocalizations.of(context).translate("Validate"),
                         style: TextStyle(color: Colors.white),
                       ),
-                      color: Colors.deepOrange,
+                      color: Colors.green,
                       onPressed: () async {
                         Navigator.pop(context);
                         await _getNotifications();
@@ -527,7 +527,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                         decoration:
                                                             TextDecoration.none,
                                                         color:
-                                                            Colors.deepOrange),
+                                                            Colors.green),
                                                   ),
                                                 ),
                                               ),
@@ -552,7 +552,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                         decoration:
                                                             TextDecoration.none,
                                                         color:
-                                                            Colors.deepOrange),
+                                                            Colors.green),
                                                   ),
                                                 ],
                                               ),
@@ -577,7 +577,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                         decoration:
                                                             TextDecoration.none,
                                                         color:
-                                                            Colors.deepOrange),
+                                                            Colors.green),
                                                   ),
                                                 ],
                                               ),
@@ -602,7 +602,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                         decoration:
                                                             TextDecoration.none,
                                                         color:
-                                                            Colors.deepOrange),
+                                                            Colors.green),
                                                   ),
                                                 ],
                                               ),
@@ -627,7 +627,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                         decoration:
                                                             TextDecoration.none,
                                                         color:
-                                                            Colors.deepOrange),
+                                                            Colors.green),
                                                   ),
                                                 ],
                                               ),
@@ -652,7 +652,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                         decoration:
                                                             TextDecoration.none,
                                                         color:
-                                                            Colors.deepOrange),
+                                                            Colors.green),
                                                   ),
                                                 ],
                                               ),
@@ -678,7 +678,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                         decoration:
                                                             TextDecoration.none,
                                                         color:
-                                                            Colors.deepOrange),
+                                                            Colors.green),
                                                   ),
                                                 ],
                                               ),
@@ -703,7 +703,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                         decoration:
                                                             TextDecoration.none,
                                                         color:
-                                                            Colors.deepOrange),
+                                                            Colors.green),
                                                   ),
                                                 ],
                                               ),
@@ -728,7 +728,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                         decoration:
                                                             TextDecoration.none,
                                                         color:
-                                                            Colors.deepOrange),
+                                                            Colors.green),
                                                   ),
                                                 ],
                                               ),
@@ -749,7 +749,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                   Icon(
                                                     Icons
                                                         .signal_wifi_4_bar_outlined,
-                                                    color: Colors.deepOrange,
+                                                    color: Colors.green,
                                                   ),
                                                 ],
                                               ),

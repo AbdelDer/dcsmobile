@@ -69,7 +69,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
       appBar: AppBar(
         actions: [
           IconButton(
-            splashColor: Colors.deepOrange,
+            splashColor: Colors.green,
             highlightColor: Colors.orangeAccent.shade400,
             icon: Icon(
               Icons.add,
@@ -434,7 +434,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
                               child: Text(
                                 "${AppLocalizations.of(context).translate("Close")}",
                                 style: TextStyle(
-                                    color: Colors.deepOrange, fontSize: 18),
+                                    color: Colors.green, fontSize: 18),
                               ),
                               onPressed: () {
                                 Navigator.of(context).pop();

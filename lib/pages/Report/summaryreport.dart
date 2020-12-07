@@ -66,7 +66,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
             )
           ],
         ),
-        backgroundColor: Colors.deepOrange,
+        backgroundColor: Colors.green,
       ),
       drawer: FEDrawer(),
       backgroundColor: Colors.white,

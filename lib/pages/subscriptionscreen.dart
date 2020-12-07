@@ -13,7 +13,7 @@ class SubscriptionScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(AppLocalizations.of(context).translate('Subscription')),
-          backgroundColor: Colors.deepOrange,
+          backgroundColor: Colors.green,
         ),
         drawer: FEDrawer(),
         body: FutureBuilder(

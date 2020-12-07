@@ -88,7 +88,7 @@ class _ReportScreenState extends State<ReportScreen> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.deepOrange,
+        backgroundColor: Colors.green,
         title: Text('$_title'),
       ),
       backgroundColor: Colors.white,
@@ -258,7 +258,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       gradient: LinearGradient(
                           begin: Alignment.topRight,
                           end: Alignment.bottomLeft,
-                          colors: [Colors.deepOrange, Colors.orange]),
+                          colors: [Colors.green, Colors.orange]),
                       color: Colors.cyanAccent,
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
