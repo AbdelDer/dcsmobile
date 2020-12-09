@@ -181,7 +181,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
                         style: TextStyle(fontSize: _fontSize),
                       ),
                       subtitle: Text(
-                        snapshot.data.speedMax.toString(),
+                        snapshot.data.speedMax?.toStringAsFixed(2)??'',
                         style:
                             TextStyle(fontSize: _fontSize, color: Colors.black),
                       ),
@@ -198,7 +198,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
                         style: TextStyle(fontSize: _fontSize),
                       ),
                       subtitle: Text(
-                        snapshot.data.speedAvg.toString(),
+                        snapshot.data.speedAvg?.toStringAsFixed(2)??'',
                         style:
                             TextStyle(fontSize: _fontSize, color: Colors.black),
                       ),

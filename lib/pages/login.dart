@@ -74,6 +74,7 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     child: Padding(
                       padding: const EdgeInsets.only(right: 20.0),
                       child: Stack(

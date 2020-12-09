@@ -11,7 +11,7 @@ class SummaryReport {
   double _odometerEnd;
   double _distance;
   double _speedMax;
-  Duration _runningTimeInMinutes;
+  Duration _runningTimeSeconds;
 
   double get odometerStart => _odometerStart;
 
@@ -28,18 +28,18 @@ class SummaryReport {
   int get stops => _stops;
 
   String runningTime() {
-    return format(_runningTimeInMinutes);
+    return format(_runningTimeSeconds);
   }
 
   format(Duration d) => d.toString().split('.').first.padLeft(8, "0");
 
   SummaryReport(this._parkingTimes, this._stops, this._speedAvg,
       this._odometerStart, this._odometerEnd,
-      this._distance, this._speedMax, this._runningTimeInMinutes);
+      this._distance, this._speedMax, this._runningTimeSeconds);
 
   factory SummaryReport.fromJson(Map<String, dynamic> json) {
     return SummaryReport(
-        json['_parkingTimes'],
+        json['parkingTimes'],
         json['stops'],
         json['speedAvg'],
         json['odometerStart'],
