@@ -58,17 +58,20 @@ class EventData {
 
   //TODO: add method that return activity Time
   String activityTime() {
-    if(_activityTime == '+24h') return _activityTime;
-    else if(_activityTime.contains(RegExp(r'^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$'))) {
-      return _activityTime;
+    if(_activityTime != null) {
+      if(_activityTime == '+24h') return _activityTime;
+      else if(_activityTime.contains(RegExp(r'^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$'))) {
+        return _activityTime;
+      }
+      else {
+        Duration duration = Duration(seconds: _timestamp.toInt() - int.parse(_activityTime));
+        String twoDigits(int n) => n.toString().padLeft(2, "0");
+        String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+        String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+        return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+      }
     }
-    else {
-      Duration duration = Duration(seconds: _timestamp.toInt() - int.parse(_activityTime));
-      String twoDigits(int n) => n.toString().padLeft(2, "0");
-      String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-      String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-      return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
-    }
+    return '';
   }
 
   String get timestampAsString {
