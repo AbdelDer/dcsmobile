@@ -57,7 +57,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
   String translate(key) {
     try {
       return AppLocalizations.of(context).translate(key);
-    } finally {
+    } catch (e) {
       return key;
     }
   }
@@ -149,7 +149,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                         });
                       },
                       title: Text(
-                        translate('Start Up'),
+                        translate('Start UP'),
                         style: GoogleFonts.roboto(
                           fontSize: 17,
                           color: Colors.black,
@@ -322,7 +322,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                       ),
                     ),
                     Container(
-                      width: 120,
+                      width: 170,
                       child: IconButton(
                         icon: Row(
                           mainAxisSize: MainAxisSize.max,
@@ -394,13 +394,11 @@ class _AlarmScreenState extends State<AlarmScreen> {
         (error) {
           //here if the table does not contain any record we will create an alarm instance with default values
           if (error == '404') {
-            print('404');
             _create = true;
             alarm = Alarm.byDefault(
                 accountID: _accountID, userID: _userID, deviceID: _deviceID);
             // _initFormFields();
             _queryResponse = Response.completed(alarm);
-            print(_queryResponse);
             return _queryResponse;
           } else {
             //if we encounter another problem, for example the user doesn't have internet we'll open dialog

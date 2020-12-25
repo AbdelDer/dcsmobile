@@ -25,9 +25,10 @@ class Api {
   static final httpClient = HttpClient();
 
   static final baseUrl = 'https://geotech-gps.com:9090/api';
+
   // static final baseUrl = 'http://192.168.43.113:9090/api';
 
-  // static final baseUrl = 'http://192.168.42.44:9090/api';
+  // static final baseUrl = 'http://192.168.98.82:9090/api';
 
   static Future<Response> login(params) async {
     await connected();
@@ -118,8 +119,8 @@ class Api {
     } else {
       body = jsonEncode({
         "accountID": params[0],
-        "userID": params[1] ?? '',
-        // "groupID": await prefs.getString("groupID"),
+        // "userID": params[1] ?? '',
+        "groupID": await prefs.getString("groupID"),
         "search": params[3]
       });
       switch (params[2]) {
@@ -169,8 +170,8 @@ class Api {
 
     body = jsonEncode({
       "accountID": await prefs.getString("accountID"),
-      "userID": await prefs.getString("userID") ?? '',
-      // "groupID": await prefs.getString("groupID") ?? '',
+      // "userID": await prefs.getString("userID") ?? '',
+      "groupID": await prefs.getString("groupID") ?? '',
       "search": search
     });
 
@@ -180,7 +181,6 @@ class Api {
         .post()
         .catchError((err) => throw ('erreur lié au serveur'));
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
-
     if (httpResponse.statusCode != 200) {
       return Response.error(responseBody['message']);
     }
@@ -201,8 +201,8 @@ class Api {
     } else {
       body = jsonEncode({
         'accountID': params[0],
-        'userID': params[1],
-        // 'groupID': await prefs.getString("groupID")
+        // 'userID': params[1],
+        'groupID': await prefs.getString("groupID")
       });
       httpCustom = HttpCustom(url: '$baseUrl/user/vehicles', body: body);
     }
@@ -297,8 +297,8 @@ class Api {
     } else {
       body = jsonEncode({
         "accountID": await prefs.getString("accountID"),
-        "userID": await prefs.getString("userID")
-        // "groupID": await prefs.getString("groupID"),
+        // "userID": await prefs.getString("userID")
+        "groupID": await prefs.getString("groupID")
       });
 
       httpCustom = HttpCustom(url: '$baseUrl/user/subscription', body: body);
@@ -360,9 +360,6 @@ class Api {
     final httpResponse = await httpCustom
         .post()
         .catchError((err) => throw ('erreur lié au serveur'));
-    print(httpResponse);
-    print(httpResponse.body);
-    print(httpResponse.bodyBytes);
     if (httpResponse.bodyBytes.isEmpty) throw ('404');
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
 

@@ -133,7 +133,7 @@ class _CommandsScreenState extends State<CommandsScreen>
                         color: Colors.white,
                         height: MediaQuery.of(context).size.height - 100,
                         child: VehicleListView(_scaffoldKey, _deviceListViewKey,
-                            "all", "Commands"),
+                            "all", AppLocalizations.of(context).translate("Commands")),
                       ),
                     ],
                   ),
@@ -152,9 +152,9 @@ class _CommandsScreenState extends State<CommandsScreen>
                       return ListView.builder(
                           itemCount: snapshot.data.responseBody.length,
                           itemBuilder: (context, index) {
-                            double _modelFontSize = 24;
-                            double _addressFontSize = 18;
-                            double _detailsFontSize = 16;
+                            double _modelFontSize = 16;
+                            double _addressFontSize = 14;
+                            double _detailsFontSize = 12;
                             return Card(
                               elevation: 2,
                               child: ExpansionTile(

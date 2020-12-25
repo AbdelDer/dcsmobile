@@ -156,7 +156,7 @@ class _DashboardSecondRowState extends State<DashboardSecondRow> {
               Colors.green.shade600,
             ],
             maxSubject:
-                AppLocalizations.of(context).translate("Vehicle running time"),
+                AppLocalizations.of(context).translate("Running time"),
             maxValue: runningTimeAsString(maxRunningTime['maxRunningTime']),
             model: maxRunningTime['vehicleModel']),
       ],

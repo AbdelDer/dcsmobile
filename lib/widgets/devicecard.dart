@@ -92,8 +92,7 @@ class _DeviceCardState extends State<DeviceCard> {
                       //       return HistoryScreen(data[index].deviceID,
                       //           data[index].vehicleModel, _option);
                       //     });
-                    } else if (_option ==
-                        AppLocalizations.of(context).translate("Alarms")) {
+                    } else if (_option =="Alarms") {
                       Navigator.push(
                         context,
                         MaterialPageRoute(

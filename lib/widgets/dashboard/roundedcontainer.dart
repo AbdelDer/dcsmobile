@@ -44,7 +44,7 @@ class _RoundedContainerState extends State<RoundedContainer> {
 //      print("tablet landscape");
     } else {
       _heightContainer = 130;
-      _widthContainer = 120;
+      _widthContainer = 140;
       _fontSize = 13;
     }
 
@@ -80,14 +80,14 @@ class _RoundedContainerState extends State<RoundedContainer> {
                       fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  maxSubject ?? 'null',
+                  maxSubject ?? '',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: _fontSize,
                       fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  maxValue ?? 'null',
+                  maxValue ?? '',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: _fontSize,
@@ -96,7 +96,7 @@ class _RoundedContainerState extends State<RoundedContainer> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    model ?? 'null',
+                    model ?? '',
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: _fontSize,

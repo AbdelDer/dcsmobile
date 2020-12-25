@@ -216,8 +216,10 @@ class _LoginState extends State<Login> {
                                             return "nom d'utilisateur est obligatoire";
                                           }
                                           else*/
+                                          // if (value.contains(new RegExp(
+                                          //     r"[0-9]|@|\+|-|\/|\*"))) {
                                           if (value.contains(new RegExp(
-                                              r"[0-9]|@|\+|-|\/|\*"))) {
+                                              r"@|\+|-|\/|\*"))) {
                                             return AppLocalizations.of(context)
                                                 .translate("Name Caracters");
                                           }
@@ -383,15 +385,15 @@ class _LoginState extends State<Login> {
 
   //here we store login data (username, password, account)
   saveLoginInfo() async {
-//    await encryptedSharedPreferences.clear();
+   await encryptedSharedPreferences.clear();
     if (_usernameController.text != '') {
       //here we do Api query to get groupid of user because we need it in all other pages
-      // await Api.userGroup(
-      //     _accountController.text, _usernameController.text)
-      //     .then((response) async{
-      //   await encryptedSharedPreferences.setString(
-      //       "groupID", response.responseBody.groupID);
-      // }).catchError((err) => ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: err, type: 'error'));
+      await Api.userGroup(
+          _accountController.text, _usernameController.text)
+          .then((response) async{
+        await encryptedSharedPreferences.setString(
+            "groupID", response.responseBody.groupID);
+      }).catchError((err) => ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: err, type: 'error'));
 
       await encryptedSharedPreferences.setString(
           "userID", _usernameController.text);

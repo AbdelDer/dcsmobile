@@ -21,9 +21,6 @@ class _PositionState extends State<Position> {
   final _option;
 
   VehicleListView _deviceListView;
-  double _modelFontSize = 24;
-  double _adresseFontSize = 18;
-  double _detailsFontSize = 16;
   Widget _title;
   IconData _icon = Icons.search;
 

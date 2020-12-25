@@ -21,6 +21,7 @@ class EventData {
   String _activityTime;
   bool _late;
   int _parked;
+  List<String> _activity;
 
   String get deviceID => _deviceID;
 
@@ -58,18 +59,21 @@ class EventData {
 
   //TODO: add method that return activity Time
   String activityTime() {
-    if(_activityTime != null) {
-      if(_activityTime == '+24h') return _activityTime;
-      else if(_activityTime.contains(RegExp(r'^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$'))) {
+    if (_activityTime != null) {
+      /*if (_activityTime == '+24h')
         return _activityTime;
-      }
-      else {
-        Duration duration = Duration(seconds: _timestamp.toInt() - int.parse(_activityTime));
+      else if (_activityTime.contains(
+          RegExp(r'^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$'))) {
+        return _activityTime;
+      } else {
+        Duration duration =
+            Duration(seconds: _timestamp.toInt() - int.parse(_activityTime));
         String twoDigits(int n) => n.toString().padLeft(2, "0");
         String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
         String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
         return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
-      }
+      }*/
+      return _activity.elementAt(0);
     }
     return '';
   }
@@ -89,15 +93,23 @@ class EventData {
   }
 
   String iconPath() {
-    if(_activityTime == null || _activityTime == '') {
+    if (_activityTime == null || _activityTime == '') {
       return 'assets/icons/disconnected.png';
-    }else {
-      if (_activityTime == '+24h') {
+    } else {
+      if (_activity.elementAt(0) == '+24h') {
         return 'assets/icons/r_marker_blue.png';
-      } else if (_activityTime.contains(RegExp(r'^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$'))) {
+      }else if (_activity.elementAt(1) == 'parked') {
         //TODO: change above condition with: _activityTime.contains(RegExp(r'^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$'))
         return 'assets/icons/marker_blue_parking.png';
-      } else {
+      }
+      /*
+      else if (_activityTime.contains(
+          RegExp(r'^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$'))) {
+        //TODO: change above condition with: _activityTime.contains(RegExp(r'^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$'))
+        return 'assets/icons/marker_blue_parking.png';
+      }
+      */
+      else {
         if (_speedKPH < 3) {
           return 'assets/icons/stop_small.png';
         } else if (_speedKPH <= 60) {
@@ -208,7 +220,9 @@ class EventData {
         _simPhoneNumber = simPhoneNumber,
         _activityTime = activityTime,
         _late = late,
-        _parked = parked;
+        _parked = parked {
+    _activity = _activityTime.split(',');
+  }
 
   factory EventData.fromJson(Map<String, dynamic> json) {
     return EventData(

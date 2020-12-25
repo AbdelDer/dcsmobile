@@ -1,8 +1,5 @@
 import 'dart:core';
 
-import 'package:geocoder/geocoder.dart';
-import 'package:intl/intl.dart';
-
 class SummaryReport {
   double _speedAvg;
   int _parkingTimes;
