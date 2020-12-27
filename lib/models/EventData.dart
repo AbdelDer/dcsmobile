@@ -78,6 +78,10 @@ class EventData {
     return '';
   }
 
+  state() {
+    return _activity.elementAt(1);
+  }
+
   String get timestampAsString {
     final date = DateTime.fromMillisecondsSinceEpoch(timestamp.toInt() * 1000);
     final formatter = new DateFormat('yyyy-MM-dd HH:mm:ss');

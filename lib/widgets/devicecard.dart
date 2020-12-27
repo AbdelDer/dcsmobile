@@ -7,6 +7,7 @@ import 'package:dcsmobile/pages/maintenance/drainingscreen.dart';
 import 'package:dcsmobile/pages/maintenance/entretienscreen.dart';
 import 'package:dcsmobile/pages/maintenance/insurancescreen.dart';
 import 'package:dcsmobile/pages/maintenance/technicalvisitscreen.dart';
+import 'package:dcsmobile/pages/openstreetmap.dart';
 import 'package:dcsmobile/pages/reportscreen.dart';
 import 'package:dcsmobile/pages/vehicleliveposition.dart';
 import 'package:flutter/material.dart';
@@ -74,6 +75,13 @@ class _DeviceCardState extends State<DeviceCard> {
                               deviceID: data[index].deviceID, option: _option),
                         ),
                       );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => OpenStreetMap(
+                      //         deviceID: data[index].deviceID, option: _option),
+                      //   ),
+                      // );
                     } else if (_option ==
                         AppLocalizations.of(context).translate("History")) {
                       Navigator.push(

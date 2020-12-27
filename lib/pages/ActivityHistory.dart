@@ -10,6 +10,7 @@ import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/models/activity.dart';
 import 'package:dcsmobile/pages/vehicleliveposition.dart';
+import 'package:dcsmobile/pages/openstreetmap.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -152,6 +153,16 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                           _endDate.millisecondsSinceEpoch ~/
                                               1000,
                                     );
+                                    // return VehicleLivePosition.History(
+                                    //   deviceID: this.deviceID,
+                                    //   option: "History",
+                                    //   startTime: _selectedDate
+                                    //           .millisecondsSinceEpoch ~/
+                                    //       1000,
+                                    //   endTime:
+                                    //       _endDate.millisecondsSinceEpoch ~/
+                                    //           1000,
+                                    // );
                                   },
                                 ),
                               );
@@ -256,6 +267,19 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                           },
                                         ),
                                       );
+                                      // return VehicleLivePosition.History(
+                                      //         deviceID: this.deviceID,
+                                      //         option: "History",
+                                      //         startTime: _timeline[index]
+                                      //             .startTime
+                                      //             .toInt(),
+                                      //         endTime: _timeline[index]
+                                      //             .endTime
+                                      //             .toInt(),
+                                      //       );
+                                      //     },
+                                      //   ),
+                                      // );
                                     },
                                     child: Card(
                                       child: ListTile(

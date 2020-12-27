@@ -46,7 +46,7 @@ class _EnteryPointState extends State<EnteryPoint> {
       locale: appLocalizations.locale ?? Locale('en'),
       debugShowCheckedModeBanner: false,
       title: "Tracking App",
-      initialRoute: '/login',
+      initialRoute: '/position',
       navigatorObservers: [routeObserver],
       theme: ThemeData(
         primaryColor: Colors.green,

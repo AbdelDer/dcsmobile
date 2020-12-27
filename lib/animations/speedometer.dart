@@ -10,7 +10,7 @@ class Speedometer extends StatefulWidget {
         this.currentValue = 0,
         this.warningValue = 80,
         this.backgroundColor = Colors.transparent,
-        this.meterColor = Colors.lightBlueAccent,
+        this.meterColor = Colors.greenAccent,
         this.warningColor = Colors.red,
         this.kimColor = Colors.white,
         this.displayNumericStyle,

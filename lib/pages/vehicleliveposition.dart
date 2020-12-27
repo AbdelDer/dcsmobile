@@ -88,18 +88,18 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
     super.dispose();
   }
 
-  double _getMyBearing(Position lastPosition, Position currentPosition) {
-    double dLon = (lastPosition.longitude - currentPosition.longitude);
-    double y = math.sin(dLon) * math.cos(lastPosition.latitude);
-    double x =
-        math.cos(currentPosition.latitude) * math.sin(lastPosition.latitude) -
-            math.sin(currentPosition.latitude) *
-                math.cos(lastPosition.latitude) *
-                math.cos(dLon);
-    double brng = (math.atan2(y, x)) * 180 / math.pi;
-    brng = (360 - ((brng + 360) % 360));
-    return 180 + brng;
-  }
+  // double _getMyBearing(Position lastPosition, Position currentPosition) {
+  //   double dLon = (lastPosition.longitude - currentPosition.longitude);
+  //   double y = math.sin(dLon) * math.cos(lastPosition.latitude);
+  //   double x =
+  //       math.cos(currentPosition.latitude) * math.sin(lastPosition.latitude) -
+  //           math.sin(currentPosition.latitude) *
+  //               math.cos(lastPosition.latitude) *
+  //               math.cos(dLon);
+  //   double brng = (math.atan2(y, x)) * 180 / math.pi;
+  //   brng = (360 - ((brng + 360) % 360));
+  //   return 180 + brng;
+  // }
 
   _positionDetails() async {
     if (_option == "History") {
@@ -311,15 +311,6 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
   }
 
   _setData(data) {
-    final bitmapCar = BitmapDescriptor.fromBytes(_carPin);
-    final markerID = MarkerId("${_markers.length}");
-    final position = LatLng(data.latitude, data.longitude);
-    _route.add(position);
-    final customPolyline = Polyline(
-        polylineId: PolylineId("custom"),
-        points: _route,
-        color: Colors.greenAccent,
-        width: 2);
     final infoWindow = InfoWindow(
         snippet: "Speed: ${data.speedKPH.toStringAsFixed(2)} Km/h more...",
         title: "${data.vehicleModel}",
@@ -550,47 +541,54 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                 );
               });
         });
-
-    if (_marker == null) {
-      _marker = Marker(
-          markerId: markerID,
-          rotation: 0,
-          position: position,
-          infoWindow: infoWindow);
-    } else {
-      final _currentPosition =
-          Position(longitude: data.longitude, latitude: data.latitude);
-      final _rotation = _getMyBearing(_lastPosition, _currentPosition);
-      //final rotation = _geodesy.finalBearingBetweenTwoGeoPoints(gdesy.LatLng(_lastPosition.latitude, _lastPosition.longitude), gdesy.LatLng(_currentPosition.latitude, _currentPosition.longitude));
-      // _marker = _marker.copyWith(
-      //     positionParam: LatLng(data.latitude, data.longitude),
-      //     rotationParam: rotation,
-      //     iconParam: bitmapCar,
-      //     infoWindowParam: infoWindow,
-      //     visibleParam: true);
-      _markers[MarkerId("${_markers.length - 1}")] =
-          _markers[MarkerId("${_markers.length - 1}")].copyWith(
-              iconParam: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueRed),
-              rotationParam: 0);
-      _marker = Marker(
-          markerId: markerID,
-          rotation: _rotation,
-          position: position,
-          icon: bitmapCar,
-          infoWindow: infoWindow);
+    final markerID = MarkerId("${_markers.length}");
+    final position = LatLng(data.latitude, data.longitude);
+    if (_option == "History") {
+      _route.add(position);
+      final customPolyline = Polyline(
+          polylineId: PolylineId("custom"),
+          points: _route,
+          color: Colors.greenAccent,
+          width: 2);
+      BitmapDescriptor.fromAssetImage(
+              ImageConfiguration(size: Size(48, 48)), data.iconPath())
+          .then((markerIcon) {
+        _marker = Marker(
+            markerId: markerID,
+            position: position,
+            icon: markerIcon,
+            infoWindow: infoWindow);
+        setState(() {
+          _markers[markerID] = _marker;
+          _speedKPH = data.speedKPH;
+          _odometer = data.odometerKM;
+          _polylines.add(customPolyline);
+        });
+        _googleMapController
+            ?.animateCamera(CameraUpdate.newLatLngZoom(position, 17));
+      });
+    } else if (_option == "Live") {
+      BitmapDescriptor.fromAssetImage(
+              ImageConfiguration(size: Size(48, 48)), data.iconPath())
+          .then((markerIcon) {
+        _marker = Marker(
+            markerId: markerID,
+            position: position,
+            icon: markerIcon,
+            infoWindow: infoWindow);
+        setState(() {
+          _markers.clear();
+          _markers[markerID] = _marker;
+          _speedKPH = data.speedKPH;
+          _odometer = data.odometerKM;
+          // _polylines.add(customPolyline);
+        });
+        _googleMapController
+            ?.animateCamera(CameraUpdate.newLatLngZoom(position, 17));
+      });
     }
 
-    _lastPosition =
-        Position(longitude: data.longitude, latitude: data.latitude);
-
-    setState(() {
-      _markers[markerID] = _marker;
-      _speedKPH = data.speedKPH;
-      _odometer = data.odometerKM;
-      _polylines.add(customPolyline);
-    });
-    _googleMapController
-        ?.animateCamera(CameraUpdate.newLatLngZoom(position, 17));
+    // _lastPosition =
+    //     Position(longitude: data.longitude, latitude: data.latitude);
   }
 }
