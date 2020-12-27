@@ -95,7 +95,8 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
         });
       });
     } else if (_option == "Live") {
-      _timer = Timer.periodic(Duration(seconds: 1), (timer) async {
+      _getActualPosition();
+      _timer = Timer.periodic(Duration(seconds: 60), (timer) async {
         await _getActualPosition();
       });
     }
@@ -119,7 +120,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
               return Image.asset(data.iconPath());
             }));
         _data?.add(data);
-        _mapController.move(_markers?.last.point, 14);
+        _mapController.move(_markers?.last?.point, 14);
         _popupLayerController.togglePopup(_markers?.last);
       });
     }).catchError((err) {
@@ -296,14 +297,14 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                       );
                     }),
               ],
-              // children: <Widget>[
-              //   TileLayerWidget(
-              //     options: TileLayerOptions(
-              //         urlTemplate:
-              //             "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-              //         subdomains: ['a', 'b', 'c']),
-              //   ),
-              // ],
+              children: <Widget>[
+                TileLayerWidget(
+                  options: TileLayerOptions(
+                      urlTemplate:
+                          "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                      subdomains: ['a', 'b', 'c']),
+                ),
+              ],
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
@@ -447,18 +448,20 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
   }
 
   void _setHistory(EventData ed) {
-    _markers?.add(Marker(
-        point: LatLng(
-          ed.latitude,
-          ed.longitude,
-        ),
-        width: 30,
-        height: 30,
-        anchorPos: AnchorPos.align(AnchorAlign.top),
-        builder: (context) {
-          return Image.asset(ed.iconPath());
-        }));
-    _data?.add(ed);
-    _mapController.move(_markers?.last.point, 14);
+    setState(() {
+      _markers?.add(Marker(
+          point: LatLng(
+            ed.latitude,
+            ed.longitude,
+          ),
+          width: 30,
+          height: 30,
+          anchorPos: AnchorPos.align(AnchorAlign.top),
+          builder: (context) {
+            return Image.asset(ed.iconPath());
+          }));
+      _data?.add(ed);
+      _mapController.move(_markers?.last.point, 14);
+    });
   }
 }

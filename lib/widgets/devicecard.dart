@@ -68,20 +68,69 @@ class _DeviceCardState extends State<DeviceCard> {
                                 data[index].simPhoneNumber, false);
                           });
                     } else if (_option == "Live") {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => VehicleLivePosition(
-                              deviceID: data[index].deviceID, option: _option),
+                      showDialog(
+                        context: context,
+                        builder: (__) => Dialog(
+                          child: Container(
+                            width: 200,
+                            height: 100,
+                            color: Colors.white,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceEvenly,
+                              children: [
+                                RaisedButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => OpenStreetMap(
+                                            deviceID: data[index].deviceID, option: _option),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    width: 200,
+                                    child: Center(
+                                      child: Text(
+                                        'OpenStreet Map',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  color: Colors.blueAccent,
+                                ),
+                                RaisedButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => VehicleLivePosition(
+                                            deviceID: data[index].deviceID, option: _option),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    width: 200,
+                                    child: Center(
+                                      child: Text(
+                                        'Google Maps',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  color: Colors.greenAccent.shade700,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       );
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => OpenStreetMap(
-                      //         deviceID: data[index].deviceID, option: _option),
-                      //   ),
-                      // );
                     } else if (_option ==
                         AppLocalizations.of(context).translate("History")) {
                       Navigator.push(

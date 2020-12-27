@@ -31,8 +31,10 @@ class _ActivityHistoryState extends State<ActivityHistory> {
   final String vehicleModel;
 
   DatePickerController _controller = DatePickerController();
-  DateTime _selectedDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-  DateTime _endDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 23, 59, 59);
+  DateTime _selectedDate =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime _endDate = DateTime(DateTime.now().year, DateTime.now().month,
+      DateTime.now().day, 23, 59, 59);
 
   StreamController _streamController;
   Stream _stream;
@@ -139,31 +141,89 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return VehicleLivePosition.History(
-                                      deviceID: this.deviceID,
-                                      option: "History",
-                                      startTime: _selectedDate
-                                              .millisecondsSinceEpoch ~/
-                                          1000,
-                                      endTime:
-                                          _endDate.millisecondsSinceEpoch ~/
-                                              1000,
-                                    );
-                                    // return VehicleLivePosition.History(
-                                    //   deviceID: this.deviceID,
-                                    //   option: "History",
-                                    //   startTime: _selectedDate
-                                    //           .millisecondsSinceEpoch ~/
-                                    //       1000,
-                                    //   endTime:
-                                    //       _endDate.millisecondsSinceEpoch ~/
-                                    //           1000,
-                                    // );
-                                  },
+                              showDialog(
+                                context: context,
+                                builder: (__) => Dialog(
+                                  child: Container(
+                                    width: 200,
+                                    height: 100,
+                                    color: Colors.white,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        RaisedButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) {
+                                                  return VehicleLivePosition
+                                                      .History(
+                                                    deviceID: this.deviceID,
+                                                    option: "History",
+                                                    startTime: _selectedDate
+                                                            .millisecondsSinceEpoch ~/
+                                                        1000,
+                                                    endTime: _endDate
+                                                            .millisecondsSinceEpoch ~/
+                                                        1000,
+                                                  );
+                                                },
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            width: 200,
+                                            child: Center(
+                                              child: Text(
+                                                'OpenStreet Map',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          color: Colors.blueAccent,
+                                        ),
+                                        RaisedButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) {
+                                                  return VehicleLivePosition
+                                                      .History(
+                                                    deviceID: this.deviceID,
+                                                    option: "History",
+                                                    startTime: _selectedDate
+                                                            .millisecondsSinceEpoch ~/
+                                                        1000,
+                                                    endTime: _endDate
+                                                            .millisecondsSinceEpoch ~/
+                                                        1000,
+                                                  );
+                                                },
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            width: 200,
+                                            child: Center(
+                                              child: Text(
+                                                'Google Maps',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          color: Colors.greenAccent.shade700,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               );
                             },
@@ -250,36 +310,89 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                 itemBuilder: (context, index) {
                                   return GestureDetector(
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return VehicleLivePosition.History(
-                                              deviceID: this.deviceID,
-                                              option: "History",
-                                              startTime: _timeline[index]
-                                                  .startTime
-                                                  .toInt(),
-                                              endTime: _timeline[index]
-                                                  .endTime
-                                                  .toInt(),
-                                            );
-                                          },
+                                      showDialog(
+                                        context: context,
+                                        builder: (__) => Dialog(
+                                          child: Container(
+                                            width: 200,
+                                            height: 100,
+                                            color: Colors.white,
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                RaisedButton(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) {
+                                                          return OpenStreetMap.History(
+                                                            deviceID: this.deviceID,
+                                                            option: "History",
+                                                            startTime: _timeline[index]
+                                                                .startTime
+                                                                .toInt(),
+                                                            endTime: _timeline[index]
+                                                                .endTime
+                                                                .toInt(),
+                                                          );
+                                                        },
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    width: 200,
+                                                    child: Center(
+                                                      child: Text(
+                                                        'OpenStreet Map',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  color: Colors.blueAccent,
+                                                ),
+                                                RaisedButton(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) {
+                                                          return VehicleLivePosition.History(
+                                                            deviceID: this.deviceID,
+                                                            option: "History",
+                                                            startTime: _timeline[index]
+                                                                .startTime
+                                                                .toInt(),
+                                                            endTime: _timeline[index]
+                                                                .endTime
+                                                                .toInt(),
+                                                          );
+                                                        },
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    width: 200,
+                                                    child: Center(
+                                                      child: Text(
+                                                        'Google Maps',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  color: Colors.greenAccent.shade700,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ),
                                       );
-                                      // return VehicleLivePosition.History(
-                                      //         deviceID: this.deviceID,
-                                      //         option: "History",
-                                      //         startTime: _timeline[index]
-                                      //             .startTime
-                                      //             .toInt(),
-                                      //         endTime: _timeline[index]
-                                      //             .endTime
-                                      //             .toInt(),
-                                      //       );
-                                      //     },
-                                      //   ),
-                                      // );
                                     },
                                     child: Card(
                                       child: ListTile(
