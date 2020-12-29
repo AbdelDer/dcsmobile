@@ -28,7 +28,7 @@ class Api {
 
   // static final baseUrl = 'http://192.168.43.113:9090/api';
 
-  // static final baseUrl = 'http://192.168.98.82:9090/api';
+  // static final baseUrl = 'http://192.168.0.102:9090/api';
 
   static Future<Response> login(params) async {
     await connected();
@@ -263,6 +263,26 @@ class Api {
     }
     return Response.completed(
         EventData.fromJson(json.decode(utf8.decode(httpResponse.bodyBytes))));
+  }
+
+  static Future<Response<List<EventData>>> getGroupActualPosition() async {
+    await connected();
+    var body;
+    var httpCustom;
+    final prefs = EncryptedSharedPreferences();
+    body = jsonEncode({"accountID": await prefs.getString("accountID"), "groupID": await prefs.getString("groupID")});
+    httpCustom = HttpCustom(url: '$baseUrl/group/eventdata', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      return Response.error(responseBody['message']);
+    }
+    return Response.completed(
+        responseBody.map<EventData>((ed) => EventData.fromJson(ed)).toList());
   }
 
   static Future<Response> getReport(deviceID) async {

@@ -1,8 +1,10 @@
 import 'package:dcsmobile/pages/commandsscreen.dart';
 import 'package:dcsmobile/pages/helpscreen.dart';
 import 'package:dcsmobile/pages/notificationsview.dart';
+import 'package:dcsmobile/pages/openstreetmap.dart';
 import 'package:dcsmobile/pages/reportscreen.dart';
 import 'package:dcsmobile/pages/subscriptionscreen.dart';
+import 'package:dcsmobile/pages/vehicleliveposition.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:dcsmobile/pages/Position.dart';
@@ -46,7 +48,7 @@ class _EnteryPointState extends State<EnteryPoint> {
       locale: appLocalizations.locale ?? Locale('en'),
       debugShowCheckedModeBanner: false,
       title: "Tracking App",
-      initialRoute: '/login',
+      initialRoute: '/dashboard',
       navigatorObservers: [routeObserver],
       theme: ThemeData(
         primaryColor: Colors.green,
@@ -91,6 +93,7 @@ class _EnteryPointState extends State<EnteryPoint> {
         '/introduction': (context) => IntroductionPage(),
         '/dashboard': (context) => Dashboard(routeObserver),
         '/position': (context) => Position("all", "Live"),
+        '/group': (context) => Position("all", "Group"),
         '/alarm': (context) =>
             Position("all", AppLocalizations.of(context).translate("Alarms")),
         '/notifications': (context) => NotificationsView(),
@@ -181,7 +184,6 @@ class _FEDrawerState extends State<FEDrawer> {
             ListTile(
               leading: Icon(Icons.place),
               title: Text('${translate(context, 'Position')}'),
-              //NOTE: change this because constructor is changed
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -204,6 +206,69 @@ class _FEDrawerState extends State<FEDrawer> {
             ListTile(
               leading: Icon(Icons.group_work),
               title: Text('${translate(context, 'Vehicle group')}'),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (__) => Dialog(
+                    child: Container(
+                      width: 200,
+                      height: 100,
+                      color: Colors.white,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceEvenly,
+                        children: [
+                          RaisedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => OpenStreetMap(option: "Group"),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              width: 200,
+                              child: Center(
+                                child: Text(
+                                  'OpenStreet Map',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            color: Colors.blueAccent,
+                          ),
+                          RaisedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => VehicleLivePosition(option: "Group"),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              width: 200,
+                              child: Center(
+                                child: Text(
+                                  'Google Maps',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            color: Colors.greenAccent.shade700,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }
             ),
             ListTile(
               leading: Icon(Icons.insert_drive_file),

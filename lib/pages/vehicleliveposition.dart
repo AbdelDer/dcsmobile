@@ -21,7 +21,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class VehicleLivePosition extends StatefulWidget {
-  final deviceID;
+  String deviceID;
   final option;
   int startTime;
   int endTime;
@@ -35,19 +35,23 @@ class VehicleLivePosition extends StatefulWidget {
       @required this.startTime,
       @required this.endTime});
 
+  VehicleLivePosition.Group({@required this.option});
+
   @override
   _VehicleLivePositionState createState() {
     if (option == "History") {
       return _VehicleLivePositionState.History(
           deviceID, option, startTime, endTime);
-    } else {
+    } else if (option == "Live") {
       return _VehicleLivePositionState(this.deviceID, this.option);
+    } else if (option == "Group") {
+      return _VehicleLivePositionState.Group(this.option);
     }
   }
 }
 
 class _VehicleLivePositionState extends State<VehicleLivePosition> {
-  final _deviceID;
+  String _deviceID;
   final _option;
   GoogleMapController _googleMapController;
   Uint8List _carPin;
@@ -75,6 +79,8 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
 
   _VehicleLivePositionState.History(
       this._deviceID, this._option, this._startTime, this._endTime);
+
+  _VehicleLivePositionState.Group(this._option);
 
   @override
   void initState() {
@@ -119,11 +125,25 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
       _timer = Timer.periodic(Duration(seconds: 60), (timer) async {
         await _getActualPosition();
       });
+    } else if (_option == "Group") {
+      _getGroupActualPosition();
+      _timer = Timer.periodic(Duration(seconds: 60), (timer) async {
+        await _getGroupActualPosition();
+      });
     }
   }
 
   _getActualPosition() async {
     await Api.getActualPosition(this._deviceID).then((r) {
+      _setData(r.responseBody);
+    }).catchError((err) {
+      ApiShowDialog.dialog(
+          scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
+    });
+  }
+
+  _getGroupActualPosition() async {
+    await Api.getGroupActualPosition().then((r) {
       _setData(r.responseBody);
     }).catchError((err) {
       ApiShowDialog.dialog(
@@ -143,8 +163,8 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
   }
 
   final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(34.011405, -5.064120),
-    zoom: 14.4746,
+    target: LatLng(30.0, -9.0),
+    zoom: 5,
   );
 
   @override
@@ -173,36 +193,41 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                 // });
               },
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: 220,
-                  height: 220,
-                  child: Speedometer(
-                    size: 220,
-                    minValue: 0,
-                    maxValue: 220,
-                    currentValue: _speedKPH?.roundToDouble(),
-                    displayNumericStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        backgroundColor: Colors.white,
-                        color: _speedKPH < _warningSpeed
-                            ? Colors.lightBlueAccent
-                            : Colors.red),
-                    warningValue: _warningSpeed,
-                    displayText: '${_odometer?.toStringAsFixed(2)}',
-                    displayTextStyle: TextStyle(
-                        fontSize: 20,
-                        backgroundColor: Colors.white,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
+            _option != "Group"
+                ? Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        width: 220,
+                        height: 220,
+                        child: Speedometer(
+                          size: 220,
+                          minValue: 0,
+                          maxValue: 220,
+                          currentValue: _speedKPH?.roundToDouble(),
+                          displayNumericStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              backgroundColor: Colors.white,
+                              color: _speedKPH < _warningSpeed
+                                  ? Colors.lightBlueAccent
+                                  : Colors.red),
+                          warningValue: _warningSpeed,
+                          displayText: '${_odometer?.toStringAsFixed(2)}',
+                          displayTextStyle: TextStyle(
+                              fontSize: 20,
+                              backgroundColor: Colors.white,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  )
+                : SizedBox(
+                    height: 0,
+                    width: 0,
                   ),
-                ),
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
               child: Align(
@@ -311,284 +336,534 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
   }
 
   _setData(data) {
-    final infoWindow = InfoWindow(
-        snippet: "Speed: ${data.speedKPH.toStringAsFixed(2)} Km/h more...",
-        title: "${data.vehicleModel}",
-        onTap: () {
-          showDialog(
-              context: _scaffoldKey.currentContext,
-              builder: (context) {
-                return Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    height: MediaQuery.of(context).size.height / 2,
-                    width: MediaQuery.of(context).size.width / 1.5,
-                    color: Colors.white,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            child: Center(
-                              child: Text(
-                                "${data.vehicleModel}",
-                                style: TextStyle(
-                                    fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none,
-                                    color: Colors.green),
+    if (_option == "Group") {
+      Map<MarkerId, Marker> markers = Map();
+      for (int i=0; i< data.length; i++) {
+        var infoWindow = InfoWindow(
+            snippet: "Speed: ${data[i].speedKPH.toStringAsFixed(2)} Km/h more...",
+            title: "${data[i].vehicleModel}",
+            onTap: () {
+              showDialog(
+                  context: _scaffoldKey.currentContext,
+                  builder: (context) {
+                    return Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height / 2,
+                        width: MediaQuery.of(context).size.width / 1.5,
+                        color: Colors.white,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 4.0),
+                                child: Center(
+                                  child: Text(
+                                    "${data[i].vehicleModel}",
+                                    style: TextStyle(
+                                        fontSize: _dialogTextSize,
+                                        decoration: TextDecoration.none,
+                                        color: Colors.green),
+                                  ),
+                                ),
+                              ),
+                              Divider(
+                                thickness: 3,
+                                color: Colors.black,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "${AppLocalizations.of(context).translate("Speed")}: ",
+                                    style: TextStyle(
+                                        fontSize: _dialogTextSize,
+                                        decoration: TextDecoration.none,
+                                        color: Colors.black),
+                                  ),
+                                  Text(
+                                    "${data[i].speedKPH.toStringAsFixed(2)} km/h",
+                                    style: TextStyle(
+                                        fontSize: _dialogTextSize,
+                                        decoration: TextDecoration.none,
+                                        color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                              Divider(
+                                thickness: 1,
+                                color: Colors.black,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "${AppLocalizations.of(context).translate("Time")}: ",
+                                    style: TextStyle(
+                                        fontSize: _dialogTextSize,
+                                        decoration: TextDecoration.none,
+                                        color: Colors.black),
+                                  ),
+                                  Text(
+                                    data[i].timestampAsString,
+                                    style: TextStyle(
+                                        fontSize: _dialogTextSize,
+                                        decoration: TextDecoration.none,
+                                        color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                              Divider(
+                                thickness: 1,
+                                color: Colors.black,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "${AppLocalizations.of(context).translate("Latitude")}: ",
+                                    style: TextStyle(
+                                        fontSize: _dialogTextSize,
+                                        decoration: TextDecoration.none,
+                                        color: Colors.black),
+                                  ),
+                                  Text(
+                                    "${data[i].latitude}",
+                                    style: TextStyle(
+                                        fontSize: _dialogTextSize,
+                                        decoration: TextDecoration.none,
+                                        color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                              Divider(
+                                thickness: 1,
+                                color: Colors.black,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "${AppLocalizations.of(context).translate("Longitude")}: ",
+                                    style: TextStyle(
+                                        fontSize: _dialogTextSize,
+                                        decoration: TextDecoration.none,
+                                        color: Colors.black),
+                                  ),
+                                  Text(
+                                    "${data[i].longitude}",
+                                    style: TextStyle(
+                                        fontSize: _dialogTextSize,
+                                        decoration: TextDecoration.none,
+                                        color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                              Divider(
+                                thickness: 1,
+                                color: Colors.black,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "${AppLocalizations.of(context).translate("Oil level")}: ",
+                                    style: TextStyle(
+                                        fontSize: _dialogTextSize,
+                                        decoration: TextDecoration.none,
+                                        color: Colors.black),
+                                  ),
+                                  Text(
+                                    "${data[i].oilLevel} L",
+                                    style: TextStyle(
+                                        fontSize: _dialogTextSize,
+                                        decoration: TextDecoration.none,
+                                        color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                              Divider(
+                                thickness: 1,
+                                color: Colors.black,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "${AppLocalizations.of(context).translate("Status")}: ",
+                                    style: TextStyle(
+                                        fontSize: _dialogTextSize,
+                                        decoration: TextDecoration.none,
+                                        color: Colors.black),
+                                  ),
+                                  Text(
+                                    "${AppLocalizations.of(context).translate(data.speedKPH > 3 ? "Moving" : "Parked")}",
+                                    style: TextStyle(
+                                        fontSize: _dialogTextSize,
+                                        decoration: TextDecoration.none,
+                                        color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                              Divider(
+                                thickness: 1,
+                                color: Colors.black,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "${AppLocalizations.of(context).translate("Battery")}: ",
+                                    style: TextStyle(
+                                        fontSize: _dialogTextSize,
+                                        decoration: TextDecoration.none,
+                                        color: Colors.black),
+                                  ),
+                                  Text(
+                                    "${data[i].batteryVolts} V",
+                                    style: TextStyle(
+                                        fontSize: _dialogTextSize,
+                                        decoration: TextDecoration.none,
+                                        color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                              Divider(
+                                thickness: 1,
+                                color: Colors.black,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "${AppLocalizations.of(context).translate("Engine temp")}: ",
+                                    style: TextStyle(
+                                        fontSize: _dialogTextSize,
+                                        decoration: TextDecoration.none,
+                                        color: Colors.black),
+                                  ),
+                                  Text(
+                                    "${data[i].engineTemp} °C",
+                                    style: TextStyle(
+                                        fontSize: _dialogTextSize,
+                                        decoration: TextDecoration.none,
+                                        color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                              Divider(
+                                thickness: 1,
+                                color: Colors.black,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "${AppLocalizations.of(context).translate("Signal")}: ",
+                                    style: TextStyle(
+                                        fontSize: _dialogTextSize,
+                                        decoration: TextDecoration.none,
+                                        color: Colors.black),
+                                  ),
+                                  Icon(
+                                    Icons.signal_wifi_4_bar_outlined,
+                                    color: Colors.green.shade700,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  });
+            });
+        var markerID = MarkerId(data[i].deviceID.toString());
+        var position = LatLng(data[i].latitude, data[i].longitude);
+        BitmapDescriptor.fromAssetImage(
+                ImageConfiguration(size: Size(30, 30)), data[i].iconPath())
+            .then((markerIcon) {
+          _marker = Marker(
+              markerId: markerID,
+              position: position,
+              icon: markerIcon,
+              infoWindow: infoWindow
+          );
+          markers[markerID] = _marker;
+        });
+      }
+      setState(() {
+        _markers.clear();
+        _markers = markers;
+      });
+    } else {
+      final infoWindow = InfoWindow(
+          snippet: "Speed: ${data.speedKPH.toStringAsFixed(2)} Km/h more...",
+          title: "${data.vehicleModel}",
+          onTap: () {
+            showDialog(
+                context: _scaffoldKey.currentContext,
+                builder: (context) {
+                  return Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      height: MediaQuery.of(context).size.height / 2,
+                      width: MediaQuery.of(context).size.width / 1.5,
+                      color: Colors.white,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4.0),
+                              child: Center(
+                                child: Text(
+                                  "${data.vehicleModel}",
+                                  style: TextStyle(
+                                      fontSize: _dialogTextSize,
+                                      decoration: TextDecoration.none,
+                                      color: Colors.green),
+                                ),
                               ),
                             ),
-                          ),
-                          Divider(
-                            thickness: 3,
-                            color: Colors.black,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "${AppLocalizations.of(context).translate("Speed")}: ",
-                                style: TextStyle(
-                                    fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none,
-                                    color: Colors.black),
-                              ),
-                              Text(
-                                "${data.speedKPH.toStringAsFixed(2)} km/h",
-                                style: TextStyle(
-                                    fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none,
-                                    color: Colors.green),
-                              ),
-                            ],
-                          ),
-                          Divider(
-                            thickness: 1,
-                            color: Colors.black,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "${AppLocalizations.of(context).translate("Time")}: ",
-                                style: TextStyle(
-                                    fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none,
-                                    color: Colors.black),
-                              ),
-                              Text(
-                                data.timestampAsString,
-                                style: TextStyle(
-                                    fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none,
-                                    color: Colors.green),
-                              ),
-                            ],
-                          ),
-                          Divider(
-                            thickness: 1,
-                            color: Colors.black,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "${AppLocalizations.of(context).translate("Latitude")}: ",
-                                style: TextStyle(
-                                    fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none,
-                                    color: Colors.black),
-                              ),
-                              Text(
-                                "${data.latitude}",
-                                style: TextStyle(
-                                    fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none,
-                                    color: Colors.green),
-                              ),
-                            ],
-                          ),
-                          Divider(
-                            thickness: 1,
-                            color: Colors.black,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "${AppLocalizations.of(context).translate("Longitude")}: ",
-                                style: TextStyle(
-                                    fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none,
-                                    color: Colors.black),
-                              ),
-                              Text(
-                                "${data.longitude}",
-                                style: TextStyle(
-                                    fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none,
-                                    color: Colors.green),
-                              ),
-                            ],
-                          ),
-                          Divider(
-                            thickness: 1,
-                            color: Colors.black,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "${AppLocalizations.of(context).translate("Oil level")}: ",
-                                style: TextStyle(
-                                    fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none,
-                                    color: Colors.black),
-                              ),
-                              Text(
-                                "${data.oilLevel} L",
-                                style: TextStyle(
-                                    fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none,
-                                    color: Colors.green),
-                              ),
-                            ],
-                          ),
-                          Divider(
-                            thickness: 1,
-                            color: Colors.black,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "${AppLocalizations.of(context).translate("Status")}: ",
-                                style: TextStyle(
-                                    fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none,
-                                    color: Colors.black),
-                              ),
-                              Text(
-                                "${AppLocalizations.of(context).translate(data.speedKPH > 3 ? "Moving" : "Parked")}",
-                                style: TextStyle(
-                                    fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none,
-                                    color: Colors.green),
-                              ),
-                            ],
-                          ),
-                          Divider(
-                            thickness: 1,
-                            color: Colors.black,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "${AppLocalizations.of(context).translate("Battery")}: ",
-                                style: TextStyle(
-                                    fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none,
-                                    color: Colors.black),
-                              ),
-                              Text(
-                                "${data.batteryVolts} V",
-                                style: TextStyle(
-                                    fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none,
-                                    color: Colors.green),
-                              ),
-                            ],
-                          ),
-                          Divider(
-                            thickness: 1,
-                            color: Colors.black,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "${AppLocalizations.of(context).translate("Engine temp")}: ",
-                                style: TextStyle(
-                                    fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none,
-                                    color: Colors.black),
-                              ),
-                              Text(
-                                "${data.engineTemp} °C",
-                                style: TextStyle(
-                                    fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none,
-                                    color: Colors.green),
-                              ),
-                            ],
-                          ),
-                          Divider(
-                            thickness: 1,
-                            color: Colors.black,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "${AppLocalizations.of(context).translate("Signal")}: ",
-                                style: TextStyle(
-                                    fontSize: _dialogTextSize,
-                                    decoration: TextDecoration.none,
-                                    color: Colors.black),
-                              ),
-                              Icon(
-                                Icons.signal_wifi_4_bar_outlined,
-                                color: Colors.green.shade700,
-                              ),
-                            ],
-                          ),
-                        ],
+                            Divider(
+                              thickness: 3,
+                              color: Colors.black,
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "${AppLocalizations.of(context).translate("Speed")}: ",
+                                  style: TextStyle(
+                                      fontSize: _dialogTextSize,
+                                      decoration: TextDecoration.none,
+                                      color: Colors.black),
+                                ),
+                                Text(
+                                  "${data.speedKPH.toStringAsFixed(2)} km/h",
+                                  style: TextStyle(
+                                      fontSize: _dialogTextSize,
+                                      decoration: TextDecoration.none,
+                                      color: Colors.green),
+                                ),
+                              ],
+                            ),
+                            Divider(
+                              thickness: 1,
+                              color: Colors.black,
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "${AppLocalizations.of(context).translate("Time")}: ",
+                                  style: TextStyle(
+                                      fontSize: _dialogTextSize,
+                                      decoration: TextDecoration.none,
+                                      color: Colors.black),
+                                ),
+                                Text(
+                                  data.timestampAsString,
+                                  style: TextStyle(
+                                      fontSize: _dialogTextSize,
+                                      decoration: TextDecoration.none,
+                                      color: Colors.green),
+                                ),
+                              ],
+                            ),
+                            Divider(
+                              thickness: 1,
+                              color: Colors.black,
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "${AppLocalizations.of(context).translate("Latitude")}: ",
+                                  style: TextStyle(
+                                      fontSize: _dialogTextSize,
+                                      decoration: TextDecoration.none,
+                                      color: Colors.black),
+                                ),
+                                Text(
+                                  "${data.latitude}",
+                                  style: TextStyle(
+                                      fontSize: _dialogTextSize,
+                                      decoration: TextDecoration.none,
+                                      color: Colors.green),
+                                ),
+                              ],
+                            ),
+                            Divider(
+                              thickness: 1,
+                              color: Colors.black,
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "${AppLocalizations.of(context).translate("Longitude")}: ",
+                                  style: TextStyle(
+                                      fontSize: _dialogTextSize,
+                                      decoration: TextDecoration.none,
+                                      color: Colors.black),
+                                ),
+                                Text(
+                                  "${data.longitude}",
+                                  style: TextStyle(
+                                      fontSize: _dialogTextSize,
+                                      decoration: TextDecoration.none,
+                                      color: Colors.green),
+                                ),
+                              ],
+                            ),
+                            Divider(
+                              thickness: 1,
+                              color: Colors.black,
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "${AppLocalizations.of(context).translate("Oil level")}: ",
+                                  style: TextStyle(
+                                      fontSize: _dialogTextSize,
+                                      decoration: TextDecoration.none,
+                                      color: Colors.black),
+                                ),
+                                Text(
+                                  "${data.oilLevel} L",
+                                  style: TextStyle(
+                                      fontSize: _dialogTextSize,
+                                      decoration: TextDecoration.none,
+                                      color: Colors.green),
+                                ),
+                              ],
+                            ),
+                            Divider(
+                              thickness: 1,
+                              color: Colors.black,
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "${AppLocalizations.of(context).translate("Status")}: ",
+                                  style: TextStyle(
+                                      fontSize: _dialogTextSize,
+                                      decoration: TextDecoration.none,
+                                      color: Colors.black),
+                                ),
+                                Text(
+                                  "${AppLocalizations.of(context).translate(data.speedKPH > 3 ? "Moving" : "Parked")}",
+                                  style: TextStyle(
+                                      fontSize: _dialogTextSize,
+                                      decoration: TextDecoration.none,
+                                      color: Colors.green),
+                                ),
+                              ],
+                            ),
+                            Divider(
+                              thickness: 1,
+                              color: Colors.black,
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "${AppLocalizations.of(context).translate("Battery")}: ",
+                                  style: TextStyle(
+                                      fontSize: _dialogTextSize,
+                                      decoration: TextDecoration.none,
+                                      color: Colors.black),
+                                ),
+                                Text(
+                                  "${data.batteryVolts} V",
+                                  style: TextStyle(
+                                      fontSize: _dialogTextSize,
+                                      decoration: TextDecoration.none,
+                                      color: Colors.green),
+                                ),
+                              ],
+                            ),
+                            Divider(
+                              thickness: 1,
+                              color: Colors.black,
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "${AppLocalizations.of(context).translate("Engine temp")}: ",
+                                  style: TextStyle(
+                                      fontSize: _dialogTextSize,
+                                      decoration: TextDecoration.none,
+                                      color: Colors.black),
+                                ),
+                                Text(
+                                  "${data.engineTemp} °C",
+                                  style: TextStyle(
+                                      fontSize: _dialogTextSize,
+                                      decoration: TextDecoration.none,
+                                      color: Colors.green),
+                                ),
+                              ],
+                            ),
+                            Divider(
+                              thickness: 1,
+                              color: Colors.black,
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "${AppLocalizations.of(context).translate("Signal")}: ",
+                                  style: TextStyle(
+                                      fontSize: _dialogTextSize,
+                                      decoration: TextDecoration.none,
+                                      color: Colors.black),
+                                ),
+                                Icon(
+                                  Icons.signal_wifi_4_bar_outlined,
+                                  color: Colors.green.shade700,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              });
+                  );
+                });
+          });
+      final markerID = MarkerId("${_markers.length}");
+      final position = LatLng(data.latitude, data.longitude);
+      if (_option == "History") {
+        _route.add(position);
+        final customPolyline = Polyline(
+            polylineId: PolylineId("custom"),
+            points: _route,
+            color: Colors.greenAccent,
+            width: 2);
+        BitmapDescriptor.fromAssetImage(
+                ImageConfiguration(size: Size(30, 30)), data.iconPath())
+            .then((markerIcon) {
+          _marker = Marker(
+              markerId: markerID,
+              position: position,
+              icon: markerIcon,
+              infoWindow: infoWindow);
+          setState(() {
+            _markers[markerID] = _marker;
+            _speedKPH = data.speedKPH;
+            _odometer = data.odometerKM;
+            _polylines.add(customPolyline);
+          });
+          _googleMapController
+              ?.animateCamera(CameraUpdate.newLatLngZoom(position, 14));
         });
-    final markerID = MarkerId("${_markers.length}");
-    final position = LatLng(data.latitude, data.longitude);
-    if (_option == "History") {
-      _route.add(position);
-      final customPolyline = Polyline(
-          polylineId: PolylineId("custom"),
-          points: _route,
-          color: Colors.greenAccent,
-          width: 2);
-      BitmapDescriptor.fromAssetImage(
-              ImageConfiguration(size: Size(48, 48)), data.iconPath())
-          .then((markerIcon) {
-        _marker = Marker(
-            markerId: markerID,
-            position: position,
-            icon: markerIcon,
-            infoWindow: infoWindow);
-        setState(() {
-          _markers[markerID] = _marker;
-          _speedKPH = data.speedKPH;
-          _odometer = data.odometerKM;
-          _polylines.add(customPolyline);
+      } else if (_option == "Live") {
+        BitmapDescriptor.fromAssetImage(
+                ImageConfiguration(size: Size(30, 30)), data.iconPath())
+            .then((markerIcon) {
+          _marker = Marker(
+              markerId: markerID,
+              position: position,
+              icon: markerIcon,
+              infoWindow: infoWindow);
+          setState(() {
+            _markers.clear();
+            _markers[markerID] = _marker;
+            _speedKPH = data.speedKPH;
+            _odometer = data.odometerKM;
+            // _polylines.add(customPolyline);
+          });
+          _googleMapController
+              ?.animateCamera(CameraUpdate.newLatLngZoom(position, 14));
         });
-        _googleMapController
-            ?.animateCamera(CameraUpdate.newLatLngZoom(position, 17));
-      });
-    } else if (_option == "Live") {
-      BitmapDescriptor.fromAssetImage(
-              ImageConfiguration(size: Size(48, 48)), data.iconPath())
-          .then((markerIcon) {
-        _marker = Marker(
-            markerId: markerID,
-            position: position,
-            icon: markerIcon,
-            infoWindow: infoWindow);
-        setState(() {
-          _markers.clear();
-          _markers[markerID] = _marker;
-          _speedKPH = data.speedKPH;
-          _odometer = data.odometerKM;
-          // _polylines.add(customPolyline);
-        });
-        _googleMapController
-            ?.animateCamera(CameraUpdate.newLatLngZoom(position, 17));
-      });
+      }
     }
-
-    // _lastPosition =
-    //     Position(longitude: data.longitude, latitude: data.latitude);
   }
 }

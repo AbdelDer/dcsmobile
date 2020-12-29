@@ -13,7 +13,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OpenStreetMap extends StatefulWidget {
-  final deviceID;
+  String deviceID;
   final option;
   int startTime;
   int endTime;
@@ -27,18 +27,22 @@ class OpenStreetMap extends StatefulWidget {
       @required this.startTime,
       @required this.endTime});
 
+  OpenStreetMap.Group({@required this.option});
+
   @override
   _OpenStreetMapState createState() {
     if (option == "History") {
       return _OpenStreetMapState.History(deviceID, option, startTime, endTime);
-    } else {
+    } else if (option == "Live") {
       return _OpenStreetMapState(this.deviceID, this.option);
+    } else if (option == "Group") {
+      return _OpenStreetMapState.Group(this.option);
     }
   }
 }
 
 class _OpenStreetMapState extends State<OpenStreetMap> {
-  final _deviceID;
+  String _deviceID;
   final _option;
   int _startTime;
   int _endTime;
@@ -62,6 +66,8 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
 
   _OpenStreetMapState.History(
       this._deviceID, this._option, this._startTime, this._endTime);
+
+  _OpenStreetMapState.Group(this._option);
 
   @override
   void initState() {
@@ -99,6 +105,11 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
       _timer = Timer.periodic(Duration(seconds: 60), (timer) async {
         await _getActualPosition();
       });
+    } else if (_option == "Group") {
+      _getGroupActualPosition();
+      _timer = Timer.periodic(Duration(seconds: 60), (timer) async {
+        await _getGroupActualPosition();
+      });
     }
   }
 
@@ -129,6 +140,36 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
     });
   }
 
+  _getGroupActualPosition() async {
+    await Api.getGroupActualPosition().then((r) {
+      List<EventData> data = r.responseBody;
+      List<Marker> markers = [];
+      for(EventData ed in data) {
+        markers?.add(Marker(
+            point: LatLng(
+              ed.latitude,
+              ed.longitude,
+            ),
+            width: 30,
+            height: 30,
+            anchorPos: AnchorPos.align(AnchorAlign.top),
+            builder: (context) {
+              return Image.asset(ed.iconPath());
+            }));
+      }
+      _markers?.clear();
+      setState(() {
+        _markers = markers;
+        _data = data;
+        // _mapController.move(_markers?.last?.point, 14);
+        // _popupLayerController.togglePopup(_markers?.last);
+      });
+    }).catchError((err) {
+      ApiShowDialog.dialog(
+          scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -143,8 +184,8 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                 plugins: [PopupMarkerPlugin()],
                 onTap: (_) => _popupLayerController
                     .hidePopup(), // Hide popup when the map is tapped.
-                center: LatLng(34.011405, -5.064120),
-                zoom: 14.0,
+                center: LatLng(30.0, -9.0),
+                zoom: 5.0,
               ),
               layers: [
                 PopupMarkerLayerOptions(
@@ -157,142 +198,144 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                           element.longitude == marker.point.longitude);
                       return Container(
                         width: 280,
-                        height: 75,
+                        height: 90,
                         color: Colors.white,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Table(
-                                defaultColumnWidth: FixedColumnWidth(150.0),
-                                children: [
-                                  TableRow(
-                                    children: [
-                                      TableCell(
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.directions_car_rounded,
-                                              color: Colors.black,
-                                            ),
-                                            Text(
-                                              data.vehicleModel,
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold,
+                        child: Expanded(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Table(
+                                  defaultColumnWidth: FixedColumnWidth(150.0),
+                                  children: [
+                                    TableRow(
+                                      children: [
+                                        TableCell(
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.directions_car_rounded,
                                                 color: Colors.black,
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  TableRow(
-                                    children: [
-                                      TableCell(
-                                          child: RichText(
-                                        text: TextSpan(
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 12,
-                                          ),
-                                          children: <TextSpan>[
-                                            TextSpan(
-                                              text: '${data.timestampAsString}',
-                                              style: TextStyle(
-                                                  color:
-                                                      Colors.lightBlueAccent),
-                                            ),
-                                            TextSpan(
-                                              text:
-                                                  ' (${data.engineTemp ?? ''}°C/${_data.last.batteryVolts ?? ''}V)',
-                                            ),
-                                          ],
-                                        ),
-                                      )),
-                                    ],
-                                  ),
-                                  TableRow(
-                                    children: [
-                                      TableCell(
-                                        child: Text(
-                                          '${data.state()}',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  TableRow(
-                                    children: [
-                                      TableCell(
-                                        child: RichText(
-                                          text: TextSpan(
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.black,
-                                            ),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                text: 'Fuel level: ',
-                                              ),
-                                              TextSpan(
-                                                text:
-                                                    '${data.oilLevel ?? ''} L',
+                                              Text(
+                                                data.vehicleModel,
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
                                               ),
                                             ],
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            VerticalDivider(
-                              endIndent: 12,
-                              indent: 10,
-                              thickness: 2,
-                              color: Colors.green,
-                            ),
-                            Center(
-                              child: RichText(
-                                  text: TextSpan(
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.black,
-                                      ),
-                                      children: <TextSpan>[
-                                    TextSpan(
-                                      text:
-                                          '${data.speedKPH?.toStringAsFixed(2) ?? ''}',
-                                      style: TextStyle(
-                                        color: Colors.green.shade700,
-                                      ),
+                                      ],
                                     ),
-                                    TextSpan(
-                                      text: '\n Km/h',
+                                    TableRow(
+                                      children: [
+                                        TableCell(
+                                            child: RichText(
+                                          text: TextSpan(
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 12,
+                                            ),
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                text: '${data.timestampAsString}',
+                                                style: TextStyle(
+                                                    color:
+                                                        Colors.lightBlueAccent),
+                                              ),
+                                              TextSpan(
+                                                text:
+                                                    ' (${data.engineTemp ?? ''}°C/${_data.last.batteryVolts ?? ''}V)',
+                                              ),
+                                            ],
+                                          ),
+                                        )),
+                                      ],
                                     ),
-                                  ])),
-                            ),
-                            VerticalDivider(
-                              endIndent: 12,
-                              indent: 10,
-                              thickness: 2,
-                              color: Colors.green,
-                            ),
-                            Center(
-                              child: Icon(
-                                Icons.signal_wifi_4_bar_outlined,
-                                color: Colors.black,
+                                    TableRow(
+                                      children: [
+                                        TableCell(
+                                          child: Text(
+                                            '${data.state()}',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    TableRow(
+                                      children: [
+                                        TableCell(
+                                          child: RichText(
+                                            text: TextSpan(
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.black,
+                                              ),
+                                              children: <TextSpan>[
+                                                TextSpan(
+                                                  text: 'Fuel level: ',
+                                                ),
+                                                TextSpan(
+                                                  text:
+                                                      '${data.oilLevel ?? ''} L',
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                              VerticalDivider(
+                                endIndent: 12,
+                                indent: 10,
+                                thickness: 2,
+                                color: Colors.green,
+                              ),
+                              Center(
+                                child: RichText(
+                                    text: TextSpan(
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black,
+                                        ),
+                                        children: <TextSpan>[
+                                      TextSpan(
+                                        text:
+                                            '${data.speedKPH?.toStringAsFixed(2) ?? ''}',
+                                        style: TextStyle(
+                                          color: Colors.green.shade700,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: '\n Km/h',
+                                      ),
+                                    ])),
+                              ),
+                              VerticalDivider(
+                                endIndent: 12,
+                                indent: 10,
+                                thickness: 2,
+                                color: Colors.green,
+                              ),
+                              Center(
+                                child: Icon(
+                                  Icons.signal_wifi_4_bar_outlined,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     }),
@@ -306,7 +349,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                 ),
               ],
             ),
-            Padding(
+            _option != "Group" ? Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
               child: Align(
                 alignment: Alignment.bottomCenter,
@@ -339,7 +382,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                   ),
                 ),
               ),
-            ),
+            ) : SizedBox(height: 0, width: 0,),
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
               child: Align(
