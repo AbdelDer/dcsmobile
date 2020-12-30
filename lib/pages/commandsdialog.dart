@@ -1,11 +1,6 @@
 import 'dart:io';
 
-import 'package:dcsmobile/Api/Api.dart';
-import 'package:dcsmobile/Api/ApiShowDialog.dart';
-import 'package:dcsmobile/commons/FEDrawer.dart';
 import 'package:dcsmobile/lang/app_localizations.dart';
-import 'package:dcsmobile/pages/Utils/VehicleListView.dart';
-import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -40,7 +35,7 @@ class _CommandsDialogState extends State<CommandsDialog> {
   String translate(key) {
     try {
       return AppLocalizations.of(context).translate(key);
-    } finally {
+    } catch(e) {
       return key;
     }
   }
@@ -55,7 +50,7 @@ class _CommandsDialogState extends State<CommandsDialog> {
       contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       title: Center(
         child: Text(
-          translate("Commands") + ": ${_vehicleModel}",
+          "${_vehicleModel}",
           style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
         ),
       ),
@@ -65,10 +60,14 @@ class _CommandsDialogState extends State<CommandsDialog> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 20.0),
                   child: RaisedButton(
-                    padding: const EdgeInsets.symmetric(horizontal: 85),
-                    child: Text(
-                      translate("Turn on"),
-                      style: TextStyle(color: Colors.white),
+                    child: Container(
+                      width: 180,
+                      child: Center(
+                        child: Text(
+                          translate("Turn on"),
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                     ),
                     onPressed: () async {
                       //change number to _simPhoneNumber
@@ -89,10 +88,14 @@ class _CommandsDialogState extends State<CommandsDialog> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 20.0),
                   child: RaisedButton(
-                    padding: const EdgeInsets.symmetric(horizontal: 85),
-                    child: Text(
-                      translate("Turn off"),
-                      style: TextStyle(color: Colors.white),
+                    child: Container(
+                      width: 180,
+                      child: Center(
+                        child: Text(
+                          translate("Turn off"),
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                     ),
                     onPressed: () async {
                       _late
@@ -111,10 +114,14 @@ class _CommandsDialogState extends State<CommandsDialog> {
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: RaisedButton(
-              padding: const EdgeInsets.symmetric(horizontal: 70),
-              child: Text(
-                translate("Unblock"),
-                style: TextStyle(color: Colors.white),
+              child: Container(
+                width: 180,
+                child: Center(
+                  child: Text(
+                    translate("Unblock"),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
               ),
               onPressed: () async {
                 await _textDevice(_simPhoneNumber, "unblock");
@@ -127,10 +134,14 @@ class _CommandsDialogState extends State<CommandsDialog> {
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: RaisedButton(
-              // padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: Text(
-                translate("Resetting the flush"),
-                style: TextStyle(color: Colors.white),
+              child: Container(
+                width: 180,
+                child: Center(
+                  child: Text(
+                    translate("Resetting the flush"),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
               ),
               onPressed: () async {
                 await _textDevice(_simPhoneNumber, "flush");
@@ -144,10 +155,14 @@ class _CommandsDialogState extends State<CommandsDialog> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 20.0),
                   child: RaisedButton(
-                    padding: const EdgeInsets.symmetric(horizontal: 70),
-                    child: Text(
-                      translate("HONK"),
-                      style: TextStyle(color: Colors.white),
+                    child: Container(
+                      width: 180,
+                      child: Center(
+                        child: Text(
+                          translate("HONK"),
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                     ),
                     onPressed: () async {
                       _late ? null : await _textDevice(_simPhoneNumber, "honk");
@@ -165,10 +180,14 @@ class _CommandsDialogState extends State<CommandsDialog> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 20.0),
                   child: RaisedButton(
-                    padding: const EdgeInsets.symmetric(horizontal: 60),
-                    child: Text(
-                      translate("SMS LOCATION"),
-                      style: TextStyle(color: Colors.white),
+                    child: Container(
+                      width: 180,
+                      child: Center(
+                        child: Text(
+                          translate("SMS LOCATION"),
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                     ),
                     onPressed: () async {
                       _late

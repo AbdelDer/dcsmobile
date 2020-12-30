@@ -200,142 +200,140 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                         width: 280,
                         height: 90,
                         color: Colors.white,
-                        child: Expanded(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Table(
-                                  defaultColumnWidth: FixedColumnWidth(150.0),
-                                  children: [
-                                    TableRow(
-                                      children: [
-                                        TableCell(
-                                          child: Row(
-                                            children: [
-                                              Icon(
-                                                Icons.directions_car_rounded,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Table(
+                                defaultColumnWidth: FixedColumnWidth(150.0),
+                                children: [
+                                  TableRow(
+                                    children: [
+                                      TableCell(
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.directions_car_rounded,
+                                              color: Colors.black,
+                                            ),
+                                            Text(
+                                              data.vehicleModel,
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
                                                 color: Colors.black,
                                               ),
-                                              Text(
-                                                data.vehicleModel,
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  TableRow(
+                                    children: [
+                                      TableCell(
+                                          child: RichText(
+                                        text: TextSpan(
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                          ),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                              text: '${data.timestampAsString}',
+                                              style: TextStyle(
+                                                  color:
+                                                      Colors.lightBlueAccent),
+                                            ),
+                                            TextSpan(
+                                              text:
+                                                  ' (${data.engineTemp ?? ''}°C/${_data.last.batteryVolts ?? ''}V)',
+                                            ),
+                                          ],
+                                        ),
+                                      )),
+                                    ],
+                                  ),
+                                  TableRow(
+                                    children: [
+                                      TableCell(
+                                        child: Text(
+                                          '${data.state()}',
+                                          style: TextStyle(
+                                            fontSize: 12,
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                    TableRow(
-                                      children: [
-                                        TableCell(
-                                            child: RichText(
+                                      ),
+                                    ],
+                                  ),
+                                  TableRow(
+                                    children: [
+                                      TableCell(
+                                        child: RichText(
                                           text: TextSpan(
                                             style: TextStyle(
-                                              color: Colors.black,
                                               fontSize: 12,
+                                              color: Colors.black,
                                             ),
                                             children: <TextSpan>[
                                               TextSpan(
-                                                text: '${data.timestampAsString}',
-                                                style: TextStyle(
-                                                    color:
-                                                        Colors.lightBlueAccent),
+                                                text: 'Fuel level: ',
                                               ),
                                               TextSpan(
                                                 text:
-                                                    ' (${data.engineTemp ?? ''}°C/${_data.last.batteryVolts ?? ''}V)',
+                                                    '${data.oilLevel ?? ''} L',
                                               ),
                                             ],
                                           ),
-                                        )),
-                                      ],
-                                    ),
-                                    TableRow(
-                                      children: [
-                                        TableCell(
-                                          child: Text(
-                                            '${data.state()}',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    TableRow(
-                                      children: [
-                                        TableCell(
-                                          child: RichText(
-                                            text: TextSpan(
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                              ),
-                                              children: <TextSpan>[
-                                                TextSpan(
-                                                  text: 'Fuel level: ',
-                                                ),
-                                                TextSpan(
-                                                  text:
-                                                      '${data.oilLevel ?? ''} L',
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              VerticalDivider(
-                                endIndent: 12,
-                                indent: 10,
-                                thickness: 2,
-                                color: Colors.green,
-                              ),
-                              Center(
-                                child: RichText(
-                                    text: TextSpan(
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.black,
-                                        ),
-                                        children: <TextSpan>[
-                                      TextSpan(
-                                        text:
-                                            '${data.speedKPH?.toStringAsFixed(2) ?? ''}',
-                                        style: TextStyle(
-                                          color: Colors.green.shade700,
                                         ),
                                       ),
-                                      TextSpan(
-                                        text: '\n Km/h',
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            VerticalDivider(
+                              endIndent: 12,
+                              indent: 10,
+                              thickness: 2,
+                              color: Colors.green,
+                            ),
+                            Center(
+                              child: RichText(
+                                  text: TextSpan(
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.black,
                                       ),
-                                    ])),
+                                      children: <TextSpan>[
+                                    TextSpan(
+                                      text:
+                                          '${data.speedKPH?.toStringAsFixed(2) ?? ''}',
+                                      style: TextStyle(
+                                        color: Colors.green.shade700,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: '\n Km/h',
+                                    ),
+                                  ])),
+                            ),
+                            VerticalDivider(
+                              endIndent: 12,
+                              indent: 10,
+                              thickness: 2,
+                              color: Colors.green,
+                            ),
+                            Center(
+                              child: Icon(
+                                Icons.signal_wifi_4_bar_outlined,
+                                color: Colors.black,
                               ),
-                              VerticalDivider(
-                                endIndent: 12,
-                                indent: 10,
-                                thickness: 2,
-                                color: Colors.green,
-                              ),
-                              Center(
-                                child: Icon(
-                                  Icons.signal_wifi_4_bar_outlined,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       );
                     }),

@@ -81,14 +81,15 @@ class ReportScreenState extends State<ReportScreen> {
                               .translate("Consumption report"),
                           style: _textStyle,
                         ),
-                        value: "Rapport de consommation",
+                        value: AppLocalizations.of(context)
+                            .translate("Consumption report"),
                       ),
                       DropdownMenuItem(
                         child: Text(
                           AppLocalizations.of(context).translate("Maintenance"),
                           style: _textStyle,
                         ),
-                        value: "Maintenance",
+                        value: AppLocalizations.of(context).translate("Maintenance"),
                       ),
                       DropdownMenuItem(
                         child: Text(
@@ -96,7 +97,8 @@ class ReportScreenState extends State<ReportScreen> {
                               .translate("Summary report"),
                           style: _textStyle,
                         ),
-                        value: "Rapport sommaire",
+                        value: AppLocalizations.of(context)
+                            .translate("Summary report"),
                       ),
                       DropdownMenuItem(
                         child: Text(
@@ -104,21 +106,22 @@ class ReportScreenState extends State<ReportScreen> {
                               .translate("Speed report"),
                           style: _textStyle,
                         ),
-                        value: "Rapport de vitesse",
+                        value: AppLocalizations.of(context)
+                            .translate("Speed report"),
                       ),
                       DropdownMenuItem(
                         child: Text(
                           AppLocalizations.of(context).translate("Temperature"),
                           style: _textStyle,
                         ),
-                        value: "Température",
+                        value: AppLocalizations.of(context).translate("Temperature"),
                       ),
                       DropdownMenuItem(
                         child: Text(
                           AppLocalizations.of(context).translate("Probe"),
                           style: _textStyle,
                         ),
-                        value: "Probe",
+                        value: AppLocalizations.of(context).translate("Probe"),
                       ),
                       DropdownMenuItem(
                         child: Text(
@@ -126,7 +129,8 @@ class ReportScreenState extends State<ReportScreen> {
                               .translate("Driver behavior"),
                           style: _textStyle,
                         ),
-                        value: "Comportement du conducteur",
+                        value: AppLocalizations.of(context)
+                            .translate("Driver behavior"),
                       ),
                     ],
                   ),
@@ -257,7 +261,7 @@ class ReportScreenState extends State<ReportScreen> {
                             0 &&
                         _deviceID != "choisir véhicule(s)" &&
                         _selectedType != null) {
-                      if (_selectedType == "Rapport sommaire") {
+                      if (_selectedType == AppLocalizations.of(context).translate("Summary report")) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -268,7 +272,7 @@ class ReportScreenState extends State<ReportScreen> {
                                 _pickedDateTimeEnd),
                           ),
                         );
-                      } else if (_selectedType == "Rapport de vitesse") {
+                      } else if (_selectedType == AppLocalizations.of(context).translate("Speed report")) {
                         TextEditingController _controller =
                             TextEditingController();
                         showDialog(
@@ -318,11 +322,28 @@ class ReportScreenState extends State<ReportScreen> {
                               );
                             });
                       } else {
-                        ApiShowDialog.dialog(
-                            scaffoldKey: _scaffoldKey,
-                            message:
-                                'veuillez chosir soit rapport de vitesse soit rapport sommaire',
-                            type: 'error');
+                        // ApiShowDialog.dialog(
+                        //     scaffoldKey: _scaffoldKey,
+                        //     message:
+                        //         'veuillez chosir soit rapport de vitesse soit rapport sommaire',
+                        //     type: 'error');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return Scaffold(
+                                appBar: AppBar(
+                                  title: Text('$_selectedType'),
+                                  backgroundColor: Colors.green,
+                                ),
+                                drawer: FEDrawer(),
+                                body: Container(
+                                  color: Colors.white,
+                                ),
+                              );
+                            },
+                          ),
+                        );
                       }
                     } else if (_deviceID == "choisir véhicule(s)") {
                       ApiShowDialog.dialog(

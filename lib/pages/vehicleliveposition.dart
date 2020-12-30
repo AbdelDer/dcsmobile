@@ -572,7 +572,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
         var markerID = MarkerId(data[i].deviceID.toString());
         var position = LatLng(data[i].latitude, data[i].longitude);
         BitmapDescriptor.fromAssetImage(
-                ImageConfiguration(size: Size(30, 30)), data[i].iconPath())
+                ImageConfiguration(size: Size(25, 25)), data[i].iconPath())
             .then((markerIcon) {
           _marker = Marker(
               markerId: markerID,
@@ -828,7 +828,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
             color: Colors.greenAccent,
             width: 2);
         BitmapDescriptor.fromAssetImage(
-                ImageConfiguration(size: Size(30, 30)), data.iconPath())
+                ImageConfiguration(size: Size(25, 25)), data.iconPath())
             .then((markerIcon) {
           _marker = Marker(
               markerId: markerID,
@@ -846,7 +846,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
         });
       } else if (_option == "Live") {
         BitmapDescriptor.fromAssetImage(
-                ImageConfiguration(size: Size(30, 30)), data.iconPath())
+                ImageConfiguration(size: Size(25, 25)), data.iconPath())
             .then((markerIcon) {
           _marker = Marker(
               markerId: markerID,

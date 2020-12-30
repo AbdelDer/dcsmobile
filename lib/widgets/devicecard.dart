@@ -159,25 +159,28 @@ class _DeviceCardState extends State<DeviceCard> {
                       );
                     }
                   },
-                  leading: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        data[index].iconPath(),
-                        width: 30,
-                      ),
-                      _option == "speedReport"
-                          ? SizedBox(
-                              height: 0,
-                              width: 0,
-                            )
-                          : Text(
-                              data[index].activityTime(),
-                              style: TextStyle(fontSize: 15),
-                            ),
-                    ],
+                  leading: Container(
+                    width: 85,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          data[index].iconPath(),
+                          width: 30,
+                        ),
+                        _option == "speedReport"
+                            ? SizedBox(
+                                height: 0,
+                                width: 0,
+                              )
+                            : Text(
+                                data[index].activityTime(),
+                                style: TextStyle(fontSize: 14),
+                              ),
+                      ],
+                    ),
                   ),
                   title: Row(children: <Widget>[
                     Icon(Icons.directions_car),
@@ -242,7 +245,7 @@ class _DeviceCardState extends State<DeviceCard> {
                                         fontWeight: FontWeight.bold,
                                       )),
                                   TextSpan(
-                                      text: "${data[index].distanceKM} Km/J")
+                                      text: "${data[index].distanceKM?.toStringAsFixed(2) ?? ''} Km/J")
                                 ],
                               ),
                             ),
@@ -274,8 +277,8 @@ class _DeviceCardState extends State<DeviceCard> {
                   markerId: MarkerId('${data.timestamp}'),
                   position: LatLng(data.latitude, data.longitude),
                   infoWindow: InfoWindow(
-                      snippet: "lat: ${data.latitude}, lon: ${data.longitude}",
-                      title: "Speed: ${data.speedKPH}"))
+                      snippet: "lat: ${data.latitude.toStringAsFixed(2)}, lon: ${data.longitude.toStringAsFixed(2)}",
+                      title: "Speed: ${data.speedKPH.toStringAsFixed(2)}"))
             ]),
             mapType: MapType.hybrid,
             onMapCreated: (GoogleMapController googleMapController) {},

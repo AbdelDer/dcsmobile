@@ -2,11 +2,8 @@ import 'dart:convert';
 
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
-import 'package:dcsmobile/Api/Response.dart';
-import 'package:dcsmobile/commons/FEDrawer.dart';
 import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
-import 'package:dcsmobile/models/summaryreport.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 
@@ -130,7 +127,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
                         style: TextStyle(fontSize: _fontSize),
                       ),
                       subtitle: Text(
-                        snapshot.data.odometerStart.toString(),
+                        snapshot.data.odometerStart.toStringAsFixed(2),
                         style:
                             TextStyle(fontSize: _fontSize, color: Colors.black),
                       ),
@@ -147,7 +144,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
                         style: TextStyle(fontSize: _fontSize),
                       ),
                       subtitle: Text(
-                        snapshot.data.odometerEnd.toString(),
+                        snapshot.data.odometerEnd.toStringAsFixed(2),
                         style:
                             TextStyle(fontSize: _fontSize, color: Colors.black),
                       ),
@@ -164,7 +161,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
                         style: TextStyle(fontSize: _fontSize),
                       ),
                       subtitle: Text(
-                        snapshot.data.distance.toString(),
+                        snapshot.data.distance.toStringAsFixed(2),
                         style:
                             TextStyle(fontSize: _fontSize, color: Colors.black),
                       ),
@@ -211,7 +208,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
                       tileColor: _cardColor,
                       leading: Image.asset('assets/report/running.png'),
                       title: Text(
-                        '${AppLocalizations.of(context).translate("Vehicle running time")}',
+                        '${AppLocalizations.of(context).translate("Running time")}',
                         style: TextStyle(fontSize: _fontSize),
                       ),
                       subtitle: Text(
@@ -232,7 +229,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
                         style: TextStyle(fontSize: _fontSize),
                       ),
                       subtitle: Text(
-                        '${snapshot.data.stops}',
+                        '${snapshot.data.stops.toStringAsFixed(2)}',
                         style:
                             TextStyle(fontSize: _fontSize, color: Colors.black),
                       ),
