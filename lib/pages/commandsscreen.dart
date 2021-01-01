@@ -206,7 +206,7 @@ class _CommandsScreenState extends State<CommandsScreen>
                                       },
                                     ),
                                     Text(
-                                      "${snapshot.data.responseBody[index].timestampAsString} ${snapshot.data.responseBody[index].speedKPH} Km/h",
+                                      "${snapshot.data.responseBody[index].timestampAsString} ${snapshot.data.responseBody[index].speedKPH.toStringAsFixed(2)} Km/h",
                                       style:
                                           TextStyle(fontSize: _detailsFontSize),
                                     ),

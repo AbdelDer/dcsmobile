@@ -320,7 +320,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                             child: Column(
                                               mainAxisSize: MainAxisSize.max,
                                               mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
+                                                  MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 RaisedButton(
                                                   onPressed: () {
@@ -328,15 +328,19 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) {
-                                                          return OpenStreetMap.History(
-                                                            deviceID: this.deviceID,
+                                                          return OpenStreetMap
+                                                              .History(
+                                                            deviceID:
+                                                                this.deviceID,
                                                             option: "History",
-                                                            startTime: _timeline[index]
-                                                                .startTime
-                                                                .toInt(),
-                                                            endTime: _timeline[index]
-                                                                .endTime
-                                                                .toInt(),
+                                                            startTime:
+                                                                _timeline[index]
+                                                                    .startTime
+                                                                    .toInt(),
+                                                            endTime:
+                                                                _timeline[index]
+                                                                    .endTime
+                                                                    .toInt(),
                                                           );
                                                         },
                                                       ),
@@ -361,15 +365,19 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) {
-                                                          return VehicleLivePosition.History(
-                                                            deviceID: this.deviceID,
+                                                          return VehicleLivePosition
+                                                              .History(
+                                                            deviceID:
+                                                                this.deviceID,
                                                             option: "History",
-                                                            startTime: _timeline[index]
-                                                                .startTime
-                                                                .toInt(),
-                                                            endTime: _timeline[index]
-                                                                .endTime
-                                                                .toInt(),
+                                                            startTime:
+                                                                _timeline[index]
+                                                                    .startTime
+                                                                    .toInt(),
+                                                            endTime:
+                                                                _timeline[index]
+                                                                    .endTime
+                                                                    .toInt(),
                                                           );
                                                         },
                                                       ),
@@ -386,7 +394,8 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                                       ),
                                                     ),
                                                   ),
-                                                  color: Colors.greenAccent.shade700,
+                                                  color: Colors
+                                                      .greenAccent.shade700,
                                                 ),
                                               ],
                                             ),
@@ -402,7 +411,8 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                               _timeline[index]
                                                   .startTimeAsString,
                                               style: TextStyle(
-                                                  color: Colors.black),
+                                                  color: Colors.black,
+                                                  fontSize: 15),
                                             ),
                                             _timeline[index].activity ==
                                                     "running"
@@ -439,7 +449,8 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                               child: Text(
                                                 '${_timeline[index].activityTimeAsString}',
                                                 style: TextStyle(
-                                                    color: Colors.black),
+                                                    color: Colors.black,
+                                                    fontSize: 15),
                                               ),
                                             ),
                                             _timeline[index].activity ==
@@ -464,9 +475,10 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                                         const EdgeInsets.only(
                                                             left: 8.0),
                                                     child: Text(
-                                                      '${_timeline[index].distanceKM}',
+                                                      '${_timeline[index].distanceKM} Km',
                                                       style: TextStyle(
-                                                          color: Colors.black),
+                                                          color: Colors.black,
+                                                          fontSize: 15),
                                                     ),
                                                   )
                                                 : SizedBox(
@@ -495,9 +507,10 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                                         const EdgeInsets.only(
                                                             left: 8.0),
                                                     child: Text(
-                                                      '${_timeline[index].avgSpeed}',
+                                                      '${_timeline[index].avgSpeed} Km/h',
                                                       style: TextStyle(
-                                                          color: Colors.black),
+                                                          color: Colors.black,
+                                                          fontSize: 15),
                                                     ),
                                                   )
                                                 : SizedBox(
