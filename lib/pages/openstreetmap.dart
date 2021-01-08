@@ -5,6 +5,7 @@ import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/animations/speedometer.dart';
 import 'package:dcsmobile/models/EventData.dart';
+import 'package:dcsmobile/pages/vehicleliveposition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
@@ -87,13 +88,17 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
   }
 
   _positionDetails() async {
-    if (_option == "History") {
+    if (_option == "History" && mounted) {
       Timer.run(() async {
         await Api.getHistory(this._deviceID, this._startTime, this._endTime)
             .then((r) async {
           for (EventData ed in r.responseBody) {
-            await Future.delayed(Duration(milliseconds: 1000));
-            _setHistory(ed);
+            if(mounted) {
+              await Future.delayed(Duration(milliseconds: 100));
+              _setHistory(ed);
+            } else {
+              break;
+            }
           }
         }).catchError((err) {
           ApiShowDialog.dialog(
@@ -222,7 +227,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                                             Text(
                                               data.vehicleModel,
                                               style: TextStyle(
-                                                fontSize: 14,
+                                                fontSize: 10,
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.black,
                                               ),
@@ -239,7 +244,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                                         text: TextSpan(
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontSize: 12,
+                                            fontSize: 10,
                                           ),
                                           children: <TextSpan>[
                                             TextSpan(
@@ -263,7 +268,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                                         child: Text(
                                           '${data.state()}',
                                           style: TextStyle(
-                                            fontSize: 12,
+                                            fontSize: 10,
                                           ),
                                         ),
                                       ),
@@ -275,7 +280,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                                         child: RichText(
                                           text: TextSpan(
                                             style: TextStyle(
-                                              fontSize: 12,
+                                              fontSize: 10,
                                               color: Colors.black,
                                             ),
                                             children: <TextSpan>[
@@ -305,7 +310,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                               child: RichText(
                                   text: TextSpan(
                                       style: TextStyle(
-                                        fontSize: 12,
+                                        fontSize: 10,
                                         color: Colors.black,
                                       ),
                                       children: <TextSpan>[
@@ -477,7 +482,55 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                           await launch(uri);
                         }
                       },
-                    )
+                    ),
+                    IconButton(
+                      icon: Container(
+                        width: 45,
+                        height: 40,
+                        decoration: new BoxDecoration(
+                          color: Colors.greenAccent,
+                          borderRadius: new BorderRadius.only(
+                            topLeft: const Radius.circular(25.0),
+                            topRight: const Radius.circular(25.0),
+                            bottomLeft: const Radius.circular(25.0),
+                            bottomRight: const Radius.circular(25.0),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 4.0),
+                          child: Icon(
+                            Icons.map,
+                            color: Colors.green.shade700,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                      onPressed: () {
+                        if (_option != "History") {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => VehicleLivePosition(
+                                  deviceID: _deviceID, option: _option),
+                            ),
+                          );
+                        } else {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return VehicleLivePosition.History(
+                                  deviceID: _deviceID,
+                                  option: "History",
+                                  startTime: _startTime,
+                                  endTime: _endTime,
+                                );
+                              },
+                            ),
+                          );
+                        }
+                      },
+                    ),
                   ],
                 ),
               ),

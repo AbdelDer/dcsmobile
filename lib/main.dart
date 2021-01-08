@@ -207,7 +207,13 @@ class _FEDrawerState extends State<FEDrawer> {
               leading: Icon(Icons.group_work),
               title: Text('${translate(context, 'Vehicle group')}'),
               onTap: () {
-                showDialog(
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => VehicleLivePosition(option: "Group"),
+                  ),
+                );
+                /*showDialog(
                   context: context,
                   builder: (__) => Dialog(
                     child: Container(
@@ -267,7 +273,7 @@ class _FEDrawerState extends State<FEDrawer> {
                       ),
                     ),
                   ),
-                );
+                );*/
               }
             ),
             ListTile(

@@ -68,7 +68,14 @@ class _DeviceCardState extends State<DeviceCard> {
                                 data[index].simPhoneNumber, false);
                           });
                     } else if (_option == "Live") {
-                      showDialog(
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => VehicleLivePosition(
+                              deviceID: data[index].deviceID, option: _option),
+                        ),
+                      );
+                      /*showDialog(
                         context: context,
                         builder: (__) => Dialog(
                           child: Container(
@@ -130,7 +137,7 @@ class _DeviceCardState extends State<DeviceCard> {
                             ),
                           ),
                         ),
-                      );
+                      );*/
                     } else if (_option ==
                         AppLocalizations.of(context).translate("History")) {
                       Navigator.push(

@@ -6,6 +6,7 @@ import 'dart:math' as math;
 
 import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
+import 'package:dcsmobile/pages/openstreetmap.dart';
 import 'package:geodesy/geodesy.dart' as gdesy;
 
 import 'package:dcsmobile/Api/Api.dart';
@@ -91,6 +92,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
   void dispose() {
     _timer?.cancel();
     _streamSubscription?.cancel();
+    _googleMapController.dispose();
     super.dispose();
   }
 
@@ -113,8 +115,12 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
         await Api.getHistory(this._deviceID, this._startTime, this._endTime)
             .then((r) async {
           for (EventData ed in r.responseBody) {
-            await Future.delayed(Duration(milliseconds: 1000));
-            _setData(ed);
+            // if (mounted) {
+              await Future.delayed(Duration(milliseconds: 100));
+              _setData(ed);
+            // } else {
+            //   break;
+            // }
           }
         }).catchError((err) {
           ApiShowDialog.dialog(
@@ -324,7 +330,55 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                           await launch(uri);
                         }
                       },
-                    )
+                    ),
+                    IconButton(
+                      icon: Container(
+                        width: 45,
+                        height: 40,
+                        decoration: new BoxDecoration(
+                          color: Colors.greenAccent,
+                          borderRadius: new BorderRadius.only(
+                            topLeft: const Radius.circular(25.0),
+                            topRight: const Radius.circular(25.0),
+                            bottomLeft: const Radius.circular(25.0),
+                            bottomRight: const Radius.circular(25.0),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 4.0),
+                          child: Icon(
+                            Icons.map,
+                            color: Colors.green.shade700,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                      onPressed: () {
+                        if (_option != "History") {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => OpenStreetMap(
+                                  deviceID: _deviceID, option: _option),
+                            ),
+                          );
+                        } else {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return OpenStreetMap.History(
+                                  deviceID: _deviceID,
+                                  option: "History",
+                                  startTime: _startTime,
+                                  endTime: _endTime,
+                                );
+                              },
+                            ),
+                          );
+                        }
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -338,9 +392,10 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
   _setData(data) {
     if (_option == "Group") {
       Map<MarkerId, Marker> markers = Map();
-      for (int i=0; i< data.length; i++) {
+      for (int i = 0; i < data.length; i++) {
         var infoWindow = InfoWindow(
-            snippet: "Speed: ${data[i].speedKPH.toStringAsFixed(2)} Km/h more...",
+            snippet:
+                "Speed: ${data[i].speedKPH.toStringAsFixed(2)} Km/h more...",
             title: "${data[i].vehicleModel}",
             onTap: () {
               showDialog(
@@ -578,8 +633,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
               markerId: markerID,
               position: position,
               icon: markerIcon,
-              infoWindow: infoWindow
-          );
+              infoWindow: infoWindow);
           markers[markerID] = _marker;
         });
       }
@@ -835,14 +889,16 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
               position: position,
               icon: markerIcon,
               infoWindow: infoWindow);
-          setState(() {
-            _markers[markerID] = _marker;
-            _speedKPH = data.speedKPH;
-            _odometer = data.odometerKM;
-            _polylines.add(customPolyline);
-          });
-          _googleMapController
-              ?.animateCamera(CameraUpdate.newLatLngZoom(position, 14));
+          if (mounted) {
+            setState(() {
+              _markers[markerID] = _marker;
+              _speedKPH = data.speedKPH;
+              _odometer = data.odometerKM;
+              _polylines.add(customPolyline);
+            });
+            _googleMapController
+                ?.moveCamera(CameraUpdate.newLatLngZoom(position, 14));
+          }
         });
       } else if (_option == "Live") {
         BitmapDescriptor.fromAssetImage(

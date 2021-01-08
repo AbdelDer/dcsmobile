@@ -141,7 +141,24 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              showDialog(
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return VehicleLivePosition.History(
+                                      deviceID: this.deviceID,
+                                      option: "History",
+                                      startTime: _selectedDate
+                                              .millisecondsSinceEpoch ~/
+                                          1000,
+                                      endTime:
+                                          _endDate.millisecondsSinceEpoch ~/
+                                              1000,
+                                    );
+                                  },
+                                ),
+                              );
+                              /*showDialog(
                                 context: context,
                                 builder: (__) => Dialog(
                                   child: Container(
@@ -225,7 +242,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                     ),
                                   ),
                                 ),
-                              );
+                              );*/
                             },
                             child: Container(
                               height: 50,
@@ -310,7 +327,24 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                 itemBuilder: (context, index) {
                                   return GestureDetector(
                                     onTap: () {
-                                      showDialog(
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return VehicleLivePosition.History(
+                                              deviceID: this.deviceID,
+                                              option: "History",
+                                              startTime: _timeline[index]
+                                                  .startTime
+                                                  .toInt(),
+                                              endTime: _timeline[index]
+                                                  .endTime
+                                                  .toInt(),
+                                            );
+                                          },
+                                        ),
+                                      );
+                                      /*showDialog(
                                         context: context,
                                         builder: (__) => Dialog(
                                           child: Container(
@@ -401,7 +435,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                             ),
                                           ),
                                         ),
-                                      );
+                                      );*/
                                     },
                                     child: Card(
                                       child: ListTile(
@@ -412,7 +446,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                                   .startTimeAsString,
                                               style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: 15),
+                                                  fontSize: 12),
                                             ),
                                             _timeline[index].activity ==
                                                     "running"
@@ -450,7 +484,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                                 '${_timeline[index].activityTimeAsString}',
                                                 style: TextStyle(
                                                     color: Colors.black,
-                                                    fontSize: 15),
+                                                    fontSize: 12),
                                               ),
                                             ),
                                             _timeline[index].activity ==
@@ -478,7 +512,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                                       '${_timeline[index].distanceKM} Km',
                                                       style: TextStyle(
                                                           color: Colors.black,
-                                                          fontSize: 15),
+                                                          fontSize: 12),
                                                     ),
                                                   )
                                                 : SizedBox(
@@ -510,7 +544,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                                       '${_timeline[index].avgSpeed} Km/h',
                                                       style: TextStyle(
                                                           color: Colors.black,
-                                                          fontSize: 15),
+                                                          fontSize: 12),
                                                     ),
                                                   )
                                                 : SizedBox(
