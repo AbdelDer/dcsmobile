@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "824077600097",
+    "firebase_url": "https://smarttrack-675f0-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "smarttrack-675f0",
+    "storage_bucket": "smarttrack-675f0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:824077600097:android:a22ad2f1f36c0eee46f120",
+        "android_client_info": {
+          "package_name": "com.smartssysitel.dcsmobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "824077600097-sv8c9edmrv3v22svt27n02oboieeam7t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrnlXvXGMXXD8fDXfBbusP22OGHQ0Gunw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "824077600097-sv8c9edmrv3v22svt27n02oboieeam7t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
