@@ -1,18 +1,16 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:dcsmobile/Api/Api.dart';
-import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/animations/speedometer.dart';
 import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/models/EventData.dart';
-import 'package:dcsmobile/pages/vehicleliveposition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:geodesy/geodesy.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:latlong/latlong.dart' as lt;
+import 'package:share/share.dart';
 
 class OpenStreetMap extends StatefulWidget {
   String deviceID;
@@ -23,11 +21,10 @@ class OpenStreetMap extends StatefulWidget {
   OpenStreetMap({Key key, @required this.deviceID, @required this.option})
       : super(key: key);
 
-  OpenStreetMap.History(
-      {@required this.deviceID,
-      @required this.option,
-      @required this.startTime,
-      @required this.endTime});
+  OpenStreetMap.History({@required this.deviceID,
+    @required this.option,
+    @required this.startTime,
+    @required this.endTime});
 
   OpenStreetMap.Group({@required this.option});
 
@@ -60,9 +57,10 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
   double _dialogTextSize = 16;
   List<Marker> _markers;
   List<EventData> _data;
+  List<lt.LatLng> _points = [];
   bool readyToPlay = false;
   String layers = "h";
-  String urlTemplate;
+  String urlTemplate = "https://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}";
   List<String> _choices = [
     'Roads only',
     'Standard roadmap',
@@ -78,8 +76,8 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
 
   _OpenStreetMapState(this._deviceID, this._option);
 
-  _OpenStreetMapState.History(
-      this._deviceID, this._option, this._startTime, this._endTime);
+  _OpenStreetMapState.History(this._deviceID, this._option, this._startTime,
+      this._endTime);
 
   _OpenStreetMapState.Group(this._option);
 
@@ -89,7 +87,6 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
     _markers = [];
     _data = [];
     _mapController = MapController();
-    urlTemplate = "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _positionDetails();
     });
@@ -217,19 +214,28 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
               mapController: _mapController,
               options: MapOptions(
                 plugins: [PopupMarkerPlugin()],
-                onTap: (_) => _popupLayerController
-                    .hidePopup(), // Hide popup when the map is tapped.
+                onTap: (_) =>
+                    _popupLayerController
+                        .hidePopup(), // Hide popup when the map is tapped.
                 center: LatLng(30.0, -9.0),
                 zoom: 5.0,
               ),
               layers: [
+                PolylineLayerOptions(
+                  polylines: [
+                    Polyline(
+                        points: _points,
+                        strokeWidth: 4.0,
+                        color: Colors.purple),
+                  ],
+                ),
                 PopupMarkerLayerOptions(
                     markers: _markers,
                     popupSnap: PopupSnap.top,
                     popupController: _popupLayerController,
                     popupBuilder: (BuildContext _, Marker marker) {
                       EventData data = _data.firstWhere((element) =>
-                          element.latitude == marker.point.latitude &&
+                      element.latitude == marker.point.latitude &&
                           element.longitude == marker.point.longitude);
                       return Container(
                         width: 280,
@@ -271,25 +277,28 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                                     children: [
                                       TableCell(
                                           child: RichText(
-                                        text: TextSpan(
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 10,
-                                          ),
-                                          children: <TextSpan>[
-                                            TextSpan(
-                                              text: '${data.timestampAsString}',
+                                            text: TextSpan(
                                               style: TextStyle(
-                                                  color:
+                                                color: Colors.black,
+                                                fontSize: 10,
+                                              ),
+                                              children: <TextSpan>[
+                                                TextSpan(
+                                                  text: '${data
+                                                      .timestampAsString}',
+                                                  style: TextStyle(
+                                                      color:
                                                       Colors.lightBlueAccent),
+                                                ),
+                                                TextSpan(
+                                                  text:
+                                                  ' (${data.engineTemp ??
+                                                      ''}°C/${_data.last
+                                                      .batteryVolts ?? ''}V)',
+                                                ),
+                                              ],
                                             ),
-                                            TextSpan(
-                                              text:
-                                                  ' (${data.engineTemp ?? ''}°C/${_data.last.batteryVolts ?? ''}V)',
-                                            ),
-                                          ],
-                                        ),
-                                      )),
+                                          )),
                                     ],
                                   ),
                                   TableRow(
@@ -319,7 +328,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                                               ),
                                               TextSpan(
                                                 text:
-                                                    '${data.oilLevel ?? ''} L',
+                                                '${data.oilLevel ?? ''} L',
                                               ),
                                             ],
                                           ),
@@ -344,17 +353,18 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                                         color: Colors.black,
                                       ),
                                       children: <TextSpan>[
-                                    TextSpan(
-                                      text:
-                                          '${data.speedKPH?.toStringAsFixed(2) ?? ''}',
-                                      style: TextStyle(
-                                        color: Colors.green.shade700,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: '\n Km/h',
-                                    ),
-                                  ])),
+                                        TextSpan(
+                                          text:
+                                          '${data.speedKPH?.toStringAsFixed(
+                                              2) ?? ''}',
+                                          style: TextStyle(
+                                            color: Colors.green.shade700,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: '\n Km/h',
+                                        ),
+                                      ])),
                             ),
                             VerticalDivider(
                               endIndent: 12,
@@ -382,43 +392,43 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
             ),
             _option != "Group"
                 ? Padding(
-                    padding: const EdgeInsets.only(bottom: 20.0),
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        width: 220,
-                        height: 220,
-                        child: Speedometer(
-                          size: 220,
-                          minValue: 0,
-                          maxValue: 220,
-                          currentValue: _data.length != 0
-                              ? _data.last.speedKPH?.roundToDouble()
-                              : 0,
-                          displayNumericStyle: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              backgroundColor: Colors.white,
-                              color: _speedKPH < _warningSpeed
-                                  ? Colors.lightBlueAccent
-                                  : Colors.red),
-                          warningValue: _warningSpeed,
-                          displayText: _data.length != 0
-                              ? '${_data.last.odometerKM?.toStringAsFixed(2)}'
-                              : '0',
-                          displayTextStyle: TextStyle(
-                              fontSize: 20,
-                              backgroundColor: Colors.white,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  )
-                : SizedBox(
-                    height: 0,
-                    width: 0,
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: 220,
+                  height: 220,
+                  child: Speedometer(
+                    size: 220,
+                    minValue: 0,
+                    maxValue: 220,
+                    currentValue: _data.length != 0
+                        ? _data.last.speedKPH?.roundToDouble()
+                        : 0,
+                    displayNumericStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        backgroundColor: Colors.white,
+                        color: _speedKPH < _warningSpeed
+                            ? Colors.lightBlueAccent
+                            : Colors.red),
+                    warningValue: _warningSpeed,
+                    displayText: _data.length != 0
+                        ? '${_data.last.odometerKM?.toStringAsFixed(2)}'
+                        : '0',
+                    displayTextStyle: TextStyle(
+                        fontSize: 20,
+                        backgroundColor: Colors.white,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
                   ),
+                ),
+              ),
+            )
+                : SizedBox(
+              height: 0,
+              width: 0,
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
               child: Align(
@@ -450,7 +460,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                         ),
                         color: Colors.white,
                         tooltip:
-                            AppLocalizations.of(context).translate("Map style"),
+                        AppLocalizations.of(context).translate("Map style"),
                         itemBuilder: (BuildContext context) {
                           return _choices.map((choice) {
                             return PopupMenuItem<String>(
@@ -462,52 +472,53 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                         onSelected: (choice) {
                           setState(() {
                             switch (choice) {
-                              // 'Roads only', 'Standard roadmap', 'Terrain', 'Satellite only', 'Terrain only', 'Hybrid'
+                            // 'Roads only', 'Standard roadmap', 'Terrain', 'Satellite only', 'Terrain only', 'Hybrid'
                               case "Roads only":
                                 setState(() {
                                   layers = "h";
                                   urlTemplate =
-                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                  "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
                                 });
                                 break;
                               case "Standard roadmap":
                                 setState(() {
                                   layers = "m";
                                   urlTemplate =
-                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                  "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
                                 });
                                 break;
                               case "Terrain":
                                 setState(() {
                                   layers = "p";
                                   urlTemplate =
-                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                  "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
                                 });
                                 break;
                               case "Satellite only":
                                 setState(() {
                                   layers = "s";
                                   urlTemplate =
-                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                  "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
                                 });
                                 break;
                               case "Terrain only":
                                 setState(() {
                                   layers = "t";
                                   urlTemplate =
-                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                  "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
                                 });
                                 break;
                               case "Hybrid":
                                 setState(() {
                                   layers = "y";
                                   urlTemplate =
-                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                  "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
                                 });
                                 break;
                               case "OpenStreetMap":
                                 setState(() {
-                                  urlTemplate = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+                                  urlTemplate =
+                                  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
                                 });
                                 break;
                             }
@@ -537,66 +548,57 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                       ),
                       onPressed: () async {
                         String body =
-                            "http://maps.google.com/?q=${_markers.last.point.latitude},${_markers.last.point.longitude}";
-
-                        //if body contains space change it with %20
-                        if (Platform.isAndroid) {
-                          var uri = 'sms:?body=$body';
-                          await launch(uri);
-                        } else if (Platform.isIOS) {
-                          // iOS
-                          // phoneNumber = phoneNumber.replaceAll('+212', '00');
-                          var uri = 'sms:&body=$body';
-                          await launch(uri);
-                        }
+                            "http://maps.google.com/?q=${_markers.last.point
+                            .latitude},${_markers.last.point.longitude}";
+                        await Share.share(body);
                       },
                     ),
                     _option == 'History' && readyToPlay
                         ? IconButton(
-                            icon: Container(
-                              width: 45,
-                              height: 40,
-                              decoration: new BoxDecoration(
-                                color: Colors.greenAccent,
-                                borderRadius: new BorderRadius.only(
-                                  topLeft: const Radius.circular(25.0),
-                                  topRight: const Radius.circular(25.0),
-                                  bottomLeft: const Radius.circular(25.0),
-                                  bottomRight: const Radius.circular(25.0),
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 4.0),
-                                child: Icon(
-                                  Icons.play_arrow,
-                                  color: Colors.green.shade700,
-                                  size: 20,
-                                ),
-                              ),
-                            ),
-                            onPressed: () async {
-                              List<Marker> oldMarkers = List<Marker>();
-                              oldMarkers = []..addAll(_markers);
-                              if (mounted) {
-                                setState(() {
-                                  _markers.clear();
-                                });
-                              }
-                              for (Marker m in oldMarkers) {
-                                await Future.delayed(Duration(milliseconds: 5));
-                                if (mounted) {
-                                  setState(() {
-                                    _markers.add(m);
-                                  });
-                                  _mapController.move(_markers.last.point, 14);
-                                }
-                              }
-                            },
-                          )
-                        : SizedBox(
-                            height: 0,
-                            width: 0,
+                      icon: Container(
+                        width: 45,
+                        height: 40,
+                        decoration: new BoxDecoration(
+                          color: Colors.greenAccent,
+                          borderRadius: new BorderRadius.only(
+                            topLeft: const Radius.circular(25.0),
+                            topRight: const Radius.circular(25.0),
+                            bottomLeft: const Radius.circular(25.0),
+                            bottomRight: const Radius.circular(25.0),
                           ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 4.0),
+                          child: Icon(
+                            Icons.play_arrow,
+                            color: Colors.green.shade700,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                      onPressed: () async {
+                        List<Marker> oldMarkers = List<Marker>();
+                        oldMarkers = []..addAll(_markers);
+                        if (mounted) {
+                          setState(() {
+                            _markers.clear();
+                          });
+                        }
+                        for (Marker m in oldMarkers) {
+                          await Future.delayed(Duration(milliseconds: 5));
+                          if (mounted) {
+                            setState(() {
+                              _markers.add(m);
+                            });
+                            _mapController.move(_markers.last.point, 14);
+                          }
+                        }
+                      },
+                    )
+                        : SizedBox(
+                      height: 0,
+                      width: 0,
+                    ),
                     IconButton(
                       icon: Container(
                         width: 45,
@@ -623,12 +625,12 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                         if (urlTemplate.contains("open")) {
                           setState(() {
                             urlTemplate =
-                                "https://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}";
+                            "https://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}";
                           });
                         } else {
                           setState(() {
                             urlTemplate =
-                                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+                            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
                           });
                         }
                         /*if (_option != "History") {
@@ -679,6 +681,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
           builder: (context) {
             return Image.asset(ed.iconPath(purpose: "History"));
           }));
+      _points?.add(lt.LatLng(ed.latitude, ed.longitude));
       _data?.add(ed);
       _mapController.move(_markers?.last.point, 14);
     });
