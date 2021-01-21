@@ -487,8 +487,13 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
         Navigator.of(context).pop();
       }
     }).catchError((error) {
-      ApiShowDialog.dialog(
-          scaffoldKey: _scaffoldKey, message: error.toString(), type: 'error');
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(error.toString()),
+        ),
+      );
+      // ApiShowDialog.dialog(
+      //     scaffoldKey: _scaffoldKey, message: error.toString(), type: 'error');
     });
   }
 
@@ -524,8 +529,13 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
         Navigator.of(context).pop();
       }
     }).catchError((error) {
-      ApiShowDialog.dialog(
-          scaffoldKey: _scaffoldKey, message: error.toString(), type: 'error');
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(error.toString()),
+        ),
+      );
+      // ApiShowDialog.dialog(
+      //     scaffoldKey: _scaffoldKey, message: error.toString(), type: 'error');
     });
   }
 
@@ -542,8 +552,13 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
         _getTechnicalVisitData();
       }
     }).catchError((error) {
-      ApiShowDialog.dialog(
-          scaffoldKey: _scaffoldKey, message: error.toString(), type: 'error');
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(error.toString()),
+        ),
+      );
+      // ApiShowDialog.dialog(
+      //     scaffoldKey: _scaffoldKey, message: error.toString(), type: 'error');
     });
   }
 }

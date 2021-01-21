@@ -96,87 +96,153 @@ class EventData {
     return false;
   }
 
-  String iconPath() {
-    if (_activityTime == null || _activityTime == '') {
-      return 'assets/icons/disconnected.png';
-    } else {
-      if (_activity.elementAt(0) == '+24h') {
-        return 'assets/icons/r_marker_blue.png';
-      }else if (_activity.elementAt(0) == 'disconnected') {
-        return 'assets/icons/disconnected.png';
-      }else if (_activity.elementAt(1) == 'parked') {
-        //TODO: change above condition with: _activityTime.contains(RegExp(r'^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$'))
-        return 'assets/icons/marker_blue_parking.png';
+  String iconPath({purpose}) {
+    if (purpose != null) {
+      if (_speedKPH < 3) {
+        return 'assets/icons/stop_small.png';
+      } else if (_speedKPH <= 60) {
+        if (_heading == 0) {
+          return 'assets/icons/marker_green.png';
+        } else if (between(0, 90)) {
+          return 'assets/icons/marker_green_ne.png';
+        } else if (_heading == 90) {
+          return 'assets/icons/marker_green_e.png';
+        } else if (between(90, 180)) {
+          return 'assets/icons/marker_green_se.png';
+        } else if (_heading == 180) {
+          return 'assets/icons/marker_green_s.png';
+        } else if (between(180, 270)) {
+          return 'assets/icons/marker_green_sw.png';
+        } else if (_heading == 270) {
+          return 'assets/icons/marker_green_w.png';
+        } else if (between(270, 360)) {
+          return 'assets/icons/marker_green_nw.png';
+        } else if (_heading == 360) {
+          return 'assets/icons/marker_green_n.png';
+        }
+      } else if (_speedKPH < 100 && _speedKPH > 60) {
+        if (_heading == 0) {
+          return 'assets/icons/marker_grey.png';
+        } else if (between(0, 90)) {
+          return 'assets/icons/marker_grey_ne.png';
+        } else if (_heading == 90) {
+          return 'assets/icons/marker_grey_e.png';
+        } else if (between(90, 180)) {
+          return 'assets/icons/marker_grey_se.png';
+        } else if (_heading == 180) {
+          return 'assets/icons/marker_grey_s.png';
+        } else if (between(180, 270)) {
+          return 'assets/icons/marker_grey_sw.png';
+        } else if (_heading == 270) {
+          return 'assets/icons/marker_grey_w.png';
+        } else if (between(270, 360)) {
+          return 'assets/icons/marker_grey_nw.png';
+        } else if (_heading == 360) {
+          return 'assets/icons/marker_grey_n.png';
+        }
+      } else {
+        if (_heading == 0) {
+          return 'assets/icons/marker_yellow.png';
+        } else if (between(0, 90)) {
+          return 'assets/icons/marker_yellow_ne.png';
+        } else if (_heading == 90) {
+          return 'assets/icons/marker_yellow_e.png';
+        } else if (between(90, 180)) {
+          return 'assets/icons/marker_yellow_se.png';
+        } else if (_heading == 180) {
+          return 'assets/icons/marker_yellow_s.png';
+        } else if (between(180, 270)) {
+          return 'assets/icons/marker_yellow_sw.png';
+        } else if (_heading == 270) {
+          return 'assets/icons/marker_yellow_w.png';
+        } else if (between(270, 360)) {
+          return 'assets/icons/marker_yellow_nw.png';
+        } else if (_heading == 360) {
+          return 'assets/icons/marker_yellow_n.png';
+        }
       }
-      /*
+    } else {
+      if (_activityTime == null || _activityTime == '') {
+        return 'assets/icons/disconnected.png';
+      } else {
+        if (_activity.elementAt(0) == '+24h') {
+          return 'assets/icons/r_marker_blue.png';
+        } else if (_activity.elementAt(0) == 'disconnected') {
+          return 'assets/icons/disconnected.png';
+        } else if (_activity.elementAt(1) == 'parked') {
+          //TODO: change above condition with: _activityTime.contains(RegExp(r'^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$'))
+          return 'assets/icons/marker_blue_parking.png';
+        }
+        /*
       else if (_activityTime.contains(
           RegExp(r'^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$'))) {
         //TODO: change above condition with: _activityTime.contains(RegExp(r'^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$'))
         return 'assets/icons/marker_blue_parking.png';
       }
       */
-      else {
-        if (_speedKPH < 3) {
-          return 'assets/icons/stop_small.png';
-        } else if (_speedKPH <= 60) {
-          if (_heading == 0) {
-            return 'assets/icons/marker_green.png';
-          } else if (between(0, 90)) {
-            return 'assets/icons/marker_green_ne.png';
-          } else if (_heading == 90) {
-            return 'assets/icons/marker_green_e.png';
-          } else if (between(90, 180)) {
-            return 'assets/icons/marker_green_se.png';
-          } else if (_heading == 180) {
-            return 'assets/icons/marker_green_s.png';
-          } else if (between(180, 270)) {
-            return 'assets/icons/marker_green_sw.png';
-          } else if (_heading == 270) {
-            return 'assets/icons/marker_green_w.png';
-          } else if (between(270, 360)) {
-            return 'assets/icons/marker_green_nw.png';
-          } else if (_heading == 360) {
-            return 'assets/icons/marker_green_n.png';
-          }
-        } else if (_speedKPH < 100 && _speedKPH > 60) {
-          if (_heading == 0) {
-            return 'assets/icons/marker_grey.png';
-          } else if (between(0, 90)) {
-            return 'assets/icons/marker_grey_ne.png';
-          } else if (_heading == 90) {
-            return 'assets/icons/marker_grey_e.png';
-          } else if (between(90, 180)) {
-            return 'assets/icons/marker_grey_se.png';
-          } else if (_heading == 180) {
-            return 'assets/icons/marker_grey_s.png';
-          } else if (between(180, 270)) {
-            return 'assets/icons/marker_grey_sw.png';
-          } else if (_heading == 270) {
-            return 'assets/icons/marker_grey_w.png';
-          } else if (between(270, 360)) {
-            return 'assets/icons/marker_grey_nw.png';
-          } else if (_heading == 360) {
-            return 'assets/icons/marker_grey_n.png';
-          }
-        } else {
-          if (_heading == 0) {
-            return 'assets/icons/marker_yellow.png';
-          } else if (between(0, 90)) {
-            return 'assets/icons/marker_yellow_ne.png';
-          } else if (_heading == 90) {
-            return 'assets/icons/marker_yellow_e.png';
-          } else if (between(90, 180)) {
-            return 'assets/icons/marker_yellow_se.png';
-          } else if (_heading == 180) {
-            return 'assets/icons/marker_yellow_s.png';
-          } else if (between(180, 270)) {
-            return 'assets/icons/marker_yellow_sw.png';
-          } else if (_heading == 270) {
-            return 'assets/icons/marker_yellow_w.png';
-          } else if (between(270, 360)) {
-            return 'assets/icons/marker_yellow_nw.png';
-          } else if (_heading == 360) {
-            return 'assets/icons/marker_yellow_n.png';
+        else {
+          if (_speedKPH < 3) {
+            return 'assets/icons/stop_small.png';
+          } else if (_speedKPH <= 60) {
+            if (_heading == 0) {
+              return 'assets/icons/marker_green.png';
+            } else if (between(0, 90)) {
+              return 'assets/icons/marker_green_ne.png';
+            } else if (_heading == 90) {
+              return 'assets/icons/marker_green_e.png';
+            } else if (between(90, 180)) {
+              return 'assets/icons/marker_green_se.png';
+            } else if (_heading == 180) {
+              return 'assets/icons/marker_green_s.png';
+            } else if (between(180, 270)) {
+              return 'assets/icons/marker_green_sw.png';
+            } else if (_heading == 270) {
+              return 'assets/icons/marker_green_w.png';
+            } else if (between(270, 360)) {
+              return 'assets/icons/marker_green_nw.png';
+            } else if (_heading == 360) {
+              return 'assets/icons/marker_green_n.png';
+            }
+          } else if (_speedKPH < 100 && _speedKPH > 60) {
+            if (_heading == 0) {
+              return 'assets/icons/marker_grey.png';
+            } else if (between(0, 90)) {
+              return 'assets/icons/marker_grey_ne.png';
+            } else if (_heading == 90) {
+              return 'assets/icons/marker_grey_e.png';
+            } else if (between(90, 180)) {
+              return 'assets/icons/marker_grey_se.png';
+            } else if (_heading == 180) {
+              return 'assets/icons/marker_grey_s.png';
+            } else if (between(180, 270)) {
+              return 'assets/icons/marker_grey_sw.png';
+            } else if (_heading == 270) {
+              return 'assets/icons/marker_grey_w.png';
+            } else if (between(270, 360)) {
+              return 'assets/icons/marker_grey_nw.png';
+            } else if (_heading == 360) {
+              return 'assets/icons/marker_grey_n.png';
+            }
+          } else {
+            if (_heading == 0) {
+              return 'assets/icons/marker_yellow.png';
+            } else if (between(0, 90)) {
+              return 'assets/icons/marker_yellow_ne.png';
+            } else if (_heading == 90) {
+              return 'assets/icons/marker_yellow_e.png';
+            } else if (between(90, 180)) {
+              return 'assets/icons/marker_yellow_se.png';
+            } else if (_heading == 180) {
+              return 'assets/icons/marker_yellow_s.png';
+            } else if (between(180, 270)) {
+              return 'assets/icons/marker_yellow_sw.png';
+            } else if (_heading == 270) {
+              return 'assets/icons/marker_yellow_w.png';
+            } else if (between(270, 360)) {
+              return 'assets/icons/marker_yellow_nw.png';
+            } else if (_heading == 360) {
+              return 'assets/icons/marker_yellow_n.png';
+            }
           }
         }
       }

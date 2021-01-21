@@ -299,8 +299,13 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
         return value.responseBody[0];
       },
     ).catchError(
-      (error) => ApiShowDialog.dialog(
-          scaffoldKey: _scaffoldKey, message: error, type: 'error'),
+        (error) => _scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text(error.toString()),
+          ),
+        ),
+      // (error) => ApiShowDialog.dialog(
+      //     scaffoldKey: _scaffoldKey, message: error, type: 'error'),
     );
   }
 }

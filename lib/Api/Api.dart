@@ -26,9 +26,9 @@ class Api {
 
   static final baseUrl = 'https://geotech-gps.com:9090/api';
 
-  // static final baseUrl = 'http://192.168.43.113:9090/api';
+  // static final baseUrl = 'http://192.168.1.75:9090/api';
 
-  // static final baseUrl = 'http://192.168.0.102:9090/api';
+  // static final baseUrl = 'http://192.168.100.10:9090/api';
 
   static Future<Response> login(params) async {
     await connected();
@@ -61,6 +61,27 @@ class Api {
       return Response.completed(
           User.fromJson(json.decode(utf8.decode(httpResponse.bodyBytes))));
     }
+  }
+
+  static Future<Response> saveToken(accountID, userID, token) async {
+    await connected();
+    var body;
+    var httpCustom;
+    body = jsonEncode({
+      "accountID" : accountID,
+      "userID" : userID,
+      "FCMToken": token
+    });
+    httpCustom = HttpCustom(url: '$baseUrl/add/token', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    if (httpResponse.statusCode != 200) {
+      return Response.error("something wrong happened");
+    }
+    return Response.completed("token saved successfully");
   }
 
   static Future<Response> userGroup(accountID, userID) async {

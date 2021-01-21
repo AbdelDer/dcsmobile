@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dcsmobile/pages/commandsscreen.dart';
 import 'package:dcsmobile/pages/helpscreen.dart';
 import 'package:dcsmobile/pages/notificationsview.dart';
@@ -6,6 +8,7 @@ import 'package:dcsmobile/pages/reportscreen.dart';
 import 'package:dcsmobile/pages/subscriptionscreen.dart';
 import 'package:dcsmobile/pages/vehicleliveposition.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:dcsmobile/pages/Position.dart';
 import 'package:dcsmobile/pages/dashboard.dart';
@@ -48,7 +51,7 @@ class _EnteryPointState extends State<EnteryPoint> {
       locale: appLocalizations.locale ?? Locale('en'),
       debugShowCheckedModeBanner: false,
       title: "Tracking App",
-      initialRoute: '/dashboard',
+      initialRoute: '/login',
       navigatorObservers: [routeObserver],
       theme: ThemeData(
         primaryColor: Colors.green,
@@ -210,7 +213,7 @@ class _FEDrawerState extends State<FEDrawer> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => VehicleLivePosition(option: "Group"),
+                    builder: (context) => OpenStreetMap.Group(option: "Group"),
                   ),
                 );
                 /*showDialog(

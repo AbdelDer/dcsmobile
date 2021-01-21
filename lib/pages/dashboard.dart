@@ -139,17 +139,27 @@ class _DashboardState extends State<Dashboard>
         stream: _stream,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            ApiShowDialog.dialog(
-                scaffoldKey: _scaffoldKey,
-                message: '${snapshot.error}',
-                type: 'error');
+            _scaffoldKey.currentState.showSnackBar(
+              SnackBar(
+                content: Text(snapshot.error.toString()),
+              ),
+            );
+            // ApiShowDialog.dialog(
+            //     scaffoldKey: _scaffoldKey,
+            //     message: '${snapshot.error}',
+            //     type: 'error');
           } else if (snapshot.hasData) {
             return _content(snapshot.data);
           } else if (snapshot.connectionState == ConnectionState.none) {
-            ApiShowDialog.dialog(
-                scaffoldKey: _scaffoldKey,
-                message: 'Problème de connexion',
-                type: 'error');
+            _scaffoldKey.currentState.showSnackBar(
+              SnackBar(
+                content: Text('Problème de connexion'),
+              ),
+            );
+            // ApiShowDialog.dialog(
+            //     scaffoldKey: _scaffoldKey,
+            //     message: 'Problème de connexion',
+            //     type: 'error');
           }
           return Center(child: CircularProgressIndicator());
         },
@@ -170,14 +180,24 @@ class _DashboardState extends State<Dashboard>
     List params = [accountID, userID];
     await Api.dashboardFirstRow(params).then((_) {
       if (_.message != null) {
-        ApiShowDialog.dialog(
-            scaffoldKey: _scaffoldKey, message: '${_.message}', type: 'error');
+        _scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text(_.message),
+          ),
+        );
+        // ApiShowDialog.dialog(
+        //     scaffoldKey: _scaffoldKey, message: '${_.message}', type: 'error');
       } else {
         list = _.responseBody;
       }
     }).catchError((err) {
-      ApiShowDialog.dialog(
-          scaffoldKey: _scaffoldKey, message: err, type: 'error');
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(err.toString()),
+        ),
+      );
+      // ApiShowDialog.dialog(
+      //     scaffoldKey: _scaffoldKey, message: err, type: 'error');
     });
     if (!_streamController.isClosed) {
       _streamController.add(list);

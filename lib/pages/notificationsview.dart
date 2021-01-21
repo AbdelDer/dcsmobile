@@ -454,8 +454,13 @@ class _NotificationsViewState extends State<NotificationsView> {
     await Api.getNotifications(_choicesToJson()).then((value) {
       _streamController.add(value);
     }).catchError((error) {
-      ApiShowDialog.dialog(
-          type: 'error', message: error, scaffoldKey: _scaffoldKey);
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(error.toString()),
+        ),
+      );
+      // ApiShowDialog.dialog(
+      //     type: 'error', message: error, scaffoldKey: _scaffoldKey);
     });
   }
 
@@ -463,8 +468,13 @@ class _NotificationsViewState extends State<NotificationsView> {
     return await Api.getPositionByTimestampAndDeviceID(
             jsonEncode({"deviceID": deviceID, "timestamp": timestamp}))
         .catchError((error) {
-      ApiShowDialog.dialog(
-          scaffoldKey: _scaffoldKey, message: error, type: 'error');
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(error.toString()),
+        ),
+      );
+      // ApiShowDialog.dialog(
+      //     scaffoldKey: _scaffoldKey, message: error, type: 'error');
       throw (error);
     });
   }

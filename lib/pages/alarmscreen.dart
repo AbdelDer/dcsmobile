@@ -403,8 +403,13 @@ class _AlarmScreenState extends State<AlarmScreen> {
           } else {
             //if we encounter another problem, for example the user doesn't have internet we'll open dialog
             //with specific message
-            ApiShowDialog.dialog(
-                scaffoldKey: _scaffoldKey, message: error, type: 'error');
+            // ApiShowDialog.dialog(
+            //     scaffoldKey: _scaffoldKey, message: error, type: 'error');
+            _scaffoldKey.currentState.showSnackBar(
+              SnackBar(
+                content: Text(error.toString()),
+              ),
+            );
           }
         },
       );
@@ -453,17 +458,27 @@ class _AlarmScreenState extends State<AlarmScreen> {
             Navigator.pop(context);
           });
         }).catchError((error) {
-          ApiShowDialog.dialog(
-              scaffoldKey: _scaffoldKey, message: error, type: 'error');
+          _scaffoldKey.currentState.showSnackBar(
+            SnackBar(
+              content: Text(error.toString()),
+            ),
+          );
+          // ApiShowDialog.dialog(
+          //     scaffoldKey: _scaffoldKey, message: error, type: 'error');
         });
       } else {
         await Api.updateDeviceAlarmSettings(jsonEncode(alarm.toJson()))
             .then((value) async {
           if (value.status == Status.ERROR) {
-            ApiShowDialog.dialog(
-                scaffoldKey: _scaffoldKey,
-                message: value.message,
-                type: 'info');
+            // ApiShowDialog.dialog(
+            //     scaffoldKey: _scaffoldKey,
+            //     message: value.message,
+            //     type: 'info');
+            _scaffoldKey.currentState.showSnackBar(
+              SnackBar(
+                content: Text(value.message),
+              ),
+            );
           } else {
             _scaffoldKey.currentState.showSnackBar(SnackBar(
               content: Text(translate("Updated")),
@@ -473,8 +488,13 @@ class _AlarmScreenState extends State<AlarmScreen> {
             });
           }
         }).catchError((error) {
-          ApiShowDialog.dialog(
-              scaffoldKey: _scaffoldKey, message: error, type: 'error');
+          _scaffoldKey.currentState.showSnackBar(
+            SnackBar(
+              content: Text(error.toString()),
+            ),
+          );
+          // ApiShowDialog.dialog(
+          //     scaffoldKey: _scaffoldKey, message: error, type: 'error');
         });
       }
     }

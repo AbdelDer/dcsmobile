@@ -50,17 +50,27 @@ class _ReportScreenState extends State<ReportScreen> {
 
     await Api.devices(params).then((_) {
       if (_.message != null) {
-        ApiShowDialog.dialog(
-            scaffoldKey: _scaffoldKey,
-            // message: search == '' ? _.message : _.message + ' de ce modèle',
-            message: 'this is test msg',
-            type: 'error');
+        _scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text('Something wrong !'),
+          ),
+        );
+        // ApiShowDialog.dialog(
+        //     scaffoldKey: _scaffoldKey,
+        //     // message: search == '' ? _.message : _.message + ' de ce modèle',
+        //     message: 'this is test msg',
+        //     type: 'error');
       } else {
         list = _.responseBody;
       }
     }).catchError((err) {
-      ApiShowDialog.dialog(
-          scaffoldKey: _scaffoldKey, message: err, type: 'error');
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(err.toString()),
+        ),
+      );
+      // ApiShowDialog.dialog(
+      //     scaffoldKey: _scaffoldKey, message: err, type: 'error');
     });
     yield list;
   }
@@ -184,18 +194,28 @@ class _ReportScreenState extends State<ReportScreen> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     if (snapshot.hasError) {
-                      ApiShowDialog.dialog(
-                          scaffoldKey: _scaffoldKey,
-                          message: '${snapshot.error}',
-                          type: 'error');
+                      _scaffoldKey.currentState.showSnackBar(
+                        SnackBar(
+                          content: Text(snapshot.error),
+                        ),
+                      );
+                      // ApiShowDialog.dialog(
+                      //     scaffoldKey: _scaffoldKey,
+                      //     message: '${snapshot.error}',
+                      //     type: 'error');
                     } else if (snapshot.hasData) {
                       return _dropDownMenuButton(snapshot.data);
                     }
                   } else if (snapshot.connectionState == ConnectionState.none) {
-                    ApiShowDialog.dialog(
-                        scaffoldKey: _scaffoldKey,
-                        message: 'Problème de connexion',
-                        type: 'error');
+                    _scaffoldKey.currentState.showSnackBar(
+                      SnackBar(
+                        content: Text('Problème de connexion'),
+                      ),
+                    );
+                    // ApiShowDialog.dialog(
+                    //     scaffoldKey: _scaffoldKey,
+                    //     message: 'Problème de connexion',
+                    //     type: 'error');
                   }
                   return Center(child: CircularProgressIndicator());
                 },

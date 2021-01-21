@@ -80,10 +80,15 @@ class _SpeedReportScreenState extends State<SpeedReportScreen> {
           future: _fetchData(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              ApiShowDialog.dialog(
-                  scaffoldKey: _scaffoldKey,
-                  message: '${snapshot.error}',
-                  type: 'error');
+              _scaffoldKey.currentState.showSnackBar(
+                SnackBar(
+                  content: Text(snapshot.error.toString()),
+                ),
+              );
+              // ApiShowDialog.dialog(
+              //     scaffoldKey: _scaffoldKey,
+              //     message: '${snapshot.error}',
+              //     type: 'error');
             } else if (snapshot.hasData) {
               return SingleChildScrollView(
                   child:
@@ -129,8 +134,15 @@ class _SpeedReportScreenState extends State<SpeedReportScreen> {
         return value.responseBody;
       },
     ).catchError(
-      (error) => ApiShowDialog.dialog(
-          scaffoldKey: _scaffoldKey, message: error, type: 'error'),
+      (error) {
+        _scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text(error.toString()),
+          ),
+        );
+        // ApiShowDialog.dialog(
+        //     scaffoldKey: _scaffoldKey, message: error, type: 'error')
+      },
     );
   }
 }

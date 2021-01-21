@@ -145,7 +145,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return VehicleLivePosition.History(
+                                    return OpenStreetMap.History(
                                       deviceID: this.deviceID,
                                       option: "History",
                                       startTime: _selectedDate
@@ -331,7 +331,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) {
-                                            return VehicleLivePosition.History(
+                                            return OpenStreetMap.History(
                                               deviceID: this.deviceID,
                                               option: "History",
                                               startTime: _timeline[index]
@@ -681,8 +681,14 @@ class _ActivityHistoryState extends State<ActivityHistory> {
         _streamController.add(value);
       }
     }).catchError((error) {
-      ApiShowDialog.dialog(
-          scaffoldKey: _scaffoldKey, message: error.toString(), type: 'error');
+      //   ApiShowDialog.dialog(
+      //       scaffoldKey: _scaffoldKey, message: error.toString(), type: 'error');
+      // });
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(error.toString()),
+        ),
+      );
     });
   }
 

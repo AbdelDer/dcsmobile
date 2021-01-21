@@ -227,10 +227,15 @@ class _CommandsScreenState extends State<CommandsScreen>
                             );
                           });
                     } else if (snapshot.hasError) {
-                      return ApiShowDialog.dialog(
-                          scaffoldKey: _scaffoldKey,
-                          message: snapshot.data.responseBody.message,
-                          type: 'error');
+                      // return ApiShowDialog.dialog(
+                      //     scaffoldKey: _scaffoldKey,
+                      //     message: snapshot.data.responseBody.message,
+                      //     type: 'error');
+                      _scaffoldKey.currentState.showSnackBar(
+                           SnackBar(
+                            content: Text(snapshot.data.responseBody.message),
+                          )
+                      );
                     } else {
                       return Center(child: CircularProgressIndicator());
                     }
@@ -281,8 +286,14 @@ class _CommandsScreenState extends State<CommandsScreen>
     await Api.late(search).then((r) {
       _streamController.add(r);
     }).catchError((err) {
-      ApiShowDialog.dialog(
-          scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
+      //   ApiShowDialog.dialog(
+      //       scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
+      // });
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(err),
+        ),
+      );
     });
   }
 }

@@ -116,15 +116,20 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
             .then((r) async {
           for (EventData ed in r.responseBody) {
             // if (mounted) {
-              await Future.delayed(Duration(milliseconds: 100));
-              _setData(ed);
+            //   await Future.delayed(Duration(milliseconds: 100));
+              await _setData(ed);
             // } else {
             //   break;
             // }
           }
         }).catchError((err) {
-          ApiShowDialog.dialog(
-              scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
+          _scaffoldKey.currentState.showSnackBar(
+            SnackBar(
+              content: Text(err.toString()),
+            ),
+          );
+          // ApiShowDialog.dialog(
+          //     scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
         });
       });
     } else if (_option == "Live") {
@@ -140,20 +145,30 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
   }
 
   _getActualPosition() async {
-    await Api.getActualPosition(this._deviceID).then((r) {
-      _setData(r.responseBody);
+    await Api.getActualPosition(this._deviceID).then((r) async{
+      await _setData(r.responseBody);
     }).catchError((err) {
-      ApiShowDialog.dialog(
-          scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(err.toString()),
+        ),
+      );
+      // ApiShowDialog.dialog(
+      //     scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
     });
   }
 
   _getGroupActualPosition() async {
-    await Api.getGroupActualPosition().then((r) {
-      _setData(r.responseBody);
+    await Api.getGroupActualPosition().then((r) async{
+      await _setData(r.responseBody);
     }).catchError((err) {
-      ApiShowDialog.dialog(
-          scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(err.toString()),
+        ),
+      );
+      // ApiShowDialog.dialog(
+      //     scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
     });
   }
 
@@ -331,6 +346,53 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
                         }
                       },
                     ),
+                    // _option == 'History'
+                    //     ? IconButton(
+                    //   icon: Container(
+                    //     width: 45,
+                    //     height: 40,
+                    //     decoration: new BoxDecoration(
+                    //       color: Colors.greenAccent,
+                    //       borderRadius: new BorderRadius.only(
+                    //         topLeft: const Radius.circular(25.0),
+                    //         topRight: const Radius.circular(25.0),
+                    //         bottomLeft: const Radius.circular(25.0),
+                    //         bottomRight: const Radius.circular(25.0),
+                    //       ),
+                    //     ),
+                    //     child: Padding(
+                    //       padding: const EdgeInsets.only(right: 4.0),
+                    //       child: Icon(
+                    //         Icons.play_arrow,
+                    //         color: Colors.green.shade700,
+                    //         size: 20,
+                    //       ),
+                    //     ),
+                    //   ),
+                    //   onPressed: () async {
+                    //     Map<MarkerId, Marker> oldMarkers = Map();
+                    //     oldMarkers = Map()..addAll(_markers);
+                    //     if(mounted) {
+                    //       setState(() {
+                    //         _markers.clear();
+                    //       });
+                    //     }
+                    //     await oldMarkers.forEach((key, value) async {
+                    //       await Future.delayed(
+                    //           Duration(milliseconds: 200));
+                    //       if(mounted) {
+                    //         setState(() {
+                    //           _markers[key] = value;
+                    //         });
+                    //         _googleMapController.moveCamera(CameraUpdate.newLatLngZoom(value.position, 14));
+                    //       }
+                    //     });
+                    //   },
+                    // )
+                    //     : SizedBox(
+                    //   height: 0,
+                    //   width: 0,
+                    // ),
                     IconButton(
                       icon: Container(
                         width: 45,
@@ -389,7 +451,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
     );
   }
 
-  _setData(data) {
+  _setData(data) async{
     if (_option == "Group") {
       Map<MarkerId, Marker> markers = Map();
       for (int i = 0; i < data.length; i++) {
@@ -881,25 +943,22 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
             points: _route,
             color: Colors.greenAccent,
             width: 2);
-        BitmapDescriptor.fromAssetImage(
-                ImageConfiguration(size: Size(25, 25)), data.iconPath())
-            .then((markerIcon) {
-          _marker = Marker(
-              markerId: markerID,
-              position: position,
-              icon: markerIcon,
-              infoWindow: infoWindow);
-          if (mounted) {
-            setState(() {
-              _markers[markerID] = _marker;
-              _speedKPH = data.speedKPH;
-              _odometer = data.odometerKM;
-              _polylines.add(customPolyline);
-            });
-            _googleMapController
-                ?.moveCamera(CameraUpdate.newLatLngZoom(position, 14));
-          }
-        });
+        _marker = Marker(
+            markerId: markerID,
+            position: position,
+            icon: await BitmapDescriptor.fromAssetImage(
+                ImageConfiguration(size: Size(25, 25)), data.iconPath(purpose: "History")),
+            infoWindow: infoWindow);
+        if (mounted) {
+          setState(() {
+            _markers[markerID] = _marker;
+            _speedKPH = data.speedKPH;
+            _odometer = data.odometerKM;
+            _polylines.add(customPolyline);
+          });
+          _googleMapController
+              ?.moveCamera(CameraUpdate.newLatLngZoom(position, 14));
+        }
       } else if (_option == "Live") {
         BitmapDescriptor.fromAssetImage(
                 ImageConfiguration(size: Size(25, 25)), data.iconPath())

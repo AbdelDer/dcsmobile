@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/animations/fadeanimation.dart';
 import 'package:dcsmobile/lang/app_localizations.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
@@ -12,6 +15,7 @@ class Login extends StatefulWidget {
   final LocaleChangeCallback onLocaleChange;
 
   const Login({Key key, this.onLocaleChange}) : super(key: key);
+
   @override
   _LoginState createState() => _LoginState(this.onLocaleChange);
 }
@@ -25,6 +29,9 @@ class _LoginState extends State<Login> {
   final EncryptedSharedPreferences encryptedSharedPreferences =
       EncryptedSharedPreferences();
   var showIntroduction = false;
+
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  String _message = '';
 
   final LocaleChangeCallback onLocaleChange;
   bool enLang = true;
@@ -218,8 +225,8 @@ class _LoginState extends State<Login> {
                                           else*/
                                           // if (value.contains(new RegExp(
                                           //     r"[0-9]|@|\+|-|\/|\*"))) {
-                                          if (value.contains(new RegExp(
-                                              r"@|\+|-|\/|\*"))) {
+                                          if (value.contains(
+                                              new RegExp(r"@|\+|-|\/|\*"))) {
                                             return AppLocalizations.of(context)
                                                 .translate("Name Caracters");
                                           }
@@ -281,10 +288,7 @@ class _LoginState extends State<Login> {
                                     gradient: LinearGradient(
                                         begin: Alignment.topRight,
                                         end: Alignment.bottomLeft,
-                                        colors: [
-                                          Colors.green,
-                                          Colors.green
-                                        ]),
+                                        colors: [Colors.green, Colors.green]),
                                     color: Colors.cyanAccent,
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
@@ -339,8 +343,13 @@ class _LoginState extends State<Login> {
       ];
       await Api.login(params).then((_) async {
         if (_.message != null && _.message.length != 0) {
-          ApiShowDialog.dialog(
-              scaffoldKey: _scaffoldKey, message: _.message, type: 'error');
+          _scaffoldKey.currentState.showSnackBar(
+            SnackBar(
+              content: Text(_.message),
+            ),
+          );
+          // ApiShowDialog.dialog(
+          //     scaffoldKey: _scaffoldKey, message: _.message, type: 'error');
         } else {
           await saveLoginInfo();
           //here if it's the first time the user uses the app we'll show a guide, else we will navigate to dashboard
@@ -353,8 +362,13 @@ class _LoginState extends State<Login> {
           }
         }
       }).catchError((err) {
-        ApiShowDialog.dialog(
-            scaffoldKey: _scaffoldKey, message: err, type: 'error');
+        _scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text(err.toString()),
+          ),
+        );
+        // ApiShowDialog.dialog(
+        //     scaffoldKey: _scaffoldKey, message: err, type: 'error');
       });
     }
   }
@@ -385,15 +399,23 @@ class _LoginState extends State<Login> {
 
   //here we store login data (username, password, account)
   saveLoginInfo() async {
-   await encryptedSharedPreferences.clear();
+    await encryptedSharedPreferences.clear();
     if (_usernameController.text != '') {
       //here we do Api query to get groupid of user because we need it in all other pages
-      await Api.userGroup(
-          _accountController.text, _usernameController.text)
-          .then((response) async{
+      await Api.userGroup(_accountController.text, _usernameController.text)
+          .then((response) async {
         await encryptedSharedPreferences.setString(
             "groupID", response.responseBody.groupID);
-      }).catchError((err) => ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: err, type: 'error'));
+      }).catchError((err) {
+        _scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text(err.toString()),
+          ),
+        );
+        // ApiShowDialog.dialog(
+        //     scaffoldKey: _scaffoldKey, message: err, type: 'error');
+      }
+      );
 
       await encryptedSharedPreferences.setString(
           "userID", _usernameController.text);
@@ -404,5 +426,41 @@ class _LoginState extends State<Login> {
         "accountID", _accountController.text);
     await encryptedSharedPreferences.setString(
         "password", _passwordController.text);
+
+    firebaseCloudMessaging_Listeners();
+  }
+
+  void firebaseCloudMessaging_Listeners() {
+    if (Platform.isIOS) iOS_Permission();
+
+    _firebaseMessaging.deleteInstanceID();
+
+    _firebaseMessaging.onTokenRefresh.listen((token) async{
+      print("token is: " + token);
+      await Api.saveToken(_accountController.text, _usernameController.text, token);
+    });
+
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('ok done ok done ok !!!!!!');
+        print('on message $message');
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('on resume $message');
+        print('notification content is: ' + message['notification']);
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('on launch $message');
+      },
+    );
+  }
+
+  void iOS_Permission() {
+    _firebaseMessaging.requestNotificationPermissions(
+        IosNotificationSettings(sound: true, badge: true, alert: true));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
   }
 }

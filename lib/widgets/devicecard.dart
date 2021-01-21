@@ -71,7 +71,7 @@ class _DeviceCardState extends State<DeviceCard> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => VehicleLivePosition(
+                          builder: (context) => OpenStreetMap(
                               deviceID: data[index].deviceID, option: _option),
                         ),
                       );

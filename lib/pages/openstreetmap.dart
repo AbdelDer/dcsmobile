@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/animations/speedometer.dart';
+import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/models/EventData.dart';
 import 'package:dcsmobile/pages/vehicleliveposition.dart';
 import 'package:flutter/material.dart';
@@ -59,6 +60,18 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
   double _dialogTextSize = 16;
   List<Marker> _markers;
   List<EventData> _data;
+  bool readyToPlay = false;
+  String layers = "h";
+  String urlTemplate;
+  List<String> _choices = [
+    'Roads only',
+    'Standard roadmap',
+    'Terrain',
+    'Satellite only',
+    'Terrain only',
+    'Hybrid',
+    'OpenStreetMap'
+  ];
 
   // Used to trigger showing/hiding of popups.
   final PopupController _popupLayerController = PopupController();
@@ -76,6 +89,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
     _markers = [];
     _data = [];
     _mapController = MapController();
+    urlTemplate = "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _positionDetails();
     });
@@ -93,16 +107,22 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
         await Api.getHistory(this._deviceID, this._startTime, this._endTime)
             .then((r) async {
           for (EventData ed in r.responseBody) {
-            if(mounted) {
-              await Future.delayed(Duration(milliseconds: 100));
+            if (mounted) {
+              // await Future.delayed(Duration(milliseconds: 100));
               _setHistory(ed);
             } else {
               break;
             }
           }
+          readyToPlay = true;
         }).catchError((err) {
-          ApiShowDialog.dialog(
-              scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
+          _scaffoldKey.currentState.showSnackBar(
+            SnackBar(
+              content: Text(err.toString()),
+            ),
+          );
+          // ApiShowDialog.dialog(
+          //     scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
         });
       });
     } else if (_option == "Live") {
@@ -140,8 +160,13 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
         _popupLayerController.togglePopup(_markers?.last);
       });
     }).catchError((err) {
-      ApiShowDialog.dialog(
-          scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(err.toString()),
+        ),
+      );
+      // ApiShowDialog.dialog(
+      //     scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
     });
   }
 
@@ -149,7 +174,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
     await Api.getGroupActualPosition().then((r) {
       List<EventData> data = r.responseBody;
       List<Marker> markers = [];
-      for(EventData ed in data) {
+      for (EventData ed in data) {
         markers?.add(Marker(
             point: LatLng(
               ed.latitude,
@@ -170,8 +195,13 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
         // _popupLayerController.togglePopup(_markers?.last);
       });
     }).catchError((err) {
-      ApiShowDialog.dialog(
-          scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(err.toString()),
+        ),
+      );
+      // ApiShowDialog.dialog(
+      //     scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
     });
   }
 
@@ -346,46 +376,49 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
               children: <Widget>[
                 TileLayerWidget(
                   options: TileLayerOptions(
-                      urlTemplate:
-                          "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                      subdomains: ['a', 'b', 'c']),
+                      urlTemplate: urlTemplate, subdomains: ['a', 'b', 'c']),
                 ),
               ],
             ),
-            _option != "Group" ? Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: 220,
-                  height: 220,
-                  child: Speedometer(
-                    size: 220,
-                    minValue: 0,
-                    maxValue: 220,
-                    currentValue: _data.length != 0
-                        ? _data.last.speedKPH?.roundToDouble()
-                        : 0,
-                    displayNumericStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        backgroundColor: Colors.white,
-                        color: _speedKPH < _warningSpeed
-                            ? Colors.lightBlueAccent
-                            : Colors.red),
-                    warningValue: _warningSpeed,
-                    displayText: _data.length != 0
-                        ? '${_data.last.odometerKM?.toStringAsFixed(2)}'
-                        : '0',
-                    displayTextStyle: TextStyle(
-                        fontSize: 20,
-                        backgroundColor: Colors.white,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
+            _option != "Group"
+                ? Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        width: 220,
+                        height: 220,
+                        child: Speedometer(
+                          size: 220,
+                          minValue: 0,
+                          maxValue: 220,
+                          currentValue: _data.length != 0
+                              ? _data.last.speedKPH?.roundToDouble()
+                              : 0,
+                          displayNumericStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              backgroundColor: Colors.white,
+                              color: _speedKPH < _warningSpeed
+                                  ? Colors.lightBlueAccent
+                                  : Colors.red),
+                          warningValue: _warningSpeed,
+                          displayText: _data.length != 0
+                              ? '${_data.last.odometerKM?.toStringAsFixed(2)}'
+                              : '0',
+                          displayTextStyle: TextStyle(
+                              fontSize: 20,
+                              backgroundColor: Colors.white,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  )
+                : SizedBox(
+                    height: 0,
+                    width: 0,
                   ),
-                ),
-              ),
-            ) : SizedBox(height: 0, width: 0,),
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
               child: Align(
@@ -394,57 +427,92 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // PopupMenuButton(
-                    //     icon: Container(
-                    //       width: 80,
-                    //       height: 80,
-                    //       decoration: new BoxDecoration(
-                    //         color: Colors.greenAccent,
-                    //         borderRadius: new BorderRadius.only(
-                    //           topLeft: const Radius.circular(30.0),
-                    //           topRight: const Radius.circular(30.0),
-                    //           bottomLeft: const Radius.circular(30.0),
-                    //           bottomRight: const Radius.circular(30.0),
-                    //         ),
-                    //       ),
-                    //       child: Center(
-                    //         child: Icon(
-                    //           Icons.more_vert,
-                    //           color: Colors.green.shade700,
-                    //           size: 25,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //     color: Colors.white,
-                    //     tooltip:
-                    //         AppLocalizations.of(context).translate("Map style"),
-                    //     itemBuilder: (BuildContext context) {
-                    //       return _choices.map((choice) {
-                    //         return PopupMenuItem<String>(
-                    //           value: choice,
-                    //           child: Text(choice),
-                    //         );
-                    //       }).toList();
-                    //     },
-                    //     onSelected: (choice) {
-                    //       setState(() {
-                    //         switch (choice) {
-                    //           // "normal", "hybrid", "satellite", "terrain"
-                    //           case "normal":
-                    //             _mapType = MapType.normal;
-                    //             break;
-                    //           case "hybrid":
-                    //             _mapType = MapType.hybrid;
-                    //             break;
-                    //           case "satellite":
-                    //             _mapType = MapType.satellite;
-                    //             break;
-                    //           case "terrain":
-                    //             _mapType = MapType.terrain;
-                    //             break;
-                    //         }
-                    //       });
-                    //     }),
+                    PopupMenuButton(
+                        icon: Container(
+                          width: 80,
+                          height: 80,
+                          decoration: new BoxDecoration(
+                            color: Colors.greenAccent,
+                            borderRadius: new BorderRadius.only(
+                              topLeft: const Radius.circular(30.0),
+                              topRight: const Radius.circular(30.0),
+                              bottomLeft: const Radius.circular(30.0),
+                              bottomRight: const Radius.circular(30.0),
+                            ),
+                          ),
+                          child: Center(
+                            child: Icon(
+                              Icons.more_vert,
+                              color: Colors.green.shade700,
+                              size: 25,
+                            ),
+                          ),
+                        ),
+                        color: Colors.white,
+                        tooltip:
+                            AppLocalizations.of(context).translate("Map style"),
+                        itemBuilder: (BuildContext context) {
+                          return _choices.map((choice) {
+                            return PopupMenuItem<String>(
+                              value: choice,
+                              child: Text(choice),
+                            );
+                          }).toList();
+                        },
+                        onSelected: (choice) {
+                          setState(() {
+                            switch (choice) {
+                              // 'Roads only', 'Standard roadmap', 'Terrain', 'Satellite only', 'Terrain only', 'Hybrid'
+                              case "Roads only":
+                                setState(() {
+                                  layers = "h";
+                                  urlTemplate =
+                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                });
+                                break;
+                              case "Standard roadmap":
+                                setState(() {
+                                  layers = "m";
+                                  urlTemplate =
+                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                });
+                                break;
+                              case "Terrain":
+                                setState(() {
+                                  layers = "p";
+                                  urlTemplate =
+                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                });
+                                break;
+                              case "Satellite only":
+                                setState(() {
+                                  layers = "s";
+                                  urlTemplate =
+                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                });
+                                break;
+                              case "Terrain only":
+                                setState(() {
+                                  layers = "t";
+                                  urlTemplate =
+                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                });
+                                break;
+                              case "Hybrid":
+                                setState(() {
+                                  layers = "y";
+                                  urlTemplate =
+                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                });
+                                break;
+                              case "OpenStreetMap":
+                                setState(() {
+                                  urlTemplate = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+                                });
+                                break;
+                            }
+                          });
+                        }),
                     IconButton(
                       icon: Container(
                         width: 45,
@@ -483,6 +551,52 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                         }
                       },
                     ),
+                    _option == 'History' && readyToPlay
+                        ? IconButton(
+                            icon: Container(
+                              width: 45,
+                              height: 40,
+                              decoration: new BoxDecoration(
+                                color: Colors.greenAccent,
+                                borderRadius: new BorderRadius.only(
+                                  topLeft: const Radius.circular(25.0),
+                                  topRight: const Radius.circular(25.0),
+                                  bottomLeft: const Radius.circular(25.0),
+                                  bottomRight: const Radius.circular(25.0),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
+                                child: Icon(
+                                  Icons.play_arrow,
+                                  color: Colors.green.shade700,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                            onPressed: () async {
+                              List<Marker> oldMarkers = List<Marker>();
+                              oldMarkers = []..addAll(_markers);
+                              if (mounted) {
+                                setState(() {
+                                  _markers.clear();
+                                });
+                              }
+                              for (Marker m in oldMarkers) {
+                                await Future.delayed(Duration(milliseconds: 5));
+                                if (mounted) {
+                                  setState(() {
+                                    _markers.add(m);
+                                  });
+                                  _mapController.move(_markers.last.point, 14);
+                                }
+                              }
+                            },
+                          )
+                        : SizedBox(
+                            height: 0,
+                            width: 0,
+                          ),
                     IconButton(
                       icon: Container(
                         width: 45,
@@ -506,7 +620,18 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                         ),
                       ),
                       onPressed: () {
-                        if (_option != "History") {
+                        if (urlTemplate.contains("open")) {
+                          setState(() {
+                            urlTemplate =
+                                "https://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}";
+                          });
+                        } else {
+                          setState(() {
+                            urlTemplate =
+                                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+                          });
+                        }
+                        /*if (_option != "History") {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -528,7 +653,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                               },
                             ),
                           );
-                        }
+                        }*/
                       },
                     ),
                   ],
@@ -552,7 +677,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
           height: 30,
           anchorPos: AnchorPos.align(AnchorAlign.top),
           builder: (context) {
-            return Image.asset(ed.iconPath());
+            return Image.asset(ed.iconPath(purpose: "History"));
           }));
       _data?.add(ed);
       _mapController.move(_markers?.last.point, 14);

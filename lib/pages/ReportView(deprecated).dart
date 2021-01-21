@@ -62,7 +62,12 @@ class _ReportViewState extends State<ReportView> {
       await Api.getReport(deviceID).then((r) {
         response = r;
       }).catchError((err) {
-        ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
+        _scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text(err.toString()),
+          ),
+        );
+        // ApiShowDialog.dialog(scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
       });
       yield response.responseBody;
       await Future.delayed(Duration(milliseconds: 1000));

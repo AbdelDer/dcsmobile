@@ -346,21 +346,36 @@ class ReportScreenState extends State<ReportScreen> {
                         );
                       }
                     } else if (_deviceID == "choisir véhicule(s)") {
-                      ApiShowDialog.dialog(
-                          scaffoldKey: _scaffoldKey,
-                          message: 'veuillez chosir un ou plusieurs véhicules',
-                          type: 'error');
+                      _scaffoldKey.currentState.showSnackBar(
+                        SnackBar(
+                          content: Text('veuillez chosir un ou plusieurs véhicules'),
+                        ),
+                      );
+                      // ApiShowDialog.dialog(
+                      //     scaffoldKey: _scaffoldKey,
+                      //     message: 'veuillez chosir un ou plusieurs véhicules',
+                      //     type: 'error');
                     } else if (_selectedType == null) {
-                      ApiShowDialog.dialog(
-                          scaffoldKey: _scaffoldKey,
-                          message: 'veuillez chosir un type de rapport',
-                          type: 'error');
+                      _scaffoldKey.currentState.showSnackBar(
+                        SnackBar(
+                          content: Text('Veuillez choisir un type de rapport'),
+                        ),
+                      );
+                      // ApiShowDialog.dialog(
+                      //     scaffoldKey: _scaffoldKey,
+                      //     message: 'veuillez chosir un type de rapport',
+                      //     type: 'error');
                     } else {
-                      ApiShowDialog.dialog(
-                          scaffoldKey: _scaffoldKey,
-                          message:
-                              'veuillez chosir date fin grande que date début',
-                          type: 'error');
+                      _scaffoldKey.currentState.showSnackBar(
+                        SnackBar(
+                          content: Text('date fin doit être supérieure à date début'),
+                        ),
+                      );
+                      // ApiShowDialog.dialog(
+                      //     scaffoldKey: _scaffoldKey,
+                      //     message:
+                      //         'veuillez chosir date fin grande que date début',
+                      //     type: 'error');
                     }
                   },
                 ),

@@ -45,10 +45,15 @@ class VehicleListViewState extends State {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
-            ApiShowDialog.dialog(
-                scaffoldKey: _scaffoldKey,
-                message: '${snapshot.error}',
-                type: 'error');
+            _scaffoldKey.currentState.showSnackBar(
+              SnackBar(
+                content: Text(snapshot.error),
+              ),
+            );
+            // ApiShowDialog.dialog(
+            //     scaffoldKey: _scaffoldKey,
+            //     message: '${snapshot.error}',
+            //     type: 'error');
           } else if (snapshot.hasData) {
               if(snapshot.data.message != null) {
                 return Center(
@@ -64,10 +69,15 @@ class VehicleListViewState extends State {
               }
           }
         } else if (snapshot.connectionState == ConnectionState.none) {
-          ApiShowDialog.dialog(
-              scaffoldKey: _scaffoldKey,
-              message: 'Problème de connexion',
-              type: 'error');
+          _scaffoldKey.currentState.showSnackBar(
+            SnackBar(
+              content: Text('Problème de connexion'),
+            ),
+          );
+          // ApiShowDialog.dialog(
+          //     scaffoldKey: _scaffoldKey,
+          //     message: 'Problème de connexion',
+          //     type: 'error');
         }
         return Center(child: CircularProgressIndicator());
       },
@@ -90,8 +100,13 @@ class VehicleListViewState extends State {
     await Api.devices(params).then((_) {
       response = _;
     }).catchError((err) {
-      ApiShowDialog.dialog(
-          scaffoldKey: _scaffoldKey, message: err, type: 'error');
+    //   ApiShowDialog.dialog(
+    //       scaffoldKey: _scaffoldKey, message: err, type: 'error');
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(err.toString()),
+        ),
+      );
     });
     yield response;
   }
