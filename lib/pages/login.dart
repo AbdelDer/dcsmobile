@@ -427,18 +427,23 @@ class _LoginState extends State<Login> {
     await encryptedSharedPreferences.setString(
         "password", _passwordController.text);
 
-    firebaseCloudMessaging_Listeners();
+   await firebaseCloudMessaging_Listeners();
   }
 
-  void firebaseCloudMessaging_Listeners() {
+  void firebaseCloudMessaging_Listeners() async{
     if (Platform.isIOS) iOS_Permission();
 
-    _firebaseMessaging.deleteInstanceID();
+    await _firebaseMessaging.deleteInstanceID();
 
-    _firebaseMessaging.onTokenRefresh.listen((token) async{
+    _firebaseMessaging.getToken().then((token) async{
       print("token is: " + token);
       await Api.saveToken(_accountController.text, _usernameController.text, token);
     });
+
+    // _firebaseMessaging.onTokenRefresh.listen((token) async{
+    //   print("token is: " + token);
+    //   await Api.saveToken(_accountController.text, _usernameController.text, token);
+    // });
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {

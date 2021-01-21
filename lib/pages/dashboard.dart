@@ -8,6 +8,7 @@ import 'package:dcsmobile/pages/subscriptionscreen.dart';
 import 'package:dcsmobile/widgets/dashboard/customswipper.dart';
 import 'package:dcsmobile/widgets/dashboard/dashboardsecondrow.dart';
 import 'package:dcsmobile/widgets/dashboardbtn.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
@@ -126,9 +127,15 @@ class _DashboardState extends State<Dashboard>
             padding: EdgeInsets.only(right: 10),
             child: IconButton(
               icon: Icon(Icons.exit_to_app),
-              onPressed: () {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    '/login', (Route<dynamic> route) => false);
+              onPressed: () async {
+                EncryptedSharedPreferences prefs = new EncryptedSharedPreferences();
+                String userID = await prefs.getString("userID");
+                String accountID = await prefs.getString("accountID");
+                await FirebaseMessaging().deleteInstanceID();
+                await Api.saveToken(accountID, userID, "").then((value) {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/login', (Route<dynamic> route) => false);
+                });
               },
             ),
           )

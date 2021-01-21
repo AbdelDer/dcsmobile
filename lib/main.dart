@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/pages/commandsscreen.dart';
 import 'package:dcsmobile/pages/helpscreen.dart';
 import 'package:dcsmobile/pages/notificationsview.dart';
@@ -378,8 +379,15 @@ class _FEDrawerState extends State<FEDrawer> {
             ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text(translate(context, 'Logout')),
-              onTap: () => Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/login', (Route<dynamic> route) => false),
+              onTap: () async{
+                EncryptedSharedPreferences prefs = new EncryptedSharedPreferences();
+                String userID = await prefs.getString("userID");
+                String accountID = await prefs.getString("accountID");
+                FirebaseMessaging().deleteInstanceID();
+                await Api.saveToken(accountID, userID, "");
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/login', (Route<dynamic> route) => false);
+              },
             ),
             ListTile(
               leading: Icon(Icons.close),
