@@ -219,6 +219,8 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                         .hidePopup(), // Hide popup when the map is tapped.
                 center: LatLng(30.0, -9.0),
                 zoom: 5.0,
+
+                // maxZoom: 18
               ),
               layers: [
                 PolylineLayerOptions(

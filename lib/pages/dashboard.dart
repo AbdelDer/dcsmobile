@@ -15,6 +15,7 @@ import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'Position.dart';
 import 'commandsscreen.dart';
 import 'notificationsview.dart';
+import 'openstreetmap.dart';
 
 class Dashboard extends StatefulWidget {
   final RouteObserver<PageRoute> _routeObserver;
@@ -34,6 +35,7 @@ class _DashboardState extends State<Dashboard>
   Stream _stream;
   Timer _timer;
   final RouteObserver<PageRoute> _routeObserver;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   _DashboardState(this._routeObserver);
 
@@ -80,6 +82,7 @@ class _DashboardState extends State<Dashboard>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _setTimerAndStream();
+    _handleNotificationTap();
   }
 
   _setTimerAndStream() {
@@ -128,11 +131,11 @@ class _DashboardState extends State<Dashboard>
             child: IconButton(
               icon: Icon(Icons.exit_to_app),
               onPressed: () async {
-                EncryptedSharedPreferences prefs = new EncryptedSharedPreferences();
-                String userID = await prefs.getString("userID");
-                String accountID = await prefs.getString("accountID");
+                EncryptedSharedPreferences prefs = EncryptedSharedPreferences();
+                String token = await FirebaseMessaging().getToken();
                 await FirebaseMessaging().deleteInstanceID();
-                await Api.saveToken(accountID, userID, "").then((value) {
+                await Api.deleteToken(token);
+                await prefs.setString("isLogged", "no").then((value) {
                   Navigator.of(context).pushNamedAndRemoveUntil(
                       '/login', (Route<dynamic> route) => false);
                 });
@@ -434,5 +437,37 @@ class _DashboardState extends State<Dashboard>
         ),
       );
     }
+  }
+
+  _handleNotificationTap() {
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text('${message['notification']['body']}'),
+        ));
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('on resume ${message['data']['deviceID']}');
+        print('notification content is: ' + message['data']['deviceID']);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OpenStreetMap(
+                deviceID: message['data']['deviceID'], option: "Live"),
+          ),
+        );
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        // if (message['notification'].size() != 0) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => OpenStreetMap(
+                  deviceID: message['data']['deviceID'], option: "Live"),
+            ),
+          );
+        // }
+      },
+    );
   }
 }

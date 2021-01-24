@@ -381,12 +381,13 @@ class _FEDrawerState extends State<FEDrawer> {
               title: Text(translate(context, 'Logout')),
               onTap: () async{
                 EncryptedSharedPreferences prefs = new EncryptedSharedPreferences();
-                String userID = await prefs.getString("userID");
-                String accountID = await prefs.getString("accountID");
+                String token = await FirebaseMessaging().getToken();
                 FirebaseMessaging().deleteInstanceID();
-                await Api.saveToken(accountID, userID, "");
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    '/login', (Route<dynamic> route) => false);
+                await Api.deleteToken(token);
+                await prefs.setString("isLogged", "no").then((value) {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/login', (Route<dynamic> route) => false);
+                });
               },
             ),
             ListTile(

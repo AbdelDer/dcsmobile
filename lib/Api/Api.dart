@@ -24,11 +24,11 @@ import 'HttpCustom.dart';
 class Api {
   static final httpClient = HttpClient();
 
-  // static final baseUrl = 'https://geotech-gps.com:9090/api';
+  static final baseUrl = 'https://geotech-gps.com:9090/api';
 
   // static final baseUrl = 'http://192.168.1.75:9090/api';
 
-  static final baseUrl = 'http://192.168.100.8:9090/api';
+  // static final baseUrl = 'http://192.168.100.6:9090/api';
 
   static Future<Response> login(params) async {
     await connected();
@@ -82,6 +82,25 @@ class Api {
       return Response.error("something wrong happened");
     }
     return Response.completed("token saved successfully");
+  }
+
+  static Future<Response> deleteToken(token) async {
+    await connected();
+    var body;
+    var httpCustom;
+    body = jsonEncode({
+      "FCMToken": token
+    });
+    httpCustom = HttpCustom(url: '$baseUrl/delete/token', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    if (httpResponse.statusCode != 200) {
+      return Response.error("something wrong happened");
+    }
+    return Response.completed("token deleted successfully");
   }
 
   static Future<Response> userGroup(accountID, userID) async {

@@ -9,6 +9,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 
+import 'openstreetmap.dart';
+
 typedef void LocaleChangeCallback(Locale locale);
 
 class Login extends StatefulWidget {
@@ -375,25 +377,31 @@ class _LoginState extends State<Login> {
 
   //here we verify if we have already login data (username, password, account) stored in device.
   void _verifySavedInfo() async {
-    var userID, accountID, pass;
-    bool error = false;
-    await encryptedSharedPreferences
-        .getString("userID")
-        .then((value) => userID = value)
-        .catchError((onError) => error = true);
-    await encryptedSharedPreferences
-        .getString("accountID")
-        .then((value) => accountID = value)
-        .catchError((onError) => error = true);
-    await encryptedSharedPreferences
-        .getString("password")
-        .then((value) => pass = value)
-        .catchError((onError) => error = true);
-    if (pass == "") {
-      showIntroduction = true;
-    }
-    if (!error) {
-      _login([accountID, userID, pass]);
+    String isLogged = await encryptedSharedPreferences.getString("isLogged");
+    if(isLogged == null || isLogged == "no" ||isLogged == ""){
+      var userID, accountID, pass;
+      bool error = false;
+      await encryptedSharedPreferences
+          .getString("userID")
+          .then((value) => userID = value)
+          .catchError((onError) => error = true);
+      await encryptedSharedPreferences
+          .getString("accountID")
+          .then((value) => accountID = value)
+          .catchError((onError) => error = true);
+      await encryptedSharedPreferences
+          .getString("password")
+          .then((value) => pass = value)
+          .catchError((onError) => error = true);
+      if (pass == "") {
+        showIntroduction = true;
+      }
+      if (!error) {
+        _login([accountID, userID, pass]);
+      }
+    } else {
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          '/dashboard', (Route<dynamic> route) => false);
     }
   }
 
@@ -426,7 +434,8 @@ class _LoginState extends State<Login> {
         "accountID", _accountController.text);
     await encryptedSharedPreferences.setString(
         "password", _passwordController.text);
-
+    await encryptedSharedPreferences.setString(
+        "isLogged", "yes");
    await firebaseCloudMessaging_Listeners();
   }
 
@@ -444,20 +453,6 @@ class _LoginState extends State<Login> {
     //   print("token is: " + token);
     //   await Api.saveToken(_accountController.text, _usernameController.text, token);
     // });
-
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print('ok done ok done ok !!!!!!');
-        print('on message $message');
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print('on resume $message');
-        print('notification content is: ' + message['notification']);
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print('on launch $message');
-      },
-    );
   }
 
   void iOS_Permission() {

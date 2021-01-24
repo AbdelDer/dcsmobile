@@ -74,6 +74,7 @@ flutter:
     - assets/markers/
     - assets/introduction/
     - assets/alarm/
+    - assets/sounds/
     - assets/report/
     - assets/historytimeline/
     - assets/maintenance/
