@@ -79,7 +79,7 @@ class EventData {
   }
 
   state() {
-    return _activity.elementAt(1);
+    return _activity.length == 2 ? _activity.elementAt(1) : '';
   }
 
   String get timestampAsString {
@@ -162,14 +162,14 @@ class EventData {
         }
       }
     } else {
-      if (_activityTime == null || _activityTime == '') {
+      if (_activityTime == null || _activityTime == '' || _activityTime == 'null') {
         return 'assets/icons/disconnected.png';
       } else {
         if (_activity.elementAt(0) == '+24h') {
           return 'assets/icons/r_marker_blue.png';
         } else if (_activity.elementAt(0) == 'disconnected') {
           return 'assets/icons/disconnected.png';
-        } else if (_activity.elementAt(1) == 'parked') {
+        } else if (_activity.elementAt(1)  == 'parked') {
           //TODO: change above condition with: _activityTime.contains(RegExp(r'^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$'))
           return 'assets/icons/marker_blue_parking.png';
         }

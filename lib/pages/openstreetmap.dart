@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dcsmobile/Api/Api.dart';
 import 'package:dcsmobile/animations/speedometer.dart';
 import 'package:dcsmobile/lang/app_localizations.dart';
+import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/models/EventData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -21,10 +22,11 @@ class OpenStreetMap extends StatefulWidget {
   OpenStreetMap({Key key, @required this.deviceID, @required this.option})
       : super(key: key);
 
-  OpenStreetMap.History({@required this.deviceID,
-    @required this.option,
-    @required this.startTime,
-    @required this.endTime});
+  OpenStreetMap.History(
+      {@required this.deviceID,
+      @required this.option,
+      @required this.startTime,
+      @required this.endTime});
 
   OpenStreetMap.Group({@required this.option});
 
@@ -54,6 +56,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
   final double _warningSpeed = 100;
   bool _first = true;
   Timer _timer;
+  Timer _timerForLoadingBar;
   double _dialogTextSize = 16;
   List<Marker> _markers;
   List<EventData> _data;
@@ -74,10 +77,14 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
   // Used to trigger showing/hiding of popups.
   final PopupController _popupLayerController = PopupController();
 
+  double _progressValue;
+
+  int _playbackSpeed;
+
   _OpenStreetMapState(this._deviceID, this._option);
 
-  _OpenStreetMapState.History(this._deviceID, this._option, this._startTime,
-      this._endTime);
+  _OpenStreetMapState.History(
+      this._deviceID, this._option, this._startTime, this._endTime);
 
   _OpenStreetMapState.Group(this._option);
 
@@ -90,11 +97,14 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _positionDetails();
     });
+    _progressValue = 0.0;
+    _playbackSpeed = 50;
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _timerForLoadingBar?.cancel();
     super.dispose();
   }
 
@@ -124,6 +134,16 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
       });
     } else if (_option == "Live") {
       _getActualPosition();
+      _timerForLoadingBar = Timer.periodic(Duration(seconds: 1), (timer) {
+        setState(() {
+          _progressValue += 0.016;
+        });
+        if (_progressValue.toStringAsFixed(1) == '1.0') {
+          setState(() {
+            _progressValue = 0.0;
+          });
+        }
+      });
       _timer = Timer.periodic(Duration(seconds: 60), (timer) async {
         await _getActualPosition();
       });
@@ -207,6 +227,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
     return Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
+      drawer: FEDrawer(),
       body: Container(
         child: Stack(
           children: [
@@ -214,9 +235,8 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
               mapController: _mapController,
               options: MapOptions(
                 plugins: [PopupMarkerPlugin()],
-                onTap: (_) =>
-                    _popupLayerController
-                        .hidePopup(), // Hide popup when the map is tapped.
+                onTap: (_) => _popupLayerController
+                    .hidePopup(), // Hide popup when the map is tapped.
                 center: LatLng(30.0, -9.0),
                 zoom: 5.0,
 
@@ -237,7 +257,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                     popupController: _popupLayerController,
                     popupBuilder: (BuildContext _, Marker marker) {
                       EventData data = _data.firstWhere((element) =>
-                      element.latitude == marker.point.latitude &&
+                          element.latitude == marker.point.latitude &&
                           element.longitude == marker.point.longitude);
                       return Container(
                         width: 280,
@@ -279,28 +299,25 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                                     children: [
                                       TableCell(
                                           child: RichText(
-                                            text: TextSpan(
+                                        text: TextSpan(
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 10,
+                                          ),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                              text: '${data.timestampAsString}',
                                               style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 10,
-                                              ),
-                                              children: <TextSpan>[
-                                                TextSpan(
-                                                  text: '${data
-                                                      .timestampAsString}',
-                                                  style: TextStyle(
-                                                      color:
+                                                  color:
                                                       Colors.lightBlueAccent),
-                                                ),
-                                                TextSpan(
-                                                  text:
-                                                  ' (${data.engineTemp ??
-                                                      ''}°C/${_data.last
-                                                      .batteryVolts ?? ''}V)',
-                                                ),
-                                              ],
                                             ),
-                                          )),
+                                            TextSpan(
+                                              text:
+                                                  ' (${data.engineTemp ?? ''}°C/${_data.last.batteryVolts ?? ''}V)',
+                                            ),
+                                          ],
+                                        ),
+                                      )),
                                     ],
                                   ),
                                   TableRow(
@@ -330,7 +347,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                                               ),
                                               TextSpan(
                                                 text:
-                                                '${data.oilLevel ?? ''} L',
+                                                    '${data.oilLevel ?? ''} L',
                                               ),
                                             ],
                                           ),
@@ -355,18 +372,17 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                                         color: Colors.black,
                                       ),
                                       children: <TextSpan>[
-                                        TextSpan(
-                                          text:
-                                          '${data.speedKPH?.toStringAsFixed(
-                                              2) ?? ''}',
-                                          style: TextStyle(
-                                            color: Colors.green.shade700,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                          text: '\n Km/h',
-                                        ),
-                                      ])),
+                                    TextSpan(
+                                      text:
+                                          '${data.speedKPH?.toStringAsFixed(2) ?? ''}',
+                                      style: TextStyle(
+                                        color: Colors.green.shade700,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: '\n Km/h',
+                                    ),
+                                  ])),
                             ),
                             VerticalDivider(
                               endIndent: 12,
@@ -394,42 +410,68 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
             ),
             _option != "Group"
                 ? Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: 220,
-                  height: 220,
-                  child: Speedometer(
-                    size: 220,
-                    minValue: 0,
-                    maxValue: 220,
-                    currentValue: _data.length != 0
-                        ? _data.last.speedKPH?.roundToDouble()
-                        : 0,
-                    displayNumericStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        backgroundColor: Colors.white,
-                        color: _speedKPH < _warningSpeed
-                            ? Colors.lightBlueAccent
-                            : Colors.red),
-                    warningValue: _warningSpeed,
-                    displayText: _data.length != 0
-                        ? '${_data.last.odometerKM?.toStringAsFixed(2)}'
-                        : '0',
-                    displayTextStyle: TextStyle(
-                        fontSize: 20,
-                        backgroundColor: Colors.white,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            )
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        width: 220,
+                        height: 220,
+                        child: Speedometer(
+                          size: 220,
+                          minValue: 0,
+                          maxValue: 220,
+                          currentValue: _data.length != 0
+                              ? _data.last.speedKPH?.roundToDouble()
+                              : 0,
+                          displayNumericStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              backgroundColor: Colors.white,
+                              color: _speedKPH < _warningSpeed
+                                  ? Colors.lightBlueAccent
+                                  : Colors.red),
+                          warningValue: _warningSpeed,
+                          displayText: _data.length != 0
+                              ? '${_data.last.odometerKM?.toStringAsFixed(2)}'
+                              : '0',
+                          displayTextStyle: TextStyle(
+                              fontSize: 20,
+                              backgroundColor: Colors.white,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  )
                 : SizedBox(
-              height: 0,
-              width: 0,
+                    height: 0,
+                    width: 0,
+                  ),
+            _option == 'Live'
+                ? Positioned(
+                    child: LinearProgressIndicator(
+                      backgroundColor: Colors.cyanAccent,
+                      valueColor:
+                          new AlwaysStoppedAnimation<Color>(Colors.green),
+                      value: _progressValue,
+                    ),
+                  )
+                : SizedBox(
+                    height: 0,
+                    width: 0,
+                  ),
+            Padding(
+              padding: const EdgeInsets.only(top: 30.0),
+              child: IconButton(
+                icon: Icon(
+                  Icons.menu,
+                  color: Colors.green.shade700,
+                  size: 24,
+                ),
+                onPressed: () {
+                  _scaffoldKey.currentState.openDrawer();
+                },
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
@@ -462,7 +504,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                         ),
                         color: Colors.white,
                         tooltip:
-                        AppLocalizations.of(context).translate("Map style"),
+                            AppLocalizations.of(context).translate("Map style"),
                         itemBuilder: (BuildContext context) {
                           return _choices.map((choice) {
                             return PopupMenuItem<String>(
@@ -474,53 +516,53 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                         onSelected: (choice) {
                           setState(() {
                             switch (choice) {
-                            // 'Roads only', 'Standard roadmap', 'Terrain', 'Satellite only', 'Terrain only', 'Hybrid'
+                              // 'Roads only', 'Standard roadmap', 'Terrain', 'Satellite only', 'Terrain only', 'Hybrid'
                               case "Roads only":
                                 setState(() {
                                   layers = "h";
                                   urlTemplate =
-                                  "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
                                 });
                                 break;
                               case "Standard roadmap":
                                 setState(() {
                                   layers = "m";
                                   urlTemplate =
-                                  "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
                                 });
                                 break;
                               case "Terrain":
                                 setState(() {
                                   layers = "p";
                                   urlTemplate =
-                                  "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
                                 });
                                 break;
                               case "Satellite only":
                                 setState(() {
                                   layers = "s";
                                   urlTemplate =
-                                  "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
                                 });
                                 break;
                               case "Terrain only":
                                 setState(() {
                                   layers = "t";
                                   urlTemplate =
-                                  "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
                                 });
                                 break;
                               case "Hybrid":
                                 setState(() {
                                   layers = "y";
                                   urlTemplate =
-                                  "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
                                 });
                                 break;
                               case "OpenStreetMap":
                                 setState(() {
                                   urlTemplate =
-                                  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+                                      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
                                 });
                                 break;
                             }
@@ -550,56 +592,9 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                       ),
                       onPressed: () async {
                         String body =
-                            "http://maps.google.com/?q=${_markers.last.point
-                            .latitude},${_markers.last.point.longitude}";
+                            "http://maps.google.com/?q=${_markers.last.point.latitude},${_markers.last.point.longitude}";
                         await Share.share(body);
                       },
-                    ),
-                    _option == 'History' && readyToPlay
-                        ? IconButton(
-                      icon: Container(
-                        width: 45,
-                        height: 40,
-                        decoration: new BoxDecoration(
-                          color: Colors.greenAccent,
-                          borderRadius: new BorderRadius.only(
-                            topLeft: const Radius.circular(25.0),
-                            topRight: const Radius.circular(25.0),
-                            bottomLeft: const Radius.circular(25.0),
-                            bottomRight: const Radius.circular(25.0),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 4.0),
-                          child: Icon(
-                            Icons.play_arrow,
-                            color: Colors.green.shade700,
-                            size: 20,
-                          ),
-                        ),
-                      ),
-                      onPressed: () async {
-                        List<Marker> oldMarkers = List<Marker>();
-                        oldMarkers = []..addAll(_markers);
-                        if (mounted) {
-                          setState(() {
-                            _markers.clear();
-                          });
-                        }
-                        for (Marker m in oldMarkers) {
-                          await Future.delayed(Duration(milliseconds: 5));
-                          if (mounted) {
-                            setState(() {
-                              _markers.add(m);
-                            });
-                            _mapController.move(_markers.last.point, 14);
-                          }
-                        }
-                      },
-                    )
-                        : SizedBox(
-                      height: 0,
-                      width: 0,
                     ),
                     IconButton(
                       icon: Container(
@@ -627,12 +622,12 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                         if (urlTemplate.contains("open")) {
                           setState(() {
                             urlTemplate =
-                            "https://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}";
+                                "https://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}";
                           });
                         } else {
                           setState(() {
                             urlTemplate =
-                            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+                                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
                           });
                         }
                         /*if (_option != "History") {
@@ -660,6 +655,166 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                         }*/
                       },
                     ),
+                    _option == 'History' && readyToPlay
+                        ? IconButton(
+                            icon: Container(
+                              width: 45,
+                              height: 40,
+                              decoration: new BoxDecoration(
+                                color: Colors.greenAccent,
+                                borderRadius: new BorderRadius.only(
+                                  topLeft: const Radius.circular(25.0),
+                                  topRight: const Radius.circular(25.0),
+                                  bottomLeft: const Radius.circular(25.0),
+                                  bottomRight: const Radius.circular(25.0),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
+                                child: Icon(
+                                  Icons.play_arrow,
+                                  color: Colors.green.shade700,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                            onPressed: () async {
+                              if(_playbackSpeed == 3600000) {
+                                setState(() {
+                                  _playbackSpeed = 50;
+                                });
+                              } else {
+                                List<Marker> oldMarkers = List<Marker>();
+                                oldMarkers = []..addAll(_markers);
+                                if (mounted) {
+                                  setState(() {
+                                    _markers.clear();
+                                  });
+                                }
+                                for (Marker m in oldMarkers) {
+                                  await Future.delayed(
+                                      Duration(milliseconds: _playbackSpeed));
+                                  if (mounted) {
+                                    setState(() {
+                                      _markers.add(m);
+                                    });
+                                    _mapController.move(_markers.last.point, 14);
+                                  }
+                                }
+                              }
+                            },
+                          )
+                        : SizedBox(
+                            height: 0,
+                            width: 0,
+                          ),
+                    _option == 'History' && readyToPlay
+                        ? IconButton(
+                            icon: Container(
+                              width: 45,
+                              height: 40,
+                              decoration: new BoxDecoration(
+                                color: Colors.greenAccent,
+                                borderRadius: new BorderRadius.only(
+                                  topLeft: const Radius.circular(25.0),
+                                  topRight: const Radius.circular(25.0),
+                                  bottomLeft: const Radius.circular(25.0),
+                                  bottomRight: const Radius.circular(25.0),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
+                                child: Icon(
+                                  Icons.pause,
+                                  color: Colors.green.shade700,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                            onPressed: () async {
+                              if(_playbackSpeed != 3600000){
+                                setState(() {
+                                  _playbackSpeed = 3600000;
+                                });
+                              }
+                            },
+                          )
+                        : SizedBox(
+                            height: 0,
+                            width: 0,
+                          ),
+                    _option == 'History'
+                        ? IconButton(
+                            icon: Container(
+                              width: 45,
+                              height: 40,
+                              decoration: new BoxDecoration(
+                                color: Colors.greenAccent,
+                                borderRadius: new BorderRadius.only(
+                                  topLeft: const Radius.circular(25.0),
+                                  topRight: const Radius.circular(25.0),
+                                  bottomLeft: const Radius.circular(25.0),
+                                  bottomRight: const Radius.circular(25.0),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
+                                child: Icon(
+                                  Icons.fast_forward,
+                                  color: Colors.green.shade700,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                if (_playbackSpeed == 200)
+                                  setState(() {
+                                    _playbackSpeed = 50;
+                                  });
+                              });
+                            },
+                          )
+                        : SizedBox(
+                            height: 0,
+                            width: 0,
+                          ),
+                    _option == 'History'
+                        ? IconButton(
+                            icon: Container(
+                              width: 45,
+                              height: 40,
+                              decoration: new BoxDecoration(
+                                color: Colors.greenAccent,
+                                borderRadius: new BorderRadius.only(
+                                  topLeft: const Radius.circular(25.0),
+                                  topRight: const Radius.circular(25.0),
+                                  bottomLeft: const Radius.circular(25.0),
+                                  bottomRight: const Radius.circular(25.0),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
+                                child: Icon(
+                                  Icons.fast_rewind,
+                                  color: Colors.green.shade700,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                if (_playbackSpeed == 50)
+                                  setState(() {
+                                    _playbackSpeed = 200;
+                                  });
+                              });
+                            },
+                          )
+                        : SizedBox(
+                            height: 0,
+                            width: 0,
+                          ),
                   ],
                 ),
               ),
