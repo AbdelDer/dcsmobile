@@ -157,7 +157,7 @@ class _DashboardSecondRowState extends State<DashboardSecondRow> {
             ],
             maxSubject:
                 AppLocalizations.of(context).translate("Running time"),
-            maxValue: runningTimeAsString(maxRunningTime['maxRunningTime']),
+            maxValue: maxRunningTime['maxRunningTime'],
             model: maxRunningTime['vehicleModel']),
       ],
     );

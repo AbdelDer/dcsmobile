@@ -8,7 +8,7 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:icon="@mipmap/ic_launcher"
-        android:label="dcsmobile">
+        android:label="SmartTrack">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDbW00uecovP8CuOWN2BZ1_SKnOp5qcdNA" />

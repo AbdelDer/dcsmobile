@@ -34,18 +34,18 @@ class _RoundedContainerState extends State<RoundedContainer> {
         MediaQuery.of(context).size.shortestSide >= 600) {
       _heightContainer = 180;
       _widthContainer = 170;
-      _fontSize = 13;
+      _fontSize = 11;
 //      print("tablet portrait");
     } else if (MediaQuery.of(context).orientation == Orientation.landscape &&
         MediaQuery.of(context).size.shortestSide >= 550) {
       _heightContainer = 180;
       _widthContainer = 170;
-      _fontSize = 13;
+      _fontSize = 11;
 //      print("tablet landscape");
     } else {
       _heightContainer = 130;
       _widthContainer = 140;
-      _fontSize = 13;
+      _fontSize = 11;
     }
 
     return Expanded(

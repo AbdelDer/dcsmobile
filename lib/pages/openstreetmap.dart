@@ -8,10 +8,12 @@ import 'package:dcsmobile/models/EventData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geodesy/geodesy.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart' as lt;
 import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OpenStreetMap extends StatefulWidget {
   String deviceID;
@@ -63,7 +65,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
   List<lt.LatLng> _points = [];
   bool readyToPlay = false;
   String layers = "h";
-  String urlTemplate = "https://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}";
+  String urlTemplate = "https://mts1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}";
   List<String> _choices = [
     'Roads only',
     'Standard roadmap',
@@ -98,7 +100,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
       _positionDetails();
     });
     _progressValue = 0.0;
-    _playbackSpeed = 50;
+    _playbackSpeed = 10;
   }
 
   @override
@@ -521,42 +523,42 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                                 setState(() {
                                   layers = "h";
                                   urlTemplate =
-                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                      "https://mts1.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
                                 });
                                 break;
                               case "Standard roadmap":
                                 setState(() {
                                   layers = "m";
                                   urlTemplate =
-                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                      "https://mts1.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
                                 });
                                 break;
                               case "Terrain":
                                 setState(() {
                                   layers = "p";
                                   urlTemplate =
-                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                      "https://mts1.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
                                 });
                                 break;
                               case "Satellite only":
                                 setState(() {
                                   layers = "s";
                                   urlTemplate =
-                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                      "https://mts1.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
                                 });
                                 break;
                               case "Terrain only":
                                 setState(() {
                                   layers = "t";
                                   urlTemplate =
-                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                      "https://mts1.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
                                 });
                                 break;
                               case "Hybrid":
                                 setState(() {
                                   layers = "y";
                                   urlTemplate =
-                                      "https://mt.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
+                                      "https://mts1.google.com/vt/lyrs=${layers}&x={x}&y={y}&z={z}";
                                 });
                                 break;
                               case "OpenStreetMap":
@@ -622,7 +624,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                         if (urlTemplate.contains("open")) {
                           setState(() {
                             urlTemplate =
-                                "https://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}";
+                                "https://mts1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}";
                           });
                         } else {
                           setState(() {
@@ -679,9 +681,9 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                               ),
                             ),
                             onPressed: () async {
-                              if(_playbackSpeed == 3600000) {
+                              if (_playbackSpeed == 3600000) {
                                 setState(() {
-                                  _playbackSpeed = 50;
+                                  _playbackSpeed = 10;
                                 });
                               } else {
                                 List<Marker> oldMarkers = List<Marker>();
@@ -698,7 +700,8 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                                     setState(() {
                                       _markers.add(m);
                                     });
-                                    _mapController.move(_markers.last.point, 14);
+                                    _mapController.move(
+                                        _markers.last.point, 14);
                                   }
                                 }
                               }
@@ -708,41 +711,41 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                             height: 0,
                             width: 0,
                           ),
-                    _option == 'History' && readyToPlay
-                        ? IconButton(
-                            icon: Container(
-                              width: 45,
-                              height: 40,
-                              decoration: new BoxDecoration(
-                                color: Colors.greenAccent,
-                                borderRadius: new BorderRadius.only(
-                                  topLeft: const Radius.circular(25.0),
-                                  topRight: const Radius.circular(25.0),
-                                  bottomLeft: const Radius.circular(25.0),
-                                  bottomRight: const Radius.circular(25.0),
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 4.0),
-                                child: Icon(
-                                  Icons.pause,
-                                  color: Colors.green.shade700,
-                                  size: 20,
-                                ),
-                              ),
-                            ),
-                            onPressed: () async {
-                              if(_playbackSpeed != 3600000){
-                                setState(() {
-                                  _playbackSpeed = 3600000;
-                                });
-                              }
-                            },
-                          )
-                        : SizedBox(
-                            height: 0,
-                            width: 0,
-                          ),
+                    // _option == 'History' && readyToPlay
+                    //     ? IconButton(
+                    //         icon: Container(
+                    //           width: 45,
+                    //           height: 40,
+                    //           decoration: new BoxDecoration(
+                    //             color: Colors.greenAccent,
+                    //             borderRadius: new BorderRadius.only(
+                    //               topLeft: const Radius.circular(25.0),
+                    //               topRight: const Radius.circular(25.0),
+                    //               bottomLeft: const Radius.circular(25.0),
+                    //               bottomRight: const Radius.circular(25.0),
+                    //             ),
+                    //           ),
+                    //           child: Padding(
+                    //             padding: const EdgeInsets.only(right: 4.0),
+                    //             child: Icon(
+                    //               Icons.pause,
+                    //               color: Colors.green.shade700,
+                    //               size: 20,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         onPressed: () async {
+                    //           if(_playbackSpeed != 3600000){
+                    //             setState(() {
+                    //               _playbackSpeed = 3600000;
+                    //             });
+                    //           }
+                    //         },
+                    //       )
+                    //     : SizedBox(
+                    //         height: 0,
+                    //         width: 0,
+                    //       ),
                     _option == 'History'
                         ? IconButton(
                             icon: Container(
@@ -770,7 +773,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                               setState(() {
                                 if (_playbackSpeed == 200)
                                   setState(() {
-                                    _playbackSpeed = 50;
+                                    _playbackSpeed = 10;
                                   });
                               });
                             },
@@ -815,6 +818,28 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                             height: 0,
                             width: 0,
                           ),
+                    _option == 'Live'
+                        ? Container(
+                            width: 30,
+                            height: 30,
+                            decoration: new BoxDecoration(
+                              color: Colors.greenAccent,
+                              borderRadius: new BorderRadius.only(
+                                topLeft: const Radius.circular(50.0),
+                                topRight: const Radius.circular(50.0),
+                                bottomLeft: const Radius.circular(50.0),
+                                bottomRight: const Radius.circular(50.0),
+                              ),
+                            ),
+                            child: SvgPicture.asset(
+                              'assets/historytimeline/distance.svg',
+                              color: Colors.green.shade700,
+                            ),
+                          )
+                        : SizedBox(
+                            height: 0,
+                            width: 0,
+                          ),
                   ],
                 ),
               ),
@@ -842,5 +867,20 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
       _data?.add(ed);
       _mapController.move(_markers?.last.point, 14);
     });
+  }
+
+  launchURL(lat, lng) async {
+    final String googleMapslocationUrl =
+        "https://www.google.com/maps/search/?api=1&query=${lat},${lng}";
+
+    final String encodedURl = Uri.encodeFull(googleMapslocationUrl);
+
+    if (await canLaunch(encodedURl)) {
+      await launch(encodedURl);
+    } else {
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Ne peut pas ouvrir Google Maps"),
+      ));
+    }
   }
 }
