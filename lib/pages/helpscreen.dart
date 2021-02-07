@@ -74,7 +74,7 @@ class _HelpScreenState extends State<HelpScreen> {
                     ],
                   ),
                   onPressed: () => setState(() {
-                    _launchInBrowser("mailto://test@gmail.com");
+                    _launchInBrowser("mailto://geotechinfo19@gmail.com");
                   }),
                 ),
               ),
@@ -107,7 +107,7 @@ class _HelpScreenState extends State<HelpScreen> {
                     ],
                   ),
                   onPressed: () => setState(() {
-                    _launchWhatsApp(phone: "+21260022449922");
+                    _launchWhatsApp(phone: "+212661721860");
                   }),
                 ),
               ),

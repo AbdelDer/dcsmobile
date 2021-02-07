@@ -229,7 +229,6 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
     return Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
-      drawer: FEDrawer(),
       body: Container(
         child: Stack(
           children: [
@@ -466,12 +465,12 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
               padding: const EdgeInsets.only(top: 30.0),
               child: IconButton(
                 icon: Icon(
-                  Icons.menu,
+                  Icons.arrow_back,
                   color: Colors.green.shade700,
                   size: 24,
                 ),
                 onPressed: () {
-                  _scaffoldKey.currentState.openDrawer();
+                  Navigator.of(context).pop();
                 },
               ),
             ),
