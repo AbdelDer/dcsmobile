@@ -26,7 +26,7 @@ class _CommandsScreenState extends State<CommandsScreen>
   Stream _stream;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<VehicleListViewState> _deviceListViewKey =
-  GlobalKey<VehicleListViewState>();
+      GlobalKey<VehicleListViewState>();
   Widget _title;
   IconData _icon = Icons.search;
   TabController _tabController;
@@ -131,11 +131,10 @@ class _CommandsScreenState extends State<CommandsScreen>
                     children: <Widget>[
                       Container(
                         color: Colors.white,
-                        height: MediaQuery
-                            .of(context)
-                            .size
-                            .height - 100,
-                        child: VehicleListView(_scaffoldKey, _deviceListViewKey,
+                        height: MediaQuery.of(context).size.height - 100,
+                        child: VehicleListView(
+                            _scaffoldKey,
+                            _deviceListViewKey,
                             "all",
                             AppLocalizations.of(context).translate("Commands")),
                       ),
@@ -149,9 +148,9 @@ class _CommandsScreenState extends State<CommandsScreen>
                       if (snapshot.data.status == Status.ERROR) {
                         return Center(
                             child: Text(
-                              snapshot.data.message,
-                              style: TextStyle(fontSize: 20),
-                            ));
+                          snapshot.data.message,
+                          style: TextStyle(fontSize: 20),
+                        ));
                       }
                       return ListView.builder(
                           itemCount: snapshot.data.responseBody.length,
@@ -171,11 +170,13 @@ class _CommandsScreenState extends State<CommandsScreen>
                                       builder: (context) {
                                         return CommandsDialog(
                                             snapshot.data.responseBody[index]
+                                                .deviceID,
+                                            snapshot.data.responseBody[index]
                                                 .vehicleModel,
                                             snapshot.data.responseBody[index]
                                                 .simPhoneNumber,
                                             snapshot.data.responseBody[index]
-                                                .late ??
+                                                    .late ??
                                                 true);
                                       });
                                 },
@@ -210,12 +211,9 @@ class _CommandsScreenState extends State<CommandsScreen>
                                       },
                                     ),
                                     Text(
-                                      "${snapshot.data.responseBody[index]
-                                          .timestampAsString} ${snapshot.data
-                                          .responseBody[index].speedKPH
-                                          .toStringAsFixed(2)} Km/h",
+                                      "${snapshot.data.responseBody[index].timestampAsString} ${snapshot.data.responseBody[index].speedKPH.toStringAsFixed(2)} Km/h",
                                       style:
-                                      TextStyle(fontSize: _detailsFontSize),
+                                          TextStyle(fontSize: _detailsFontSize),
                                     ),
                                   ],
                                 ),
@@ -231,10 +229,12 @@ class _CommandsScreenState extends State<CommandsScreen>
                       //     scaffoldKey: _scaffoldKey,
                       //     message: snapshot.data.responseBody.message,
                       //     type: 'error');
-                      _scaffoldKey.currentState.showSnackBar(
-                           SnackBar(
-                            content: Text(snapshot.data.responseBody.message),
-                          )
+                      _scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(snapshot.data.responseBody.message),
+                      ));
+                      return SizedBox(
+                        height: 0,
+                        width: 0,
                       );
                     } else {
                       return Center(child: CircularProgressIndicator());

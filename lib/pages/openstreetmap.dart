@@ -680,7 +680,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                               ),
                             ),
                             onPressed: () async {
-                              if (_playbackSpeed == 3600000) {
+                              if (_playbackSpeed == 1) {
                                 setState(() {
                                   _playbackSpeed = 10;
                                 });
@@ -734,9 +734,9 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                     //           ),
                     //         ),
                     //         onPressed: () async {
-                    //           if(_playbackSpeed != 3600000){
+                    //           if(_playbackSpeed != 1){
                     //             setState(() {
-                    //               _playbackSpeed = 3600000;
+                    //               _playbackSpeed = 1;
                     //             });
                     //           }
                     //         },
@@ -818,21 +818,24 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                             width: 0,
                           ),
                     _option == 'Live'
-                        ? Container(
-                            width: 30,
-                            height: 30,
-                            decoration: new BoxDecoration(
-                              color: Colors.greenAccent,
-                              borderRadius: new BorderRadius.only(
-                                topLeft: const Radius.circular(50.0),
-                                topRight: const Radius.circular(50.0),
-                                bottomLeft: const Radius.circular(50.0),
-                                bottomRight: const Radius.circular(50.0),
+                        ? GestureDetector(
+                            onTap: () {launchURL(_data.last.latitude, _data.last.longitude);},
+                            child: Container(
+                              width: 30,
+                              height: 30,
+                              decoration: new BoxDecoration(
+                                color: Colors.greenAccent,
+                                borderRadius: new BorderRadius.only(
+                                  topLeft: const Radius.circular(50.0),
+                                  topRight: const Radius.circular(50.0),
+                                  bottomLeft: const Radius.circular(50.0),
+                                  bottomRight: const Radius.circular(50.0),
+                                ),
                               ),
-                            ),
-                            child: SvgPicture.asset(
-                              'assets/historytimeline/distance.svg',
-                              color: Colors.green.shade700,
+                              child: SvgPicture.asset(
+                                'assets/historytimeline/distance.svg',
+                                color: Colors.green.shade700,
+                              ),
                             ),
                           )
                         : SizedBox(

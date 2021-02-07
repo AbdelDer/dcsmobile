@@ -64,7 +64,7 @@ class _DeviceCardState extends State<DeviceCard> {
                       showDialog(
                           context: context,
                           builder: (context) {
-                            return CommandsDialog(data[index].vehicleModel,
+                            return CommandsDialog(data[index].deviceID, data[index].vehicleModel,
                                 data[index].simPhoneNumber, false);
                           });
                     } else if (_option == "Live") {

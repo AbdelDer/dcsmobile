@@ -5,15 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CommandsDialog extends StatefulWidget {
+  String _deviceID;
   String _vehicleModel;
   String _simPhoneNumber;
   bool _late;
 
-  CommandsDialog(this._vehicleModel, this._simPhoneNumber, this._late);
+  CommandsDialog(this._deviceID, this._vehicleModel, this._simPhoneNumber, this._late);
 
   @override
   _CommandsDialogState createState() =>
-      _CommandsDialogState(_vehicleModel, _simPhoneNumber, _late);
+      _CommandsDialogState(_deviceID, _vehicleModel, _simPhoneNumber, _late);
 }
 
 class _CommandsDialogState extends State<CommandsDialog> {
@@ -24,13 +25,14 @@ class _CommandsDialogState extends State<CommandsDialog> {
     fontSize: 18,
   );
 
+  String _deviceID;
   String _vehicleModel;
   String _simPhoneNumber;
 
   //in on tap functions we will verify if last we'll disable some buttons
   bool _late;
 
-  _CommandsDialogState(this._vehicleModel, this._simPhoneNumber, this._late);
+  _CommandsDialogState(this._deviceID, this._vehicleModel, this._simPhoneNumber, this._late);
 
   String translate(key) {
     try {
@@ -218,14 +220,14 @@ class _CommandsDialogState extends State<CommandsDialog> {
         body = "lex trk setdigout 00";
         break;
       case 'turnOff':
-        body = "lex trk setdigout 10";
+        body = "lex trk setdigout 11";
         break;
       case 'unblock':
         body = "lex trk cpureset";
         break;
       case 'flush':
         body =
-            "lex trk flush 359633101511090,internet1.meditel.ma,MEDINET,MEDINET,145.239.67.90,5027,0";
+            "lex trk flush $_deviceID,internet1.meditel.ma,MEDINET,MEDINET,37.187.149.86,5027,0";
         break;
       case 'honk':
         body = "lex trk setdigout 01 0 2";
