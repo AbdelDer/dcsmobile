@@ -75,26 +75,26 @@ class DonutAutoLabelChart extends StatelessWidget {
           new VehicleStatus(
               "all",
               num.parse(receivedData['firstRow']['all'].toString()) ?? 0,
-              Colors.greenAccent.shade200),
+              Colors.green),
         ];
       } else {
         data = [
           new VehicleStatus(
               AppLocalizations.of(context).translate("Moving"),
               num.parse(receivedData['firstRow']['moving'].toString()) ?? 0,
-              Colors.greenAccent.shade200),
+              Colors.green),
           new VehicleStatus(
               AppLocalizations.of(context).translate("Parked"),
               num.parse(receivedData['firstRow']['parked'].toString()) ?? 0,
-              Colors.green.shade200),
+              Colors.blueAccent),
         ];
       }
     } else {
       data = [
         new VehicleStatus(AppLocalizations.of(context).translate("Moving"), 0,
-            Colors.greenAccent.shade200),
+            Colors.green),
         new VehicleStatus(AppLocalizations.of(context).translate("Parked"), 0,
-            Colors.green.shade200),
+            Colors.blueAccent),
       ];
     }
 
