@@ -100,7 +100,7 @@ class EventData {
     if (purpose != null) {
       if (_speedKPH < 3) {
         return 'assets/icons/stop_small.png';
-      } else if (_speedKPH <= 60) {
+      } else if (_speedKPH <= 67) {
         if (_heading == 0) {
           return 'assets/icons/marker_green.png';
         } else if (between(0, 90)) {
@@ -120,7 +120,7 @@ class EventData {
         } else if (_heading == 360) {
           return 'assets/icons/marker_green_n.png';
         }
-      } else if (_speedKPH < 100 && _speedKPH > 60) {
+      } else if (_speedKPH < 127 && _speedKPH > 67) {
         if (_heading == 0) {
           return 'assets/icons/marker_grey.png';
         } else if (between(0, 90)) {
