@@ -151,6 +151,17 @@ class _FEDrawerState extends State<FEDrawer> {
                   // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Center(child: Image.asset('assets/images/logo.png')),
+                    Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Container(
+                        child: Text(
+                          'version: 1.0',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
                     Container(
                       child: FutureBuilder(
                         future: getUsername(),
