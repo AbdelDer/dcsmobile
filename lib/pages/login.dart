@@ -1,15 +1,13 @@
 import 'dart:io';
 
 import 'package:dcsmobile/Api/Api.dart';
-import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/animations/fadeanimation.dart';
 import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
-
-import 'openstreetmap.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 typedef void LocaleChangeCallback(Locale locale);
 
@@ -33,10 +31,9 @@ class _LoginState extends State<Login> {
   var showIntroduction = false;
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  String _message = '';
+  String _lang = 'fr';
 
   final LocaleChangeCallback onLocaleChange;
-  bool enLang = true;
 
   _LoginState(this.onLocaleChange);
 
@@ -82,36 +79,40 @@ class _LoginState extends State<Login> {
                     ],
                   ),
                 ),
-                GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            left: 1.5,
-                            top: 2.5,
-                            child: Icon(
-                              Icons.translate,
-                              color: Colors.black54,
-                            ),
+                Row(
+                  children: [
+                    GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 20.0),
+                          child: SvgPicture.asset(
+                            'assets/languages/france.svg',
+                            width: 30,
                           ),
-                          Icon(
-                            Icons.translate,
-                            color: Colors.white,
+                        ),
+                        onTap: () async {
+                          setState(() {
+                            widget.onLocaleChange(Locale('fr'));
+                            _lang = 'fr';
+                          });
+                        }),
+                    GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 20.0),
+                          child: SvgPicture.asset(
+                            'assets/languages/usa.svg',
+                            width: 30,
                           ),
-                        ],
-                      ),
-                    ),
-                    onTap: () async {
-                      String local;
-                      setState(() {
-                        enLang = !enLang;
-                        local = enLang ? 'en' : 'fr';
-                        widget.onLocaleChange(Locale(local));
-                      });
-                      await encryptedSharedPreferences.setString("lang", local);
-                    }),
+                        ),
+                        onTap: () async {
+                          setState(() {
+                            widget.onLocaleChange(Locale('en'));
+                            _lang = 'en';
+                          });
+                        }),
+                  ],
+                )
               ],
             ),
             SizedBox(height: 20),
@@ -400,14 +401,20 @@ class _LoginState extends State<Login> {
         _login([accountID, userID, pass]);
       }
     } else {
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          '/dashboard', (Route<dynamic> route) => false);
+      encryptedSharedPreferences.getString("lang").then((lang) {
+        setState(() {
+          widget.onLocaleChange(Locale(lang == "" ? 'fr' : lang));
+        });
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            '/dashboard', (Route<dynamic> route) => false);
+      });
     }
   }
 
   //here we store login data (username, password, account)
   saveLoginInfo() async {
     await encryptedSharedPreferences.clear();
+    await encryptedSharedPreferences.setString("lang", _lang);
     if (_usernameController.text != '') {
       //here we do Api query to get groupid of user because we need it in all other pages
       await Api.userGroup(_accountController.text, _usernameController.text)

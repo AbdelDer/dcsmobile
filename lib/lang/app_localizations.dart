@@ -22,11 +22,9 @@ class AppLocalizations {
 
   Map<String, String> _localizedStrings;
 
-  Future<bool> load() async {
+  Future<bool> load(locale) async {
     final EncryptedSharedPreferences encryptedSharedPreferences =
         EncryptedSharedPreferences();
-    final String lang = await encryptedSharedPreferences.getString("lang");
-    locale = Locale(lang == "" ? 'en' : lang);
     // Load the language JSON file from the "lang" folder
     String jsonString =
         await rootBundle.loadString('lang/${locale.languageCode}.json');
@@ -66,7 +64,7 @@ class _AppLocalizationsDelegate
   Future<AppLocalizations> load(Locale locale) async {
     // AppLocalizations class is where the JSON loading actually runs
     AppLocalizations localizations = new AppLocalizations(locale);
-    await localizations.load();
+    await localizations.load(locale);
     return localizations;
   }
 

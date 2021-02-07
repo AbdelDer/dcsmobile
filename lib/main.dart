@@ -37,7 +37,7 @@ class EnteryPoint extends StatefulWidget {
 class _EnteryPointState extends State<EnteryPoint> {
   final EncryptedSharedPreferences encryptedSharedPreferences =
       EncryptedSharedPreferences();
-  AppLocalizations appLocalizations = AppLocalizations(Locale('en'));
+  AppLocalizations appLocalizations = AppLocalizations(Locale('fr'));
 
   onLocaleChange(Locale l) {
     setState(() {
@@ -49,7 +49,7 @@ class _EnteryPointState extends State<EnteryPoint> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      locale: appLocalizations.locale ?? Locale('en'),
+      locale: appLocalizations?.locale ?? Locale('fr'),
       debugShowCheckedModeBanner: false,
       title: "Tracking App",
       initialRoute: '/login',
@@ -67,11 +67,11 @@ class _EnteryPointState extends State<EnteryPoint> {
       localizationsDelegates: [
         // THIS CLASS WILL BE ADDED LATER
         // A class which loads the translations from JSON files
-        appLocalizations.delegate,
+        appLocalizations?.delegate,
         // Built-in localization of basic text for Material widgets
-        GlobalMaterialLocalizations.delegate,
+        GlobalMaterialLocalizations?.delegate,
         // Built-in localization for text direction LTR/RTL
-        GlobalWidgetsLocalizations.delegate,
+        GlobalWidgetsLocalizations?.delegate,
       ],
       // Returns a locale which will be used by the app
       localeResolutionCallback: (locale, supportedLocales) {
