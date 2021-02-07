@@ -138,7 +138,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
       _getActualPosition();
       _timerForLoadingBar = Timer.periodic(Duration(seconds: 1), (timer) {
         setState(() {
-          _progressValue += 0.016;
+          _progressValue += 0.05;
         });
         if (_progressValue.toStringAsFixed(1) == '1.0') {
           setState(() {
@@ -475,7 +475,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 20.0),
+              padding: const EdgeInsets.only(top: 30.0),
               child: Align(
                 alignment: Alignment.topRight,
                 child: Column(
