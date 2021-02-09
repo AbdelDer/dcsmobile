@@ -18,9 +18,12 @@ class NotificationsView extends StatefulWidget {
 
 class _NotificationsViewState extends State<NotificationsView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  EncryptedSharedPreferences _preferences = EncryptedSharedPreferences();
   var _choices = ["vehicles filtering", "events filtering", "new date"];
   var _devices = [];
   String _vehicleErrorMsg = "";
+  String _accountID;
+  String _userID;
 
   DateTime _dateStartChose = DateTime.now();
   TimeOfDay _timeStartChose = TimeOfDay(hour: 0, minute: 0);
@@ -43,12 +46,17 @@ class _NotificationsViewState extends State<NotificationsView> {
   StreamController _streamController;
   Stream _stream;
 
+  bool _isLoading;
+  int _page = 1;
+
+  bool _shouldLoad = true;
+
   @override
   void initState() {
     super.initState();
     _streamController = StreamController();
     _stream = _streamController.stream;
-    _getVehicles('init').then((value) => _getNotifications());
+    _getVehicles('init').then((value) => _getNotifications(_page));
   }
 
   @override
@@ -135,7 +143,8 @@ class _NotificationsViewState extends State<NotificationsView> {
                         cancelText: 'annuler',
                         confirmText: 'ok',
                       );
-                      await _getNotifications();
+                      await _getNotifications(1);
+                      _shouldLoad = true;
                       break;
                   }
                 }),
@@ -158,60 +167,75 @@ class _NotificationsViewState extends State<NotificationsView> {
                   ),
                 );
               } else {
-                return ListView.builder(
-                  itemCount: snapshot.data.responseBody.length,
-                  itemBuilder: (context, index) {
-                    return ExpansionTile(
-                      initiallyExpanded: false,
-                      children: <Widget>[
-                        _childrenWidgets(
-                            snapshot.data.responseBody[index].deviceID,
-                            snapshot.data.responseBody[index].timestamp)
-                      ],
-                      backgroundColor: Colors.transparent,
-                      // onExpansionChanged: (value) {
-                      //   if (value) {}
-                      // },
-                      leading: Image.asset(
-                        snapshot.data.responseBody[index].getAssetPath(),
-                        color: Colors.black,
-                      ),
-                      title: Text(
-                        '${snapshot.data.responseBody[index].vehicleModel}',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
+                return NotificationListener(
+                  onNotification: (ScrollNotification scrollInfo) {
+                    if (_shouldLoad &&
+                        !_isLoading &&
+                        scrollInfo.metrics.pixels ==
+                            scrollInfo.metrics.maxScrollExtent) {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      // start loading data
+                      _getNotifications(_page++);
+                    }
+                    return;
+                  },
+                  child: ListView.builder(
+                    itemCount: snapshot.data.responseBody.length,
+                    itemBuilder: (context, index) {
+                      return ExpansionTile(
+                        initiallyExpanded: false,
+                        children: <Widget>[
+                          _childrenWidgets(
+                              snapshot.data.responseBody[index].deviceID,
+                              snapshot.data.responseBody[index].timestamp)
+                        ],
+                        backgroundColor: Colors.transparent,
+                        // onExpansionChanged: (value) {
+                        //   if (value) {}
+                        // },
+                        // leading: Image.asset(
+                        //   snapshot.data.responseBody[index].getAssetPath(),
+                        //   color: Colors.black,
+                        // ),
+                        title: Text(
+                          '${snapshot.data.responseBody[index].vehicleModel}',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                          ),
                         ),
-                      ),
-                      subtitle: Column(
-                        children: [
-                          Align(
+                        subtitle: Column(
+                          children: [
+                            Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  '${snapshot.data.responseBody[index].message}',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.blueAccent,
+                                  ),
+                                )),
+                            Align(
                               alignment: Alignment.topLeft,
                               child: Text(
-                                '${snapshot.data.responseBody[index].message}',
+                                '${snapshot.data.responseBody[index].timestampAsString}',
                                 style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.blueAccent,
+                                  color: Colors.black,
+                                  fontSize: 14,
                                 ),
-                              )),
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              '${snapshot.data.responseBody[index].timestampAsString}',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      trailing: Icon(
-                        Icons.map_outlined,
-                        color: Colors.black,
-                      ),
-                    );
-                  },
+                          ],
+                        ),
+                        trailing: Icon(
+                          Icons.map_outlined,
+                          color: Colors.black,
+                        ),
+                      );
+                    },
+                  ),
                 );
               }
             } else {
@@ -224,7 +248,6 @@ class _NotificationsViewState extends State<NotificationsView> {
   }
 
   Future _getVehicles(state) async {
-    EncryptedSharedPreferences _preferences = EncryptedSharedPreferences();
     final _params = {
       "accountID": await _preferences.getString("accountID"),
       "userID": await _preferences.getString("userID"),
@@ -237,6 +260,12 @@ class _NotificationsViewState extends State<NotificationsView> {
         _devices = value.responseBody;
         if (state != 'init') _vehiclesFilter();
       }
+    }).catchError((error) {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(error.toString()),
+        ),
+      );
     });
   }
 
@@ -321,7 +350,8 @@ class _NotificationsViewState extends State<NotificationsView> {
                             color: Colors.green,
                             onPressed: () async {
                               Navigator.pop(context);
-                              await _getNotifications();
+                              _shouldLoad = true;
+                              await _getNotifications(1);
                             }),
                       ],
                     ),
@@ -417,7 +447,8 @@ class _NotificationsViewState extends State<NotificationsView> {
                       color: Colors.green,
                       onPressed: () async {
                         Navigator.pop(context);
-                        await _getNotifications();
+                        _shouldLoad = true;
+                        await _getNotifications(1);
                       }),
                 ],
               ),
@@ -426,7 +457,11 @@ class _NotificationsViewState extends State<NotificationsView> {
         });
   }
 
-  _choicesToJson() {
+  _choicesToJson(page) async {
+    if (_accountID == null && _userID == null) {
+      _accountID = await _preferences.getString("accountID");
+      _userID = await _preferences.getString("userID");
+    }
     _dateStartChose = _dateStartChose ?? DateTime.now();
     _dateStartChose = _dateStartChose ?? DateTime.now();
     _timeStartChose = _timeStartChose ?? TimeOfDay(hour: 0, minute: 0);
@@ -446,13 +481,26 @@ class _NotificationsViewState extends State<NotificationsView> {
       'timestampEnd': DateTime(_dateEndChose.year, _dateEndChose.month,
                   _dateEndChose.day, _timeEndChose.hour, _timeEndChose.minute)
               .millisecondsSinceEpoch ~/
-          1000
+          1000,
+      "page": page,
+      "accountID": _accountID,
+      "userID": _userID
     });
   }
 
-  _getNotifications() async {
-    await Api.getNotifications(_choicesToJson()).then((value) {
+  _getNotifications(page) async {
+    var body = await _choicesToJson(page);
+    await Api.getNotifications(body).then((value) {
+      setState(() {
+        _isLoading = false;
+      });
       _streamController.add(value);
+      //if value empty array than shouldLoad will get false
+      if(value?.responseBody?.length == 0) {
+        setState(() {
+          _shouldLoad = false;
+        });
+      }
     }).catchError((error) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
@@ -498,14 +546,15 @@ class _NotificationsViewState extends State<NotificationsView> {
                 height: 200,
                 child: GoogleMap(
                   initialCameraPosition: CameraPosition(
-                      target: LatLng(snapshot.data.responseBody.latitude,
-                          snapshot.data.responseBody.longitude),
+                      target: LatLng(snapshot.data.responseBody.latitude ?? 0,
+                          snapshot.data.responseBody.longitude ?? 0),
                       zoom: 17),
                   zoomControlsEnabled: false,
                   markers: Set.of([
                     Marker(
                         markerId: MarkerId('${data.timestamp}'),
-                        position: LatLng(data.latitude, data.longitude),
+                        position:
+                            LatLng(data.latitude ?? 0, data.longitude ?? 0),
                         infoWindow: InfoWindow(
                             snippet: "Speed: ${data.speedKPH} Km/h more...",
                             title: "${data.vehicleModel}",
@@ -536,8 +585,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                         fontSize: 16,
                                                         decoration:
                                                             TextDecoration.none,
-                                                        color:
-                                                            Colors.green),
+                                                        color: Colors.green),
                                                   ),
                                                 ),
                                               ),
@@ -561,8 +609,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                         fontSize: 16,
                                                         decoration:
                                                             TextDecoration.none,
-                                                        color:
-                                                            Colors.green),
+                                                        color: Colors.green),
                                                   ),
                                                 ],
                                               ),
@@ -586,8 +633,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                         fontSize: 16,
                                                         decoration:
                                                             TextDecoration.none,
-                                                        color:
-                                                            Colors.green),
+                                                        color: Colors.green),
                                                   ),
                                                 ],
                                               ),
@@ -611,8 +657,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                         fontSize: 16,
                                                         decoration:
                                                             TextDecoration.none,
-                                                        color:
-                                                            Colors.green),
+                                                        color: Colors.green),
                                                   ),
                                                 ],
                                               ),
@@ -636,8 +681,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                         fontSize: 16,
                                                         decoration:
                                                             TextDecoration.none,
-                                                        color:
-                                                            Colors.green),
+                                                        color: Colors.green),
                                                   ),
                                                 ],
                                               ),
@@ -661,8 +705,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                         fontSize: 16,
                                                         decoration:
                                                             TextDecoration.none,
-                                                        color:
-                                                            Colors.green),
+                                                        color: Colors.green),
                                                   ),
                                                 ],
                                               ),
@@ -687,8 +730,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                         fontSize: 16,
                                                         decoration:
                                                             TextDecoration.none,
-                                                        color:
-                                                            Colors.green),
+                                                        color: Colors.green),
                                                   ),
                                                 ],
                                               ),
@@ -712,8 +754,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                         fontSize: 16,
                                                         decoration:
                                                             TextDecoration.none,
-                                                        color:
-                                                            Colors.green),
+                                                        color: Colors.green),
                                                   ),
                                                 ],
                                               ),
@@ -737,8 +778,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                         fontSize: 16,
                                                         decoration:
                                                             TextDecoration.none,
-                                                        color:
-                                                            Colors.green),
+                                                        color: Colors.green),
                                                   ),
                                                 ],
                                               ),

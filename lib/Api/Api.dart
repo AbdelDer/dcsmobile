@@ -24,9 +24,9 @@ import 'HttpCustom.dart';
 class Api {
   static final httpClient = HttpClient();
 
-  static final baseUrl = 'https://geotech-gps.com:9090/api';
+  // static final baseUrl = 'https://geotech-gps.com:9090/api';
 
-  // static final baseUrl = 'http://192.168.1.75:9090/api';
+  static final baseUrl = 'http://192.168.42.44:9090/api';
 
   // static final baseUrl = 'http://192.168.100.6:9090/api';
 
@@ -484,7 +484,7 @@ class Api {
     if (httpResponse.statusCode != 200) {
       return Response.error(responseBody['message']);
     }
-    return Response.completed(responseBody
+    return Response.completed(responseBody['content']
         .map<Notification>(
             (notification) => Notification.fromJson(notification))
         .toList());
