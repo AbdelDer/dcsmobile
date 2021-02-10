@@ -69,16 +69,16 @@ class Notification {
 
   String getAssetPath() {
     switch(type) {
-      case "BATTERY" : return 'assets/alarm/battery&disconnect.png';
-      case "BONNET" : return 'assets/alarm/bonnet.png';
-      case "CRASH" : return 'assets/alarm/crash.png';
-      case "DISCONNECT" : return 'assets/alarm/battery&disconnect.png';
-      case "DRIVER" : return 'assets/alarm/driver.png';
-      case "SPEED" : return 'assets/alarm/speed.png';
-      case "MAXTEMP" : return 'assets/alarm/temp.png';
-      case "MINTEMP" : return 'assets/alarm/temp.png';
-      case "STARTUP" : return 'assets/alarm/startup.png';
-      case "TOWING" : return 'assets/alarm/towing.png';
+      case "BA" : return 'assets/alarm/battery&disconnect.png';
+      case "BO" : return 'assets/alarm/bonnet.png';
+      case "CR" : return 'assets/alarm/crash.png';
+      case "DI" : return 'assets/alarm/battery&disconnect.png';
+      case "DR" : return 'assets/alarm/driver.png';
+      case "SP" : return 'assets/alarm/speed.png';
+      case "TMAX" : return 'assets/alarm/temp.png';
+      case "TMIN" : return 'assets/alarm/temp.png';
+      case "SU" : return 'assets/alarm/startup.png';
+      case "TO" : return 'assets/alarm/towing.png';
     }
   }
 }

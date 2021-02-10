@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dcsmobile/Api/Api.dart';
-import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/Api/Response.dart';
 import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/models/notifications/filter.dart';
+import 'package:dcsmobile/models/notifications/notification.dart' as n;
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -43,25 +43,27 @@ class _NotificationsViewState extends State<NotificationsView> {
     Filter(filterName: "towing", filterAbbreviation: "TO"),
   ];
 
-  StreamController _streamController;
-  Stream _stream;
+  // StreamController _streamController;
+  // Stream _stream;
 
-  bool _isLoading;
+  bool _isLoading = true;
   int _page = 1;
 
   bool _shouldLoad = true;
 
+  List<n.Notification> _notifications = <n.Notification>[];
+
   @override
   void initState() {
     super.initState();
-    _streamController = StreamController();
-    _stream = _streamController.stream;
+    // _streamController = StreamController();
+    // _stream = _streamController.stream;
     _getVehicles('init').then((value) => _getNotifications(_page));
   }
 
   @override
   void dispose() {
-    _streamController.close();
+    // _streamController.close();
     super.dispose();
   }
 
@@ -143,7 +145,9 @@ class _NotificationsViewState extends State<NotificationsView> {
                         cancelText: 'annuler',
                         confirmText: 'ok',
                       );
-                      await _getNotifications(1);
+                      _page = 1;
+                      _notifications.clear();
+                      await _getNotifications(_page);
                       _shouldLoad = true;
                       break;
                   }
@@ -151,97 +155,74 @@ class _NotificationsViewState extends State<NotificationsView> {
           ],
         ),
         drawer: FEDrawer(),
-        body: StreamBuilder(
-          stream: _stream,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data.status == Status.ERROR) {
-                return Center(
-                  child: Container(
-                    child: Text(
-                      snapshot.data.message,
-                      style: TextStyle(
-                        fontSize: 18,
+        body: NotificationListener(
+          onNotification: (ScrollNotification scrollInfo) {
+            if (_shouldLoad &&
+                !_isLoading &&
+                scrollInfo.metrics.pixels ==
+                    scrollInfo.metrics.maxScrollExtent) {
+              setState(() {
+                _isLoading = true;
+              });
+              // start loading data
+              _getNotifications(_page++);
+            }
+            return;
+          },
+          child: ListView.builder(
+            itemCount: _notifications.length,
+            itemBuilder: (context, index) {
+              return ExpansionTile(
+                initiallyExpanded: false,
+                children: <Widget>[
+                  _childrenWidgets(_notifications[index].deviceID,
+                      _notifications[index].timestamp)
+                ],
+                backgroundColor: Colors.transparent,
+                // onExpansionChanged: (value) {
+                //   if (value) {}
+                // },
+                leading: Image.asset(
+                  _notifications[index].getAssetPath(),
+                  color: Colors.black,
+                ),
+                title: Text(
+                  '${_notifications[index].vehicleModel}',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                  ),
+                ),
+                subtitle: Column(
+                  children: [
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          '${_notifications[index].message}',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.blueAccent,
+                          ),
+                        )),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        '${_notifications[index].timestampAsString}',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                        ),
                       ),
                     ),
-                  ),
-                );
-              } else {
-                return NotificationListener(
-                  onNotification: (ScrollNotification scrollInfo) {
-                    if (_shouldLoad &&
-                        !_isLoading &&
-                        scrollInfo.metrics.pixels ==
-                            scrollInfo.metrics.maxScrollExtent) {
-                      setState(() {
-                        _isLoading = true;
-                      });
-                      // start loading data
-                      _getNotifications(_page++);
-                    }
-                    return;
-                  },
-                  child: ListView.builder(
-                    itemCount: snapshot.data.responseBody.length,
-                    itemBuilder: (context, index) {
-                      return ExpansionTile(
-                        initiallyExpanded: false,
-                        children: <Widget>[
-                          _childrenWidgets(
-                              snapshot.data.responseBody[index].deviceID,
-                              snapshot.data.responseBody[index].timestamp)
-                        ],
-                        backgroundColor: Colors.transparent,
-                        // onExpansionChanged: (value) {
-                        //   if (value) {}
-                        // },
-                        // leading: Image.asset(
-                        //   snapshot.data.responseBody[index].getAssetPath(),
-                        //   color: Colors.black,
-                        // ),
-                        title: Text(
-                          '${snapshot.data.responseBody[index].vehicleModel}',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                          ),
-                        ),
-                        subtitle: Column(
-                          children: [
-                            Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  '${snapshot.data.responseBody[index].message}',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.blueAccent,
-                                  ),
-                                )),
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                '${snapshot.data.responseBody[index].timestampAsString}',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        trailing: Icon(
-                          Icons.map_outlined,
-                          color: Colors.black,
-                        ),
-                      );
-                    },
-                  ),
-                );
-              }
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          },
+                  ],
+                ),
+                trailing: Icon(
+                  Icons.map_outlined,
+                  color: Colors.black,
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -351,7 +332,9 @@ class _NotificationsViewState extends State<NotificationsView> {
                             onPressed: () async {
                               Navigator.pop(context);
                               _shouldLoad = true;
-                              await _getNotifications(1);
+                              _page = 1;
+                              _notifications.clear();
+                              await _getNotifications(_page);
                             }),
                       ],
                     ),
@@ -448,7 +431,9 @@ class _NotificationsViewState extends State<NotificationsView> {
                       onPressed: () async {
                         Navigator.pop(context);
                         _shouldLoad = true;
-                        await _getNotifications(1);
+                        _page = 1;
+                        _notifications.clear();
+                        await _getNotifications(_page);
                       }),
                 ],
               ),
@@ -493,10 +478,11 @@ class _NotificationsViewState extends State<NotificationsView> {
     await Api.getNotifications(body).then((value) {
       setState(() {
         _isLoading = false;
+        _notifications.addAll(value.responseBody);
       });
-      _streamController.add(value);
+      // _streamController.add(value);
       //if value empty array than shouldLoad will get false
-      if(value?.responseBody?.length == 0) {
+      if (value?.responseBody?.length == 0) {
         setState(() {
           _shouldLoad = false;
         });
