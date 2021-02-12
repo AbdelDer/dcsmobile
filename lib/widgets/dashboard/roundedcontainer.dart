@@ -32,18 +32,18 @@ class _RoundedContainerState extends State<RoundedContainer> {
   Widget build(BuildContext context) {
     if (MediaQuery.of(context).orientation == Orientation.portrait &&
         MediaQuery.of(context).size.shortestSide >= 600) {
-      _heightContainer = 180;
+      _heightContainer = 170;
       _widthContainer = 170;
       _fontSize = 11;
 //      print("tablet portrait");
     } else if (MediaQuery.of(context).orientation == Orientation.landscape &&
         MediaQuery.of(context).size.shortestSide >= 550) {
-      _heightContainer = 180;
+      _heightContainer = 170;
       _widthContainer = 170;
       _fontSize = 11;
 //      print("tablet landscape");
     } else {
-      _heightContainer = 130;
+      _heightContainer = 120;
       _widthContainer = 140;
       _fontSize = 11;
     }
@@ -85,6 +85,7 @@ class _RoundedContainerState extends State<RoundedContainer> {
                       color: Colors.white,
                       fontSize: _fontSize,
                       fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
                 ),
                 Text(
                   maxValue ?? '',
@@ -92,15 +93,18 @@ class _RoundedContainerState extends State<RoundedContainer> {
                       color: Colors.white,
                       fontSize: _fontSize,
                       fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     model ?? '',
                     style: TextStyle(
-                        color: Colors.white,
-                        fontSize: _fontSize,
-                        fontWeight: FontWeight.bold),
+                      color: Colors.white,
+                      fontSize: _fontSize,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ],

@@ -21,7 +21,7 @@ class DonutAutoLabelChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return charts.PieChart(seriesList,
         animate: true,
-        animationDuration: Duration(seconds: 1),
+        animationDuration: Duration(milliseconds: 500),
         behaviors: [
           new charts.DatumLegend(
             outsideJustification: charts.OutsideJustification.endDrawArea,
@@ -29,17 +29,17 @@ class DonutAutoLabelChart extends StatelessWidget {
             desiredMaxRows: 2,
             cellPadding: new EdgeInsets.only(right: 4.0, bottom: 4.0),
             entryTextStyle: charts.TextStyleSpec(
-                color: charts.MaterialPalette.black, fontSize: 20),
+                color: charts.MaterialPalette.black, fontSize: 14),
           )
         ],
         defaultRenderer:
-            new charts.ArcRendererConfig(arcWidth: 300, arcRendererDecorators: [
+            new charts.ArcRendererConfig(arcWidth: 600, arcRendererDecorators: [
           new charts.ArcLabelDecorator(
               insideLabelStyleSpec: new charts.TextStyleSpec(
                 color: charts.Color(r: 0, g: 0, b: 0),
-                fontSize: 15,
+                fontSize: 14,
               ),
-              labelPosition: charts.ArcLabelPosition.inside)
+              labelPosition: charts.ArcLabelPosition.outside)
         ]));
     // seriesList,
     //   animate: animate,

@@ -138,7 +138,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
       _getActualPosition();
       _timerForLoadingBar = Timer.periodic(Duration(seconds: 1), (timer) {
         setState(() {
-          _progressValue += 0.05;
+          _progressValue += 0.2;
         });
         if (_progressValue.toStringAsFixed(1) == '1.0') {
           setState(() {
@@ -175,7 +175,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
               return Image.asset(data.iconPath());
             }));
         _data?.add(data);
-        _mapController.move(_markers?.last?.point, 14);
+        _mapController.move(_markers?.last?.point, 18);
         _popupLayerController.togglePopup(_markers?.last);
       });
     }).catchError((err) {
@@ -210,7 +210,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
       setState(() {
         _markers = markers;
         _data = data;
-        // _mapController.move(_markers?.last?.point, 14);
+        // _mapController.move(_markers?.last?.point, 18);
         // _popupLayerController.togglePopup(_markers?.last);
       });
     }).catchError((err) {
@@ -449,11 +449,14 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                     width: 0,
                   ),
             _option == 'Live'
-                ? Positioned(
+                ? Padding(
+                    padding: EdgeInsets.only(
+                      top: 1,
+                    ),
                     child: LinearProgressIndicator(
-                      backgroundColor: Colors.cyanAccent,
-                      valueColor:
-                          new AlwaysStoppedAnimation<Color>(Colors.green),
+                      backgroundColor: Colors.greenAccent.shade100,
+                      valueColor: new AlwaysStoppedAnimation<Color>(
+                          Colors.green.shade900),
                       value: _progressValue,
                     ),
                   )
@@ -700,7 +703,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                                       _markers.add(m);
                                     });
                                     _mapController.move(
-                                        _markers.last.point, 14);
+                                        _markers.last.point, 18);
                                   }
                                 }
                               }
@@ -819,7 +822,10 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                           ),
                     _option == 'Live'
                         ? GestureDetector(
-                            onTap: () {launchURL(_data.last.latitude, _data.last.longitude);},
+                            onTap: () {
+                              launchURL(
+                                  _data.last.latitude, _data.last.longitude);
+                            },
                             child: Container(
                               width: 30,
                               height: 30,
@@ -867,7 +873,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
           }));
       _points?.add(lt.LatLng(ed.latitude, ed.longitude));
       _data?.add(ed);
-      _mapController.move(_markers?.last.point, 14);
+      _mapController.move(_markers?.last.point, 18);
     });
   }
 

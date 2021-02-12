@@ -157,7 +157,7 @@ class _FEDrawerState extends State<FEDrawer> {
                         child: Text(
                           'version: 1.0',
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Colors.blue,
                           ),
                         ),
                       ),
@@ -171,7 +171,7 @@ class _FEDrawerState extends State<FEDrawer> {
                             child: Text(
                               '${translate(context, 'Logged as')} ${snapshot.data}',
                               style: TextStyle(
-                                color: Colors.black,
+                                color: Colors.green.shade700,
                               ),
                             ),
                           );

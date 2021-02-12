@@ -88,6 +88,17 @@ class _ActivityHistoryState extends State<ActivityHistory> {
             )
           ],
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.green.shade900,
+            ),
+            onPressed: () => Navigator.of(context).canPop()
+                ? Navigator.of(context).pop()
+                : null,
+          ),
+        ],
       ),
       drawer: FEDrawer(),
       body: Column(

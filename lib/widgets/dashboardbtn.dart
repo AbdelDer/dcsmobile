@@ -23,8 +23,8 @@ class _DashboardBtnState extends State<DashboardBtn> {
   String description;
   Color color;
 
-  final _height = 120.0;
-  final _width = 120.0;
+  final _height = 110.0;
+  final _width = 110.0;
 
 
   _DashboardBtnState(this.quantity, this.description, this.color);
@@ -48,18 +48,18 @@ class _DashboardBtnState extends State<DashboardBtn> {
                   Icon(
                     Icons.place,
                     color: color,
-                    size: 30,
+                    size: 25,
                   ),
                   Text(
                     "${quantity ?? 0}",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 20,
+                      fontSize: 18,
                     ),
                   ),
                   Text(
                     description,
-                    style: TextStyle(color: Colors.white, fontSize: 11.5),
+                    style: TextStyle(color: Colors.white, fontSize: 11),
                   ),
                 ],
               ),
