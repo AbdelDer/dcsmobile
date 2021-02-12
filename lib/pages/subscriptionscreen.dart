@@ -14,6 +14,17 @@ class SubscriptionScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text(AppLocalizations.of(context).translate('Subscription')),
           backgroundColor: Colors.green,
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.green.shade900,
+              ),
+              onPressed: () => Navigator.of(context).canPop()
+                  ? Navigator.of(context).pop()
+                  : null,
+            ),
+          ],
         ),
         drawer: FEDrawer(),
         body: FutureBuilder(

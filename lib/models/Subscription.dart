@@ -10,7 +10,7 @@ class Subscription {
 
   String get deviceID => _deviceID;
 
-  num get days => Duration(seconds: _timeInSeconds).inDays;
+  num get days => ((_timeInSeconds - (DateTime.now().millisecondsSinceEpoch / 1000)) / 86400).roundToDouble();
 
   Color get color {
     if(days <= 0) {
@@ -31,6 +31,6 @@ class Subscription {
     return Subscription(
         deviceID: json['deviceID'],
         vehicleModel: json['vehicleModel'],
-        timeInSeconds: json['remainingTime']);
+        timeInSeconds: json['expirationTime']);
   }
 }
