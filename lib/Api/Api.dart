@@ -26,9 +26,9 @@ class Api {
 
   static final baseUrl = 'https://geotech-gps.com:9090/api';
 
-  // static final baseUrl = 'http://192.168.42.44:9090/api';
+  // static final baseUrl = 'https://smartrack-geotech.com:9090/api';
 
-  // static final baseUrl = 'http://192.168.100.6:9090/api';
+  // static final baseUrl = 'http://10.0.0.2:9090/api';
 
   static Future<Response> login(params) async {
     await connected();

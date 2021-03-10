@@ -165,7 +165,7 @@ class EventData {
       if (_activityTime == null || _activityTime == '' || _activityTime == 'null') {
         return 'assets/icons/disconnected.png';
       } else {
-        if (_activity.elementAt(0) == '+24h') {
+        if (_activity.elementAt(0) == '+10min') {
           return 'assets/icons/r_marker_blue.png';
         } else if (_activity.elementAt(0) == 'disconnected') {
           return 'assets/icons/disconnected.png';

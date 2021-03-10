@@ -169,60 +169,133 @@ class _NotificationsViewState extends State<NotificationsView> {
             }
             return;
           },
-          child: ListView.builder(
-            itemCount: _notifications.length,
-            itemBuilder: (context, index) {
-              return ExpansionTile(
-                initiallyExpanded: false,
-                children: <Widget>[
-                  _childrenWidgets(_notifications[index].deviceID,
-                      _notifications[index].timestamp)
-                ],
-                backgroundColor: Colors.transparent,
-                // onExpansionChanged: (value) {
-                //   if (value) {}
-                // },
-                leading: Image.asset(
-                  _notifications[index].getAssetPath(),
-                  color: Colors.black,
-                ),
-                title: Text(
-                  '${_notifications[index].vehicleModel}',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                  ),
-                ),
-                subtitle: Column(
+          child: _notifications.length == 0
+              ?
+              //TODO : add translate in this case also
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          '${_notifications[index].message}',
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.blueAccent,
-                          ),
-                        )),
-                    Align(
-                      alignment: Alignment.topLeft,
+                    Center(
                       child: Text(
-                        '${_notifications[index].timestampAsString}',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                        ),
+                        "Aucune Notification trouvée",
+                        style: TextStyle(fontSize: 20),
                       ),
                     ),
+                    FlatButton(
+                      child: Text(
+                        "Choisir une autre date",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.blueAccent,
+                        ),
+                      ),
+                      onPressed: () async {
+                        _dateStartChose = await showDatePicker(
+                          context: context,
+                          firstDate: DateTime.now().subtract(Duration(
+                            days: 60,
+                          )),
+                          lastDate: DateTime.now(),
+                          initialDate: _dateStartChose ?? DateTime.now(),
+                          helpText: 'Choisir une date',
+                          // Can be used as title
+                          cancelText: 'annuler',
+                          confirmText: 'ok',
+                          fieldLabelText: 'date',
+                          fieldHintText: 'Mois/Jour/Année',
+                        );
+                        _timeStartChose = await showTimePicker(
+                          context: context,
+                          initialTime: _timeStartChose ?? TimeOfDay.now(),
+                          helpText: 'Choisir une heure',
+                          // Can be used as title
+                          cancelText: 'annuler',
+                          confirmText: 'ok',
+                        );
+                        _dateEndChose = await showDatePicker(
+                          context: context,
+                          firstDate: DateTime.now().subtract(Duration(
+                            days: 60,
+                          )),
+                          lastDate: DateTime.now(),
+                          initialDate: _dateEndChose ?? DateTime.now(),
+                          helpText: 'Choisir une date',
+                          // Can be used as title
+                          cancelText: 'annuler',
+                          confirmText: 'ok',
+                          fieldLabelText: 'date',
+                          fieldHintText: 'Mois/Jour/Année',
+                        );
+                        _timeEndChose = await showTimePicker(
+                          context: context,
+                          initialTime: _timeEndChose ?? TimeOfDay.now(),
+                          helpText: 'Choisir une heure',
+                          // Can be used as title
+                          cancelText: 'annuler',
+                          confirmText: 'ok',
+                        );
+                        _page = 1;
+                        _notifications.clear();
+                        await _getNotifications(_page);
+                        _shouldLoad = true;
+                      },
+                    ),
                   ],
+                )
+              : ListView.builder(
+                  itemCount: _notifications.length,
+                  itemBuilder: (context, index) {
+                    return ExpansionTile(
+                      initiallyExpanded: false,
+                      children: <Widget>[
+                        _childrenWidgets(_notifications[index].deviceID,
+                            _notifications[index].timestamp)
+                      ],
+                      backgroundColor: Colors.transparent,
+                      // onExpansionChanged: (value) {
+                      //   if (value) {}
+                      // },
+                      leading: Image.asset(
+                        _notifications[index].getAssetPath(),
+                        color: Colors.black,
+                      ),
+                      title: Text(
+                        '${_notifications[index].vehicleModel}',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                        ),
+                      ),
+                      subtitle: Column(
+                        children: [
+                          Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                '${_notifications[index].message}',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.blueAccent,
+                                ),
+                              )),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              '${_notifications[index].timestampAsString}',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      trailing: Icon(
+                        Icons.map_outlined,
+                        color: Colors.black,
+                      ),
+                    );
+                  },
                 ),
-                trailing: Icon(
-                  Icons.map_outlined,
-                  color: Colors.black,
-                ),
-              );
-            },
-          ),
         ),
       ),
     );
