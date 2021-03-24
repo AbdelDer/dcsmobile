@@ -106,7 +106,7 @@ class _OpenStreetMapState extends State<OpenStreetMap>
       _positionDetails();
     });
     _progressValue = 0.0;
-    _playbackSpeed = 10;
+    _playbackSpeed = 1000;
   }
 
   @override
@@ -766,9 +766,9 @@ class _OpenStreetMapState extends State<OpenStreetMap>
                               ),
                             ),
                             onPressed: () async {
-                              if (_playbackSpeed == 1) {
+                              if (_playbackSpeed == 1000) {
                                 setState(() {
-                                  _playbackSpeed = 10;
+                                  _playbackSpeed = 3000;
                                 });
                               } else {
                                 List<Marker> oldMarkers = List<Marker>();
@@ -856,9 +856,9 @@ class _OpenStreetMapState extends State<OpenStreetMap>
                             ),
                             onPressed: () {
                               setState(() {
-                                if (_playbackSpeed == 200)
+                                if (_playbackSpeed == 3000)
                                   setState(() {
-                                    _playbackSpeed = 10;
+                                    _playbackSpeed = 1000;
                                   });
                               });
                             },
@@ -892,9 +892,9 @@ class _OpenStreetMapState extends State<OpenStreetMap>
                             ),
                             onPressed: () {
                               setState(() {
-                                if (_playbackSpeed == 50)
+                                if (_playbackSpeed == 1000)
                                   setState(() {
-                                    _playbackSpeed = 200;
+                                    _playbackSpeed = 3000;
                                   });
                               });
                             },
