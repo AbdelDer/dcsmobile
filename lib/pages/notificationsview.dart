@@ -47,7 +47,7 @@ class _NotificationsViewState extends State<NotificationsView> {
   // Stream _stream;
 
   bool _isLoading = true;
-  int _page = 1;
+  int _page = 0;
 
   bool _shouldLoad = true;
 
@@ -145,7 +145,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                         cancelText: 'annuler',
                         confirmText: 'ok',
                       );
-                      _page = 1;
+                      _page = 0;
                       _notifications.clear();
                       await _getNotifications(_page);
                       _shouldLoad = true;
@@ -234,7 +234,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                           cancelText: 'annuler',
                           confirmText: 'ok',
                         );
-                        _page = 1;
+                        _page = 0;
                         _notifications.clear();
                         await _getNotifications(_page);
                         _shouldLoad = true;
@@ -405,7 +405,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                             onPressed: () async {
                               Navigator.pop(context);
                               _shouldLoad = true;
-                              _page = 1;
+                              _page = 0;
                               _notifications.clear();
                               await _getNotifications(_page);
                             }),
@@ -504,7 +504,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                       onPressed: () async {
                         Navigator.pop(context);
                         _shouldLoad = true;
-                        _page = 1;
+                        _page = 0;
                         _notifications.clear();
                         await _getNotifications(_page);
                       }),

@@ -15,6 +15,8 @@ import 'package:latlong/latlong.dart' as lt;
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'map/coords.dart';
+
 class OpenStreetMap extends StatefulWidget {
   String deviceID;
   final option;
@@ -44,7 +46,8 @@ class OpenStreetMap extends StatefulWidget {
   }
 }
 
-class _OpenStreetMapState extends State<OpenStreetMap> {
+class _OpenStreetMapState extends State<OpenStreetMap>
+    with TickerProviderStateMixin {
   String _deviceID;
   final _option;
   int _startTime;
@@ -82,6 +85,9 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
   double _progressValue;
 
   int _playbackSpeed;
+
+  CoordsBetweenTwoGeoPoints _coordsBetweenTwoGeoPoints =
+      CoordsBetweenTwoGeoPoints();
 
   _OpenStreetMapState(this._deviceID, this._option);
 
@@ -146,7 +152,7 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
           });
         }
       });
-      _timer = Timer.periodic(Duration(seconds: 60), (timer) async {
+      _timer = Timer.periodic(Duration(seconds: 20), (timer) async {
         await _getActualPosition();
       });
     } else if (_option == "Group") {
@@ -157,9 +163,80 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
     }
   }
 
+  void _animatedMapMove(LatLng destLocation) {
+    // Create some tweens. These serve to split up the transition from one location to another.
+    // In our case, we want to split the transition be<tween> our current map center and the destination.
+    final _latTween = Tween<double>(
+        begin: _mapController.center.latitude, end: destLocation.latitude);
+    final _lngTween = Tween<double>(
+        begin: _mapController.center.longitude, end: destLocation.longitude);
+    final _zoomTween = Tween<double>(begin: _mapController.zoom, end: 18);
+
+    // Create a animation controller that has a duration and a TickerProvider.
+    var controller = AnimationController(
+        duration: const Duration(milliseconds: 500), vsync: this);
+    // The animation determines what path the animation will take. You can try different Curves values, although I found
+    // fastOutSlowIn to be my favorite.
+    Animation<double> animation =
+        CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
+
+    controller.addListener(() {
+      _mapController.move(
+          LatLng(_latTween.evaluate(animation), _lngTween.evaluate(animation)),
+          _zoomTween.evaluate(animation));
+    });
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        controller.dispose();
+      } else if (status == AnimationStatus.dismissed) {
+        controller.dispose();
+      }
+    });
+
+    controller.forward();
+  }
+
   _getActualPosition() async {
-    await Api.getActualPosition(this._deviceID).then((r) {
+    await Api.getActualPosition(this._deviceID).then((r) async {
       var data = r.responseBody;
+      if (_markers?.length != 0) {
+        String icon;
+        if (_data[0].speedKPH == 0) {
+          icon = data.iconPath();
+        } else {
+          icon = _data[0].iconPath();
+        }
+        for (var coord in _coordsBetweenTwoGeoPoints.getCoords(
+            _markers[0].point.latitude,
+            _markers[0].point.longitude,
+            data.latitude,
+            data.longitude)) {
+          // print(coord);
+          _markers?.clear();
+          _data?.clear();
+          data.latitude = coord[0];
+          data.longitude = coord[1];
+          _data?.add(data);
+          setState(() {
+            _markers?.add(Marker(
+                point: LatLng(
+                  coord[0],
+                  coord[1],
+                ),
+                width: 30,
+                height: 30,
+                anchorPos: AnchorPos.align(AnchorAlign.top),
+                builder: (context) {
+                  return Image.asset(icon);
+                }));
+            _mapController.move(_markers?.last?.point, 18);
+            _popupLayerController.togglePopup(_markers?.last);
+            // _animatedMapMove(_markers.last.point);
+          });
+          await Future.delayed(Duration(milliseconds: 2));
+        }
+      }
       _markers?.clear();
       _data?.clear();
       setState(() {
@@ -177,9 +254,10 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
         _data?.add(data);
         _mapController.move(_markers?.last?.point, 18);
         _popupLayerController.togglePopup(_markers?.last);
+        // _animatedMapMove(_markers.last.point);
       });
     }).catchError((err) {
-      _scaffoldKey.currentState.showSnackBar(
+      _scaffoldKey?.currentState?.showSnackBar(
         SnackBar(
           content: Text(err.toString()),
         ),
@@ -249,158 +327,162 @@ class _OpenStreetMapState extends State<OpenStreetMap> {
                     Polyline(
                         points: _points,
                         strokeWidth: 4.0,
-                        color: Colors.purple),
+                        color: Colors.greenAccent),
                   ],
                 ),
                 PopupMarkerLayerOptions(
-                    markers: _markers,
-                    popupSnap: PopupSnap.top,
-                    popupController: _popupLayerController,
-                    popupBuilder: (BuildContext _, Marker marker) {
-                      EventData data = _data.firstWhere((element) =>
+                  markers: _markers,
+                  popupSnap: PopupSnap.top,
+                  popupController: _popupLayerController,
+                  popupBuilder: (BuildContext _, Marker marker) {
+                    EventData data;
+                    if (_option != "Live") {
+                      data = _data.firstWhere((element) =>
                           element.latitude == marker.point.latitude &&
                           element.longitude == marker.point.longitude);
-                      return Container(
-                        width: 280,
-                        height: 90,
-                        color: Colors.white,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Table(
-                                defaultColumnWidth: FixedColumnWidth(150.0),
-                                children: [
-                                  TableRow(
-                                    children: [
-                                      TableCell(
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.directions_car_rounded,
+                    } else {
+                      data = _data[0];
+                    }
+                    return Container(
+                      width: 280,
+                      height: 90,
+                      color: Colors.white,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Table(
+                              defaultColumnWidth: FixedColumnWidth(150.0),
+                              children: [
+                                TableRow(
+                                  children: [
+                                    TableCell(
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.directions_car_rounded,
+                                            color: Colors.black,
+                                          ),
+                                          Text(
+                                            data.vehicleModel,
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold,
                                               color: Colors.black,
                                             ),
-                                            Text(
-                                              data.vehicleModel,
-                                              style: TextStyle(
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                TableRow(
+                                  children: [
+                                    TableCell(
+                                        child: RichText(
+                                      text: TextSpan(
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 10,
+                                        ),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                            text: '${data.timestampAsString}',
+                                            style: TextStyle(
+                                                color: Colors.lightBlueAccent),
+                                          ),
+                                          TextSpan(
+                                            text:
+                                                ' (${data.engineTemp ?? ''}°C/${_data.last.batteryVolts ?? ''}V)',
+                                          ),
+                                        ],
+                                      ),
+                                    )),
+                                  ],
+                                ),
+                                TableRow(
+                                  children: [
+                                    TableCell(
+                                      child: Text(
+                                        '${data.state()}',
+                                        style: TextStyle(
+                                          fontSize: 10,
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                  TableRow(
-                                    children: [
-                                      TableCell(
-                                          child: RichText(
+                                    ),
+                                  ],
+                                ),
+                                TableRow(
+                                  children: [
+                                    TableCell(
+                                      child: RichText(
                                         text: TextSpan(
                                           style: TextStyle(
-                                            color: Colors.black,
                                             fontSize: 10,
+                                            color: Colors.black,
                                           ),
                                           children: <TextSpan>[
                                             TextSpan(
-                                              text: '${data.timestampAsString}',
-                                              style: TextStyle(
-                                                  color:
-                                                      Colors.lightBlueAccent),
+                                              text: 'Fuel level: ',
                                             ),
                                             TextSpan(
-                                              text:
-                                                  ' (${data.engineTemp ?? ''}°C/${_data.last.batteryVolts ?? ''}V)',
+                                              text: '${data.oilLevel ?? ''} L',
                                             ),
                                           ],
                                         ),
-                                      )),
-                                    ],
-                                  ),
-                                  TableRow(
-                                    children: [
-                                      TableCell(
-                                        child: Text(
-                                          '${data.state()}',
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  TableRow(
-                                    children: [
-                                      TableCell(
-                                        child: RichText(
-                                          text: TextSpan(
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              color: Colors.black,
-                                            ),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                text: 'Fuel level: ',
-                                              ),
-                                              TextSpan(
-                                                text:
-                                                    '${data.oilLevel ?? ''} L',
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            VerticalDivider(
-                              endIndent: 12,
-                              indent: 10,
-                              thickness: 2,
-                              color: Colors.green,
-                            ),
-                            Center(
-                              child: RichText(
-                                  text: TextSpan(
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.black,
-                                      ),
-                                      children: <TextSpan>[
-                                    TextSpan(
-                                      text:
-                                          '${data.speedKPH?.toStringAsFixed(2) ?? ''}',
-                                      style: TextStyle(
-                                        color: Colors.green.shade700,
                                       ),
                                     ),
-                                    TextSpan(
-                                      text: '\n Km/h',
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          VerticalDivider(
+                            endIndent: 12,
+                            indent: 10,
+                            thickness: 2,
+                            color: Colors.green,
+                          ),
+                          Center(
+                            child: RichText(
+                                text: TextSpan(
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.black,
                                     ),
-                                  ])),
+                                    children: <TextSpan>[
+                                  TextSpan(
+                                    text:
+                                        '${data.speedKPH?.toStringAsFixed(2) ?? ''}',
+                                    style: TextStyle(
+                                      color: Colors.green.shade700,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: '\n Km/h',
+                                  ),
+                                ])),
+                          ),
+                          VerticalDivider(
+                            endIndent: 12,
+                            indent: 10,
+                            thickness: 2,
+                            color: Colors.green,
+                          ),
+                          Center(
+                            child: Icon(
+                              Icons.signal_wifi_4_bar_outlined,
+                              color: Colors.black,
                             ),
-                            VerticalDivider(
-                              endIndent: 12,
-                              indent: 10,
-                              thickness: 2,
-                              color: Colors.green,
-                            ),
-                            Center(
-                              child: Icon(
-                                Icons.signal_wifi_4_bar_outlined,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ],
               children: <Widget>[
                 TileLayerWidget(

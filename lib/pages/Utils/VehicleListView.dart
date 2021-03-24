@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:dcsmobile/Api/Api.dart';
-import 'package:dcsmobile/Api/ApiShowDialog.dart';
 import 'package:dcsmobile/Api/Response.dart';
 import 'package:dcsmobile/widgets/devicecard.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
@@ -19,7 +18,8 @@ class VehicleListView<T> extends StatefulWidget {
 
   @override
   VehicleListViewState createState() {
-    return VehicleListViewState(this._scaffoldKey, this._key, this._description, this._option);
+    return VehicleListViewState(
+        this._scaffoldKey, this._key, this._description, this._option);
   }
 }
 
@@ -30,61 +30,61 @@ class VehicleListViewState extends State {
   final _option;
   String search = "";
 
-  VehicleListViewState(this._scaffoldKey, this._key, this._description,
-      this._option);
+  StreamController _streamController;
+  Stream _stream;
+
+  VehicleListViewState(
+      this._scaffoldKey, this._key, this._description, this._option);
 
   @override
   void initState() {
     super.initState();
+    _streamController = StreamController();
+    _stream = _streamController.stream;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      fetchDevices();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: fetchDevices(),
+      stream: _stream,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasError) {
-            _scaffoldKey.currentState.showSnackBar(
-              SnackBar(
-                content: Text(snapshot.error),
-              ),
-            );
-            // ApiShowDialog.dialog(
-            //     scaffoldKey: _scaffoldKey,
-            //     message: '${snapshot.error}',
-            //     type: 'error');
-          } else if (snapshot.hasData) {
-              if(snapshot.data.message != null) {
-                return Center(
-                  child: Text(
-                    snapshot.data.message,
-                    style: TextStyle(
-                      fontSize: 20
-                    ),
-                  ),
-                );
-              }else {
-                return SingleChildScrollView(child: DeviceCard(snapshot.data.responseBody, _option, _scaffoldKey));
-              }
-          }
-        } else if (snapshot.connectionState == ConnectionState.none) {
+        if (snapshot.hasError) {
           _scaffoldKey.currentState.showSnackBar(
             SnackBar(
-              content: Text('Problème de connexion'),
+              content: Text(snapshot.error),
             ),
           );
           // ApiShowDialog.dialog(
           //     scaffoldKey: _scaffoldKey,
-          //     message: 'Problème de connexion',
+          //     message: '${snapshot.error}',
           //     type: 'error');
+        } else if (snapshot.hasData) {
+          if (snapshot.data.message != null) {
+            return Center(
+              child: Text(
+                snapshot.data.message,
+                style: TextStyle(fontSize: 20),
+              ),
+            );
+          } else {
+            return RefreshIndicator(
+              onRefresh: () => fetchDevices(),
+              color: Colors.greenAccent,
+              backgroundColor: Colors.green[900],
+              child:
+                  DeviceCard(snapshot.data.responseBody, _option, _scaffoldKey),
+            );
+          }
         }
         return Center(child: CircularProgressIndicator());
       },
     );
   }
 
-  fetchDevices() async* {
+  Future<void> fetchDevices() async {
     final prefs = EncryptedSharedPreferences();
     //in this case if user connected using only accountID params will be [accountID, null], in the Api class
     //we will find devices of an account not use and vice versa.
@@ -95,24 +95,21 @@ class VehicleListViewState extends State {
       this.search
     ];
 
-    Response response;
-
     await Api.devices(params).then((_) {
-      response = _;
+      print('called again : \n ${_.responseBody[0].vehicleModel} : ${_.responseBody[0].activityTime()}');
+      _streamController.add(_);
     }).catchError((err) {
-    //   ApiShowDialog.dialog(
-    //       scaffoldKey: _scaffoldKey, message: err, type: 'error');
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
           content: Text(err.toString()),
         ),
       );
     });
-    yield response;
   }
 
   @override
   void dispose() {
+    _streamController.close();
     super.dispose();
   }
 }

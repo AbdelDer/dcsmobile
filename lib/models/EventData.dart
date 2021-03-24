@@ -73,7 +73,7 @@ class EventData {
         String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
         return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
       }*/
-      return _activity.elementAt(0);
+      return _activity.elementAt(0) == '+10min' ? '' : _activity.elementAt(0);
     }
     return '';
   }
@@ -249,6 +249,11 @@ class EventData {
     }
   }
 
+
+  set latitude(double value) {
+    _latitude = value;
+  }
+
   Future<String> get address async {
     final coordinates = new Coordinates(latitude, longitude);
     final addresses =
@@ -256,6 +261,10 @@ class EventData {
     final first = addresses.first;
     // print('${first.addressLine}');
     return '${first.addressLine}';
+  }
+
+  EventData.empty() {
+
   }
 
   EventData(
@@ -315,5 +324,9 @@ class EventData {
         activityTime: json['activity_time'].toString(),
         late: json['late'],
         parked: json['parked']);
+  }
+
+  set longitude(double value) {
+    _longitude = value;
   }
 }

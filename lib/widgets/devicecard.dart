@@ -44,140 +44,147 @@ class _DeviceCardState extends State<DeviceCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListView.builder(
-            shrinkWrap: true,
-            itemCount: data.length,
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              return Card(
-                color: Colors.white,
-                elevation: 2,
-                child: ExpansionTile(
-                  initiallyExpanded: false,
-                  children: _childrenWidgets(data[index]),
-                  backgroundColor: Colors.transparent,
-                  onExpansionChanged: (val) async {
-                    if (_option ==
-                        AppLocalizations.of(context).translate("Commands")) {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return CommandsDialog(data[index].deviceID, data[index].vehicleModel,
-                                data[index].simPhoneNumber, false);
-                          });
-                    } else if (_option == "Live") {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => OpenStreetMap(
-                              deviceID: data[index].deviceID, option: _option),
-                        ),
-                      );
-                      /*showDialog(
-                        context: context,
-                        builder: (__) => Dialog(
-                          child: Container(
-                            width: 200,
-                            height: 100,
-                            color: Colors.white,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceEvenly,
-                              children: [
-                                RaisedButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => OpenStreetMap(
-                                            deviceID: data[index].deviceID, option: _option),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    width: 200,
-                                    child: Center(
-                                      child: Text(
-                                        'OpenStreet Map',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
+    return ListView.builder(
+        shrinkWrap: true,
+        itemCount: data.length,
+        // physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          return Card(
+            margin: EdgeInsets.all(2),
+            color: Colors.white,
+            elevation: 2,
+            child: ExpansionTile(
+              initiallyExpanded: false,
+              children: _childrenWidgets(data[index]),
+              backgroundColor: Colors.transparent,
+              onExpansionChanged: (val) async {
+                if (_option ==
+                    AppLocalizations.of(context).translate("Commands")) {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return CommandsDialog(
+                            data[index].deviceID,
+                            data[index].vehicleModel,
+                            data[index].simPhoneNumber,
+                            false);
+                      });
+                } else if (_option == "Live") {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => OpenStreetMap(
+                          deviceID: data[index].deviceID, option: _option),
+                    ),
+                  );
+                  /*showDialog(
+                    context: context,
+                    builder: (__) => Dialog(
+                      child: Container(
+                        width: 200,
+                        height: 100,
+                        color: Colors.white,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceEvenly,
+                          children: [
+                            RaisedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => OpenStreetMap(
+                                        deviceID: data[index].deviceID, option: _option),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                width: 200,
+                                child: Center(
+                                  child: Text(
+                                    'OpenStreet Map',
+                                    style: TextStyle(
+                                      color: Colors.white,
                                     ),
                                   ),
-                                  color: Colors.blueAccent,
                                 ),
-                                RaisedButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => VehicleLivePosition(
-                                            deviceID: data[index].deviceID, option: _option),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    width: 200,
-                                    child: Center(
-                                      child: Text(
-                                        'Google Maps',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  color: Colors.greenAccent.shade700,
-                                ),
-                              ],
+                              ),
+                              color: Colors.blueAccent,
                             ),
-                          ),
+                            RaisedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => VehicleLivePosition(
+                                        deviceID: data[index].deviceID, option: _option),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                width: 200,
+                                child: Center(
+                                  child: Text(
+                                    'Google Maps',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              color: Colors.greenAccent.shade700,
+                            ),
+                          ],
                         ),
-                      );*/
-                    } else if (_option ==
-                        AppLocalizations.of(context).translate("History")) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ActivityHistory(
-                              vehicleModel: data[index].vehicleModel,
-                              deviceID: data[index].deviceID),
-                        ),
-                      );
-                      // showDialog(
-                      //   // isScrollControlled: true,
-                      //   //   backgroundColor: Colors.transparent,
-                      //     context: context,
-                      //     builder: (context) {
-                      //       return HistoryScreen(data[index].deviceID,
-                      //           data[index].vehicleModel, _option);
-                      //     });
-                    } else if (_option =="Alarms") {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AlarmScreen(
-                              data[index].vehicleModel, data[index].deviceID),
-                        ),
-                      );
-                    }
-                  },
-                  leading: Container(
-                    width: 85,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          data[index].iconPath(),
-                          width: 30,
-                        ),
-                        _option == "speedReport"
+                      ),
+                    ),
+                  );*/
+                } else if (_option ==
+                    AppLocalizations.of(context).translate("History")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ActivityHistory(
+                          vehicleModel: data[index].vehicleModel,
+                          deviceID: data[index].deviceID),
+                    ),
+                  );
+                  // showDialog(
+                  //   // isScrollControlled: true,
+                  //   //   backgroundColor: Colors.transparent,
+                  //     context: context,
+                  //     builder: (context) {
+                  //       return HistoryScreen(data[index].deviceID,
+                  //           data[index].vehicleModel, _option);
+                  //     });
+                } else if (_option == "Alarms") {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AlarmScreen(
+                          data[index].vehicleModel, data[index].deviceID),
+                    ),
+                  );
+                }
+              },
+              leading: Container(
+                width: 85,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      data[index].iconPath(),
+                      width: 30,
+                    ),
+                    _option == "speedReport"
+                        ? SizedBox(
+                            height: 0,
+                            width: 0,
+                          )
+                        : data[index].activityTime() == ''
                             ? SizedBox(
                                 height: 0,
                                 width: 0,
@@ -186,87 +193,86 @@ class _DeviceCardState extends State<DeviceCard> {
                                 data[index].activityTime(),
                                 style: TextStyle(fontSize: 14),
                               ),
-                      ],
-                    ),
-                  ),
-                  title: Row(children: <Widget>[
-                    Icon(Icons.directions_car),
-                    Text(
-                      data[index].vehicleModel,
-                      style: TextStyle(
-                        fontSize: _modelFontSize,
-                        color: Colors.black,
-                      ),
-                    )
-                  ]),
-                  subtitle: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      FutureBuilder(
-                        future: data[index].address,
-                        builder: (context, snapshot) {
-                          return Text(
-                            '${snapshot.data}',
-                            style: TextStyle(
-                                color: Colors.lightBlue,
-                                fontSize: _addressFontSize),
-                          );
-                        },
-                      ),
-                      _option == "speedReport"
-                          ? RichText(
-                              text: TextSpan(
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: _detailsFontSize,
-                                ),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                      text:
-                                          "${data[index].timestampAsString} "),
-                                  TextSpan(
-                                      text: "| ",
-                                      style: TextStyle(
-                                        color: Colors.green.shade900,
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                  TextSpan(text: "${data[index].speedKPH.toStringAsFixed(2)} Km/h")
-                                ],
-                              ),
-                            )
-                          : RichText(
-                              text: TextSpan(
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: _detailsFontSize,
-                                ),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                      text:
-                                          "${data[index].timestampAsString} "),
-                                  TextSpan(
-                                      text: "| ",
-                                      style: TextStyle(
-                                        color: Colors.green.shade900,
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                  TextSpan(
-                                      text: "${data[index].distanceKM?.toStringAsFixed(2) ?? ''} Km/J")
-                                ],
-                              ),
-                            ),
-                    ],
-                  ),
-                  trailing: Icon(
-                    Icons.network_wifi,
+                  ],
+                ),
+              ),
+              title: Row(children: <Widget>[
+                Icon(Icons.directions_car),
+                Text(
+                  data[index].vehicleModel,
+                  style: TextStyle(
+                    fontSize: _modelFontSize,
                     color: Colors.black,
                   ),
-                ),
-              );
-            }),
-      ],
-    );
+                )
+              ]),
+              subtitle: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  FutureBuilder(
+                    future: data[index].address,
+                    builder: (context, snapshot) {
+                      return Text(
+                        '${snapshot.data}',
+                        style: TextStyle(
+                            color: Colors.lightBlue,
+                            fontSize: _addressFontSize),
+                      );
+                    },
+                  ),
+                  _option == "speedReport"
+                      ? RichText(
+                          text: TextSpan(
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: _detailsFontSize,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: "${data[index].timestampAsString} "),
+                              TextSpan(
+                                  text: "| ",
+                                  style: TextStyle(
+                                    color: Colors.green.shade900,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              TextSpan(
+                                  text:
+                                      "${data[index].speedKPH.toStringAsFixed(2)} Km/h")
+                            ],
+                          ),
+                        )
+                      : RichText(
+                          text: TextSpan(
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: _detailsFontSize,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: "${data[index].timestampAsString} "),
+                              TextSpan(
+                                  text: "| ",
+                                  style: TextStyle(
+                                    color: Colors.green.shade900,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              TextSpan(
+                                  text:
+                                      "${data[index].distanceKM?.toStringAsFixed(2) ?? ''} Km/J")
+                            ],
+                          ),
+                        ),
+                ],
+              ),
+              trailing: Icon(
+                Icons.network_wifi,
+                color: Colors.black,
+              ),
+            ),
+          );
+        });
   }
 
   _childrenWidgets(data) {
@@ -284,7 +290,8 @@ class _DeviceCardState extends State<DeviceCard> {
                   markerId: MarkerId('${data.timestamp}'),
                   position: LatLng(data.latitude, data.longitude),
                   infoWindow: InfoWindow(
-                      snippet: "lat: ${data.latitude.toStringAsFixed(2)}, lon: ${data.longitude.toStringAsFixed(2)}",
+                      snippet:
+                          "lat: ${data.latitude.toStringAsFixed(2)}, lon: ${data.longitude.toStringAsFixed(2)}",
                       title: "Speed: ${data.speedKPH.toStringAsFixed(2)}"))
             ]),
             mapType: MapType.hybrid,
