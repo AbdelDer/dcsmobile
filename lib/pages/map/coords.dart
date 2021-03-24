@@ -62,7 +62,7 @@ class CoordsBetweenTwoGeoPoints {
     return bearing;
   }
 
-  getCoords(lat1, lng1, lat2, lng2) {
+  getCoords(lat1, lng1, lat2, lng2, speed) {
     // returns every coordinate pair inbetween two coordinate
     // pairs given the desired interval
     // point interval in meters
@@ -72,7 +72,7 @@ class CoordsBetweenTwoGeoPoints {
     if(d < 50) {
       interval = 1.0;
     } else {
-      interval = d/950;
+      interval = (speed/5) * (d/950);
     }
     print("the distance in meter is : $d and interval is $interval");
     print("$lat1,$lng1");

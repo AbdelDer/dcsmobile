@@ -211,7 +211,8 @@ class _OpenStreetMapState extends State<OpenStreetMap>
             _markers[0].point.latitude,
             _markers[0].point.longitude,
             data.latitude,
-            data.longitude)) {
+            data.longitude,
+            _data[0].speedKPH)) {
           // print(coord);
           _markers?.clear();
           _data?.clear();
