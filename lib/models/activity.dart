@@ -17,14 +17,14 @@ class Activity {
 
   String get activityTimeAsString {
     final _timeDiff = DateTime.fromMillisecondsSinceEpoch((_endTime * 1000).toInt())
-        .difference(DateTime.fromMillisecondsSinceEpoch((_startTime * 1000).toInt()));
+        .difference(DateTime.fromMillisecondsSinceEpoch((_startTime * 1000).toInt())).abs();
 
     return printDuration(_timeDiff);
   }
 
   Duration get activityTimeAsDuration {
     final _timeDiff = DateTime.fromMillisecondsSinceEpoch((_endTime * 1000).toInt())
-        .difference(DateTime.fromMillisecondsSinceEpoch((_startTime * 1000).toInt()));
+        .difference(DateTime.fromMillisecondsSinceEpoch((_startTime * 1000).toInt())).abs();
 
     return _timeDiff;
   }

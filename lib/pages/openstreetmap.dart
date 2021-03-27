@@ -78,6 +78,7 @@ class _OpenStreetMapState extends State<OpenStreetMap>
     'Hybrid',
     'OpenStreetMap'
   ];
+  List<Marker> oldMarkers = List<Marker>();
 
   // Used to trigger showing/hiding of popups.
   final PopupController _popupLayerController = PopupController();
@@ -88,6 +89,10 @@ class _OpenStreetMapState extends State<OpenStreetMap>
 
   CoordsBetweenTwoGeoPoints _coordsBetweenTwoGeoPoints =
       CoordsBetweenTwoGeoPoints();
+
+  bool onPause = false;
+
+  int index = 0;
 
   _OpenStreetMapState(this._deviceID, this._option);
 
@@ -106,7 +111,7 @@ class _OpenStreetMapState extends State<OpenStreetMap>
       _positionDetails();
     });
     _progressValue = 0.0;
-    _playbackSpeed = 1000;
+    _playbackSpeed = 300;
   }
 
   @override
@@ -767,27 +772,32 @@ class _OpenStreetMapState extends State<OpenStreetMap>
                               ),
                             ),
                             onPressed: () async {
-                              if (_playbackSpeed == 1000) {
+                              if (mounted) {
                                 setState(() {
-                                  _playbackSpeed = 3000;
-                                });
-                              } else {
-                                List<Marker> oldMarkers = List<Marker>();
-                                oldMarkers = []..addAll(_markers);
-                                if (mounted) {
-                                  setState(() {
+                                  if (!onPause) {
                                     _markers.clear();
-                                  });
-                                }
-                                for (Marker m in oldMarkers) {
+                                  }
+                                  onPause = false;
+                                });
+                                for (int i = index;
+                                    i < oldMarkers.length;
+                                    i++) {
+                                  if (onPause) {
+                                    index = i - 1;
+                                    break;
+                                  }
                                   await Future.delayed(
                                       Duration(milliseconds: _playbackSpeed));
                                   if (mounted) {
                                     setState(() {
-                                      _markers.add(m);
+                                      _markers.add(oldMarkers[i]);
                                     });
                                     _mapController.move(
-                                        _markers.last.point, 18);
+                                        _markers.last.point, 16);
+                                  }
+                                  // this is really important if the user will replay the history
+                                  if(i == oldMarkers.length -1) {
+                                    index = 0;
                                   }
                                 }
                               }
@@ -797,42 +807,42 @@ class _OpenStreetMapState extends State<OpenStreetMap>
                             height: 0,
                             width: 0,
                           ),
-                    // _option == 'History' && readyToPlay
-                    //     ? IconButton(
-                    //         icon: Container(
-                    //           width: 45,
-                    //           height: 40,
-                    //           decoration: new BoxDecoration(
-                    //             color: Colors.greenAccent,
-                    //             borderRadius: new BorderRadius.only(
-                    //               topLeft: const Radius.circular(25.0),
-                    //               topRight: const Radius.circular(25.0),
-                    //               bottomLeft: const Radius.circular(25.0),
-                    //               bottomRight: const Radius.circular(25.0),
-                    //             ),
-                    //           ),
-                    //           child: Padding(
-                    //             padding: const EdgeInsets.only(right: 4.0),
-                    //             child: Icon(
-                    //               Icons.pause,
-                    //               color: Colors.green.shade700,
-                    //               size: 20,
-                    //             ),
-                    //           ),
-                    //         ),
-                    //         onPressed: () async {
-                    //           if(_playbackSpeed != 1){
-                    //             setState(() {
-                    //               _playbackSpeed = 1;
-                    //             });
-                    //           }
-                    //         },
-                    //       )
-                    //     : SizedBox(
-                    //         height: 0,
-                    //         width: 0,
-                    //       ),
-                    _option == 'History'
+                    _option == 'History' && readyToPlay
+                        ? IconButton(
+                            icon: Container(
+                              width: 45,
+                              height: 40,
+                              decoration: new BoxDecoration(
+                                color: Colors.greenAccent,
+                                borderRadius: new BorderRadius.only(
+                                  topLeft: const Radius.circular(25.0),
+                                  topRight: const Radius.circular(25.0),
+                                  bottomLeft: const Radius.circular(25.0),
+                                  bottomRight: const Radius.circular(25.0),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
+                                child: Icon(
+                                  Icons.pause,
+                                  color: Colors.green.shade700,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                            onPressed: () async {
+                              if (mounted) {
+                                setState(() {
+                                  onPause = true;
+                                });
+                              }
+                            },
+                          )
+                        : SizedBox(
+                            height: 0,
+                            width: 0,
+                          ),
+                    _option == 'History' && readyToPlay
                         ? IconButton(
                             icon: Container(
                               width: 45,
@@ -857,9 +867,9 @@ class _OpenStreetMapState extends State<OpenStreetMap>
                             ),
                             onPressed: () {
                               setState(() {
-                                if (_playbackSpeed == 3000)
+                                if (_playbackSpeed == 1000)
                                   setState(() {
-                                    _playbackSpeed = 1000;
+                                    _playbackSpeed = 300;
                                   });
                               });
                             },
@@ -868,7 +878,7 @@ class _OpenStreetMapState extends State<OpenStreetMap>
                             height: 0,
                             width: 0,
                           ),
-                    _option == 'History'
+                    _option == 'History' && readyToPlay
                         ? IconButton(
                             icon: Container(
                               width: 45,
@@ -893,9 +903,9 @@ class _OpenStreetMapState extends State<OpenStreetMap>
                             ),
                             onPressed: () {
                               setState(() {
-                                if (_playbackSpeed == 1000)
+                                if (_playbackSpeed == 300)
                                   setState(() {
-                                    _playbackSpeed = 3000;
+                                    _playbackSpeed = 1000;
                                   });
                               });
                             },
@@ -957,6 +967,7 @@ class _OpenStreetMapState extends State<OpenStreetMap>
           }));
       _points?.add(lt.LatLng(ed.latitude, ed.longitude));
       _data?.add(ed);
+      oldMarkers.add(_markers?.last);
       _mapController.move(_markers?.last.point, 18);
     });
   }
