@@ -90,7 +90,7 @@ class _SpeedReportScreenState extends State<SpeedReportScreen> {
               //     message: '${snapshot.error}',
               //     type: 'error');
             } else if (snapshot.hasData) {
-              return DeviceCard(snapshot.data, "speedReport", _scaffoldKey);
+              return DeviceCard(snapshot.data, "speedReport", _scaffoldKey, GlobalKey());
             }
             return Center(child: CircularProgressIndicator());
           },

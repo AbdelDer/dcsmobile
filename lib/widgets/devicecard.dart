@@ -16,16 +16,19 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class DeviceCard extends StatefulWidget {
   var data;
   String _option;
+  final Key _key;
   final GlobalKey<ScaffoldState> _scaffoldKey;
 
-  DeviceCard(this.data, this._option, this._scaffoldKey);
+  DeviceCard(this.data, this._option, this._scaffoldKey, this._key):super(key: _key);
 
   @override
-  _DeviceCardState createState() =>
-      _DeviceCardState(this.data, this._option, this._scaffoldKey);
+  DeviceCardState createState() =>
+      DeviceCardState(this.data, this._option, this._scaffoldKey, this._key);
 }
 
-class _DeviceCardState extends State<DeviceCard> {
+class DeviceCardState extends State<DeviceCard> {
+  final Key _key;
+
   double _modelFontSize = 16;
   double _addressFontSize = 14;
   double _detailsFontSize = 12;
@@ -35,7 +38,7 @@ class _DeviceCardState extends State<DeviceCard> {
   final GlobalKey<ScaffoldState> _scaffoldKey;
   var expansionChildren;
 
-  _DeviceCardState(this.data, this._option, this._scaffoldKey);
+  DeviceCardState(this.data, this._option, this._scaffoldKey, this._key);
 
   @override
   void initState() {

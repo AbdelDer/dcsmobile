@@ -57,6 +57,12 @@ class EventData {
 
   int get parked => _parked;
 
+
+  set speedKPH(double value) {
+    _speedKPH = value;
+  }
+
+
   //TODO: add method that return activity Time
   String activityTime() {
     if (_activityTime != null) {

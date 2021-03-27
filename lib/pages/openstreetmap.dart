@@ -218,6 +218,7 @@ class _OpenStreetMapState extends State<OpenStreetMap>
           _data?.clear();
           data.latitude = coord[0];
           data.longitude = coord[1];
+          // data.speedKPH = _data[0].speedKPH;
           _data?.add(data);
           setState(() {
             _markers?.add(Marker(

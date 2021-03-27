@@ -29,6 +29,8 @@ class VehicleListViewState extends State {
   final _description;
   final _option;
   String search = "";
+  final GlobalKey<DeviceCardState> _deviceCardKey =
+      GlobalKey<DeviceCardState>();
 
   StreamController _streamController;
   Stream _stream;
@@ -57,10 +59,6 @@ class VehicleListViewState extends State {
               content: Text(snapshot.error),
             ),
           );
-          // ApiShowDialog.dialog(
-          //     scaffoldKey: _scaffoldKey,
-          //     message: '${snapshot.error}',
-          //     type: 'error');
         } else if (snapshot.hasData) {
           if (snapshot.data.message != null) {
             return Center(
@@ -74,8 +72,8 @@ class VehicleListViewState extends State {
               onRefresh: () => fetchDevices(),
               color: Colors.greenAccent,
               backgroundColor: Colors.green[900],
-              child:
-                  DeviceCard(snapshot.data.responseBody, _option, _scaffoldKey),
+              child: DeviceCard(snapshot.data.responseBody, _option,
+                  _scaffoldKey, _deviceCardKey),
             );
           }
         }
@@ -96,8 +94,10 @@ class VehicleListViewState extends State {
     ];
 
     await Api.devices(params).then((_) {
-      print('called again : \n ${_.responseBody[0].vehicleModel} : ${_.responseBody[0].activityTime()}');
       _streamController.add(_);
+      _deviceCardKey?.currentState?.setState(() {
+        _deviceCardKey.currentState.data = _.responseBody;
+      });
     }).catchError((err) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(

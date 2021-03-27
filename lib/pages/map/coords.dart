@@ -72,7 +72,7 @@ class CoordsBetweenTwoGeoPoints {
     if(d < 50) {
       interval = 1.0;
     } else {
-      interval = (speed/5) * (d/950);
+      interval = (speed/15) * (d/950);
     }
     print("the distance in meter is : $d and interval is $interval");
     print("$lat1,$lng1");
