@@ -162,7 +162,17 @@ class _OpenStreetMapState extends State<OpenStreetMap>
       });
     } else if (_option == "Group") {
       _getGroupActualPosition();
-      _timer = Timer.periodic(Duration(seconds: 60), (timer) async {
+      _timerForLoadingBar = Timer.periodic(Duration(seconds: 1), (timer) {
+        setState(() {
+          _progressValue += 0.2;
+        });
+        if (_progressValue.toStringAsFixed(1) == '1.0') {
+          setState(() {
+            _progressValue = 0.0;
+          });
+        }
+      });
+      _timer = Timer.periodic(Duration(seconds: 20), (timer) async {
         await _getGroupActualPosition();
       });
     }
@@ -238,7 +248,7 @@ class _OpenStreetMapState extends State<OpenStreetMap>
                   return Image.asset(icon);
                 }));
             _mapController.move(_markers?.last?.point, 18);
-            _popupLayerController.togglePopup(_markers?.last);
+            // _popupLayerController.togglePopup(_markers?.last);
             // _animatedMapMove(_markers.last.point);
           });
           await Future.delayed(Duration(milliseconds: 2));
@@ -260,7 +270,7 @@ class _OpenStreetMapState extends State<OpenStreetMap>
             }));
         _data?.add(data);
         _mapController.move(_markers?.last?.point, 18);
-        _popupLayerController.togglePopup(_markers?.last);
+        // _popupLayerController.togglePopup(_markers?.last);
         // _animatedMapMove(_markers.last.point);
       });
     }).catchError((err) {
@@ -296,7 +306,7 @@ class _OpenStreetMapState extends State<OpenStreetMap>
         _markers = markers;
         _data = data;
         // _mapController.move(_markers?.last?.point, 18);
-        // _popupLayerController.togglePopup(_markers?.last);
+        _popupLayerController.hidePopup();
       });
     }).catchError((err) {
       _scaffoldKey.currentState.showSnackBar(
@@ -537,7 +547,7 @@ class _OpenStreetMapState extends State<OpenStreetMap>
                     height: 0,
                     width: 0,
                   ),
-            _option == 'Live'
+            _option == 'Live' || _option == 'Group'
                 ? Padding(
                     padding: EdgeInsets.only(
                       top: 1,
