@@ -27,7 +27,7 @@ dependencies:
   flutter_swiper: ^1.1.6
   charts_flutter: ^0.10.0
   http: ^0.12.0+4
-  google_maps_flutter: ^0.5.27+1
+  google_maps_flutter: ^2.0.1
   geolocator: ^5.3.1
   geocoder: ^0.2.1
   intl: ^0.17.0
