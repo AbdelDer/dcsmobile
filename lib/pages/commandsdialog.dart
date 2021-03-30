@@ -10,7 +10,8 @@ class CommandsDialog extends StatefulWidget {
   String _simPhoneNumber;
   bool _late;
 
-  CommandsDialog(this._deviceID, this._vehicleModel, this._simPhoneNumber, this._late);
+  CommandsDialog(this._deviceID, this._vehicleModel, this._simPhoneNumber,
+      this._late);
 
   @override
   _CommandsDialogState createState() =>
@@ -32,12 +33,13 @@ class _CommandsDialogState extends State<CommandsDialog> {
   //in on tap functions we will verify if last we'll disable some buttons
   bool _late;
 
-  _CommandsDialogState(this._deviceID, this._vehicleModel, this._simPhoneNumber, this._late);
+  _CommandsDialogState(this._deviceID, this._vehicleModel, this._simPhoneNumber,
+      this._late);
 
   String translate(key) {
     try {
       return AppLocalizations.of(context).translate(key);
-    } catch(e) {
+    } catch (e) {
       return key;
     }
   }
@@ -59,63 +61,67 @@ class _CommandsDialogState extends State<CommandsDialog> {
       children: [
         !_late
             ? Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: RaisedButton(
-                    child: Container(
-                      width: 180,
-                      child: Center(
-                        child: Text(
-                          translate("Turn on"),
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    onPressed: () async {
-                      //change number to _simPhoneNumber
-                      _late
-                          ? null
-                          : await _textDevice(_simPhoneNumber, "turnOn");
-                    },
-                    color: Colors.green.shade500,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: ElevatedButton(
+              child: Container(
+                width: 180,
+                child: Center(
+                  child: Text(
+                    translate("Turn on"),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
-              )
-            : SizedBox(
-                height: 0,
-                width: 0,
               ),
+              onPressed: () async {
+                //change number to _simPhoneNumber
+                _late
+                    ? null
+                    : await _textDevice(_simPhoneNumber, "turnOn");
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.green.shade500,
+              ),
+            ),
+          ),
+        )
+            : SizedBox(
+          height: 0,
+          width: 0,
+        ),
         !_late
             ? Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: RaisedButton(
-                    child: Container(
-                      width: 180,
-                      child: Center(
-                        child: Text(
-                          translate("Turn off"),
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    onPressed: () async {
-                      _late
-                          ? null
-                          : await _textDevice(_simPhoneNumber, "turnOff");
-                    },
-                    color: Colors.green.shade500,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: ElevatedButton(
+              child: Container(
+                width: 180,
+                child: Center(
+                  child: Text(
+                    translate("Turn off"),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
-              )
-            : SizedBox(
-                height: 0,
-                width: 0,
               ),
+              onPressed: () async {
+                _late
+                    ? null
+                    : await _textDevice(_simPhoneNumber, "turnOff");
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.green.shade500,
+              ),
+            ),
+          ),
+        )
+            : SizedBox(
+          height: 0,
+          width: 0,
+        ),
         Center(
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0),
-            child: RaisedButton(
+            child: ElevatedButton(
               child: Container(
                 width: 180,
                 child: Center(
@@ -128,14 +134,16 @@ class _CommandsDialogState extends State<CommandsDialog> {
               onPressed: () async {
                 await _textDevice(_simPhoneNumber, "unblock");
               },
-              color: Colors.red.shade500,
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red.shade500,
+              ),
             ),
           ),
         ),
         Center(
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0),
-            child: RaisedButton(
+            child: ElevatedButton(
               child: Container(
                 width: 180,
                 child: Center(
@@ -148,62 +156,68 @@ class _CommandsDialogState extends State<CommandsDialog> {
               onPressed: () async {
                 await _textDevice(_simPhoneNumber, "flush");
               },
-              color: Colors.lightBlueAccent.shade700,
+              style: ElevatedButton.styleFrom(
+                primary: Colors.lightBlueAccent.shade700,
+              ),
             ),
           ),
         ),
         !_late
             ? Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: RaisedButton(
-                    child: Container(
-                      width: 180,
-                      child: Center(
-                        child: Text(
-                          translate("HONK"),
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    onPressed: () async {
-                      _late ? null : await _textDevice(_simPhoneNumber, "honk");
-                    },
-                    color: Colors.lightBlueAccent.shade700,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: ElevatedButton(
+              child: Container(
+                width: 180,
+                child: Center(
+                  child: Text(
+                    translate("HONK"),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
-              )
-            : SizedBox(
-                height: 0,
-                width: 0,
               ),
+              onPressed: () async {
+                _late ? null : await _textDevice(_simPhoneNumber, "honk");
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.lightBlueAccent.shade700,
+              ),
+            ),
+          ),
+        )
+            : SizedBox(
+          height: 0,
+          width: 0,
+        ),
         !_late
             ? Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: RaisedButton(
-                    child: Container(
-                      width: 180,
-                      child: Center(
-                        child: Text(
-                          translate("SMS LOCATION"),
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    onPressed: () async {
-                      _late
-                          ? null
-                          : await _textDevice(_simPhoneNumber, "smsLocation");
-                    },
-                    color: Colors.lightBlueAccent.shade700,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: ElevatedButton(
+              child: Container(
+                width: 180,
+                child: Center(
+                  child: Text(
+                    translate("SMS LOCATION"),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
-              )
-            : SizedBox(
-                height: 0,
-                width: 0,
               ),
+              onPressed: () async {
+                _late
+                    ? null
+                    : await _textDevice(_simPhoneNumber, "smsLocation");
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.lightBlueAccent.shade700,
+              ),
+            ),
+          ),
+        )
+            : SizedBox(
+          height: 0,
+          width: 0,
+        ),
       ],
     );
   }
@@ -227,7 +241,7 @@ class _CommandsDialogState extends State<CommandsDialog> {
         break;
       case 'flush':
         body =
-            "lex trk flush $_deviceID,internet1.meditel.ma,MEDINET,MEDINET,37.187.149.86,5027,0";
+        "lex trk flush $_deviceID,internet1.meditel.ma,MEDINET,MEDINET,37.187.149.86,5027,0";
         break;
       case 'honk':
         body = "lex trk setdigout 01 0 2";

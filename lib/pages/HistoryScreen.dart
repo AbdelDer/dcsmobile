@@ -104,8 +104,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
         Center(
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0),
-            child: RaisedButton(
-              padding: const EdgeInsets.symmetric(horizontal: 50),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 50),
+                primary: Colors.green,
+              ),
               child: Text("Valider", style: TextStyle(color: Colors.white),),
               onPressed: () {
                 Navigator.push(
@@ -116,7 +119,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   ),
                 );
               },
-              color: Colors.green,
             ),
           ),
         ),

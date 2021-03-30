@@ -19,7 +19,8 @@ class DeviceCard extends StatefulWidget {
   final Key _key;
   final GlobalKey<ScaffoldState> _scaffoldKey;
 
-  DeviceCard(this.data, this._option, this._scaffoldKey, this._key):super(key: _key);
+  DeviceCard(this.data, this._option, this._scaffoldKey, this._key)
+      : super(key: _key);
 
   @override
   DeviceCardState createState() =>
@@ -92,7 +93,7 @@ class DeviceCardState extends State<DeviceCard> {
                           mainAxisAlignment:
                           MainAxisAlignment.spaceEvenly,
                           children: [
-                            RaisedButton(
+                            ElevatedButton(
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -115,7 +116,7 @@ class DeviceCardState extends State<DeviceCard> {
                               ),
                               color: Colors.blueAccent,
                             ),
-                            RaisedButton(
+                            ElevatedButton(
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -306,11 +307,14 @@ class DeviceCardState extends State<DeviceCard> {
       return <Widget>[
         Container(
           width: 300,
-          child: RaisedButton.icon(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-                side: BorderSide(color: Colors.green)),
-            padding: const EdgeInsets.symmetric(horizontal: 60),
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                  side: BorderSide(color: Colors.green)),
+              padding: const EdgeInsets.symmetric(horizontal: 60),
+            ),
             icon: Image.asset('assets/maintenance/draining.png'),
             label: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -330,12 +334,11 @@ class DeviceCardState extends State<DeviceCard> {
                 ),
               );
             },
-            color: Colors.white,
           ),
         ),
         // Container(
         //   width: 300,
-        //   child: RaisedButton.icon(
+        //   child: ElevatedButton.icon(
         //     shape: RoundedRectangleBorder(
         //         borderRadius: BorderRadius.circular(18.0),
         //         side: BorderSide(color: Colors.green)),
@@ -354,11 +357,14 @@ class DeviceCardState extends State<DeviceCard> {
         // ),
         Container(
           width: 300,
-          child: RaisedButton.icon(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-                side: BorderSide(color: Colors.green)),
-            padding: const EdgeInsets.symmetric(horizontal: 60),
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                  side: BorderSide(color: Colors.green)),
+              padding: const EdgeInsets.symmetric(horizontal: 60),
+              primary: Colors.white,
+            ),
             icon: Image.asset('assets/maintenance/visit.png'),
             label: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -378,16 +384,18 @@ class DeviceCardState extends State<DeviceCard> {
                 ),
               );
             },
-            color: Colors.white,
           ),
         ),
         Container(
           width: 300,
-          child: RaisedButton.icon(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-                side: BorderSide(color: Colors.green)),
-            padding: const EdgeInsets.symmetric(horizontal: 60),
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                  side: BorderSide(color: Colors.green)),
+              padding: const EdgeInsets.symmetric(horizontal: 60),
+            ),
             icon: Image.asset('assets/maintenance/insurance.png'),
             label: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -407,16 +415,18 @@ class DeviceCardState extends State<DeviceCard> {
                 ),
               );
             },
-            color: Colors.white,
           ),
         ),
         Container(
           width: 300,
-          child: RaisedButton.icon(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-                side: BorderSide(color: Colors.green)),
-            padding: const EdgeInsets.symmetric(horizontal: 60),
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                  side: BorderSide(color: Colors.green)),
+              padding: const EdgeInsets.symmetric(horizontal: 60),
+              primary: Colors.white,
+            ),
             icon: Image.asset('assets/maintenance/entretien.png'),
             label: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -436,7 +446,6 @@ class DeviceCardState extends State<DeviceCard> {
                 ),
               );
             },
-            color: Colors.white,
           ),
         ),
       ];

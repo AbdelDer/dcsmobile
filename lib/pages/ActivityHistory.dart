@@ -181,7 +181,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        RaisedButton(
+                                        ElevatedButton(
                                           onPressed: () {
                                             Navigator.push(
                                               context,
@@ -215,7 +215,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                                           ),
                                           color: Colors.blueAccent,
                                         ),
-                                        RaisedButton(
+                                        ElevatedButton(
                                           onPressed: () {
                                             Navigator.push(
                                               context,

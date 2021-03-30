@@ -240,7 +240,7 @@ class _FEDrawerState extends State<FEDrawer> {
                         mainAxisAlignment:
                         MainAxisAlignment.spaceEvenly,
                         children: [
-                          RaisedButton(
+                          ElevatedButton(
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -262,7 +262,7 @@ class _FEDrawerState extends State<FEDrawer> {
                             ),
                             color: Colors.blueAccent,
                           ),
-                          RaisedButton(
+                          ElevatedButton(
                             onPressed: () {
                               Navigator.push(
                                 context,

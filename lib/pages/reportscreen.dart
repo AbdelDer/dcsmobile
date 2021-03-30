@@ -246,8 +246,10 @@ class ReportScreenState extends State<ReportScreen> {
                 padding: EdgeInsets.only(
                   top: 20,
                 ),
-                child: RaisedButton(
-                  color: Colors.green,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                  ),
                   child: Text(
                     AppLocalizations.of(context).translate("Validate"),
                     style: TextStyle(

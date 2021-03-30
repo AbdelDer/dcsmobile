@@ -50,8 +50,10 @@ class _HelpScreenState extends State<HelpScreen> {
               ),
               Container(
                 width: MediaQuery.of(context).size.width / 2,
-                child: RaisedButton(
-                  color: Colors.red,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.red,
+                  ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -83,8 +85,10 @@ class _HelpScreenState extends State<HelpScreen> {
               ),
               Container(
                 width: MediaQuery.of(context).size.width / 2,
-                child: RaisedButton(
-                  color: Colors.green,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                  ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
