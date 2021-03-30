@@ -149,7 +149,7 @@ class _DashboardState extends State<Dashboard>
         stream: _stream,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            _scaffoldKey.currentState.showSnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(snapshot.error.toString()),
               ),
@@ -161,7 +161,7 @@ class _DashboardState extends State<Dashboard>
           } else if (snapshot.hasData) {
             return _content(snapshot.data);
           } else if (snapshot.connectionState == ConnectionState.none) {
-            _scaffoldKey.currentState.showSnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Problème de connexion'),
               ),
@@ -190,7 +190,7 @@ class _DashboardState extends State<Dashboard>
     List params = [accountID, userID];
     await Api.dashboardFirstRow(params).then((_) {
       if (_.message != null) {
-        _scaffoldKey.currentState.showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(_.message),
           ),
@@ -201,7 +201,7 @@ class _DashboardState extends State<Dashboard>
         list = _.responseBody;
       }
     }).catchError((err) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(err.toString()),
         ),
@@ -442,7 +442,7 @@ class _DashboardState extends State<Dashboard>
   _handleNotificationTap() {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('${message['notification']['body']}'),
         ));
       },

@@ -346,7 +346,7 @@ class _LoginState extends State<Login> {
       ];
       await Api.login(params).then((_) async {
         if (_.message != null && _.message.length != 0) {
-          _scaffoldKey.currentState.showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(_.message),
             ),
@@ -365,7 +365,7 @@ class _LoginState extends State<Login> {
           }
         }
       }).catchError((err) {
-        _scaffoldKey.currentState.showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(err.toString()),
           ),
@@ -422,7 +422,7 @@ class _LoginState extends State<Login> {
         await encryptedSharedPreferences.setString(
             "groupID", response.responseBody.groupID);
       }).catchError((err) {
-        _scaffoldKey.currentState.showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(err.toString()),
           ),

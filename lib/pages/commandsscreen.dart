@@ -229,7 +229,7 @@ class _CommandsScreenState extends State<CommandsScreen>
                       //     scaffoldKey: _scaffoldKey,
                       //     message: snapshot.data.responseBody.message,
                       //     type: 'error');
-                      _scaffoldKey.currentState.showSnackBar(SnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text(snapshot.data.responseBody.message),
                       ));
                       return SizedBox(
@@ -289,7 +289,7 @@ class _CommandsScreenState extends State<CommandsScreen>
       //   ApiShowDialog.dialog(
       //       scaffoldKey: _scaffoldKey, message: '${err}', type: 'error');
       // });
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(err),
         ),

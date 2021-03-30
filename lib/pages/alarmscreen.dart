@@ -405,7 +405,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
             //with specific message
             // ApiShowDialog.dialog(
             //     scaffoldKey: _scaffoldKey, message: error, type: 'error');
-            _scaffoldKey.currentState.showSnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(error.toString()),
               ),
@@ -451,14 +451,14 @@ class _AlarmScreenState extends State<AlarmScreen> {
       if (_create) {
         await Api.saveDeviceAlarmSettings(jsonEncode(alarm.toJson()))
             .then((value) async {
-          _scaffoldKey.currentState.showSnackBar(SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(translate("Updated")),
           ));
           await Future.delayed(Duration(seconds: 1), () {
             Navigator.pop(context);
           });
         }).catchError((error) {
-          _scaffoldKey.currentState.showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(error.toString()),
             ),
@@ -474,13 +474,13 @@ class _AlarmScreenState extends State<AlarmScreen> {
             //     scaffoldKey: _scaffoldKey,
             //     message: value.message,
             //     type: 'info');
-            _scaffoldKey.currentState.showSnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(value.message),
               ),
             );
           } else {
-            _scaffoldKey.currentState.showSnackBar(SnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(translate("Updated")),
             ));
             await Future.delayed(Duration(seconds: 1), () {
@@ -488,7 +488,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
             });
           }
         }).catchError((error) {
-          _scaffoldKey.currentState.showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(error.toString()),
             ),

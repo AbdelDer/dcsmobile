@@ -299,7 +299,7 @@ class _SummaryReportScreenState extends State<SummaryReportScreen> {
         return value.responseBody[0];
       },
     ).catchError(
-        (error) => _scaffoldKey.currentState.showSnackBar(
+        (error) => ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(error.toString()),
           ),

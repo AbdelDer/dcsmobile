@@ -7,6 +7,7 @@ import 'package:dcsmobile/lang/app_localizations.dart';
 import 'package:dcsmobile/main.dart';
 import 'package:dcsmobile/models/notifications/filter.dart';
 import 'package:dcsmobile/models/notifications/notification.dart' as n;
+import 'package:dcsmobile/pages/notificationmap.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -171,131 +172,141 @@ class _NotificationsViewState extends State<NotificationsView> {
           },
           child: _notifications.length == 0
               ?
-              //TODO : add translate in this case also
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: Text(
-                        "Aucune Notification trouvée",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                    FlatButton(
-                      child: Text(
-                        "Choisir une autre date",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.blueAccent,
-                        ),
-                      ),
-                      onPressed: () async {
-                        _dateStartChose = await showDatePicker(
-                          context: context,
-                          firstDate: DateTime.now().subtract(Duration(
-                            days: 60,
-                          )),
-                          lastDate: DateTime.now(),
-                          initialDate: _dateStartChose ?? DateTime.now(),
-                          helpText: 'Choisir une date',
-                          // Can be used as title
-                          cancelText: 'annuler',
-                          confirmText: 'ok',
-                          fieldLabelText: 'date',
-                          fieldHintText: 'Mois/Jour/Année',
-                        );
-                        _timeStartChose = await showTimePicker(
-                          context: context,
-                          initialTime: _timeStartChose ?? TimeOfDay.now(),
-                          helpText: 'Choisir une heure',
-                          // Can be used as title
-                          cancelText: 'annuler',
-                          confirmText: 'ok',
-                        );
-                        _dateEndChose = await showDatePicker(
-                          context: context,
-                          firstDate: DateTime.now().subtract(Duration(
-                            days: 60,
-                          )),
-                          lastDate: DateTime.now(),
-                          initialDate: _dateEndChose ?? DateTime.now(),
-                          helpText: 'Choisir une date',
-                          // Can be used as title
-                          cancelText: 'annuler',
-                          confirmText: 'ok',
-                          fieldLabelText: 'date',
-                          fieldHintText: 'Mois/Jour/Année',
-                        );
-                        _timeEndChose = await showTimePicker(
-                          context: context,
-                          initialTime: _timeEndChose ?? TimeOfDay.now(),
-                          helpText: 'Choisir une heure',
-                          // Can be used as title
-                          cancelText: 'annuler',
-                          confirmText: 'ok',
-                        );
-                        _page = 0;
-                        _notifications.clear();
-                        await _getNotifications(_page);
-                        _shouldLoad = true;
-                      },
-                    ),
-                  ],
-                )
+          //TODO : add translate in this case also
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: Text(
+                  "Aucune Notification trouvée",
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              FlatButton(
+                child: Text(
+                  "Choisir une autre date",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.blueAccent,
+                  ),
+                ),
+                onPressed: () async {
+                  _dateStartChose = await showDatePicker(
+                    context: context,
+                    firstDate: DateTime.now().subtract(Duration(
+                      days: 60,
+                    )),
+                    lastDate: DateTime.now(),
+                    initialDate: _dateStartChose ?? DateTime.now(),
+                    helpText: 'Choisir une date',
+                    // Can be used as title
+                    cancelText: 'annuler',
+                    confirmText: 'ok',
+                    fieldLabelText: 'date',
+                    fieldHintText: 'Mois/Jour/Année',
+                  );
+                  _timeStartChose = await showTimePicker(
+                    context: context,
+                    initialTime: _timeStartChose ?? TimeOfDay.now(),
+                    helpText: 'Choisir une heure',
+                    // Can be used as title
+                    cancelText: 'annuler',
+                    confirmText: 'ok',
+                  );
+                  _dateEndChose = await showDatePicker(
+                    context: context,
+                    firstDate: DateTime.now().subtract(Duration(
+                      days: 60,
+                    )),
+                    lastDate: DateTime.now(),
+                    initialDate: _dateEndChose ?? DateTime.now(),
+                    helpText: 'Choisir une date',
+                    // Can be used as title
+                    cancelText: 'annuler',
+                    confirmText: 'ok',
+                    fieldLabelText: 'date',
+                    fieldHintText: 'Mois/Jour/Année',
+                  );
+                  _timeEndChose = await showTimePicker(
+                    context: context,
+                    initialTime: _timeEndChose ?? TimeOfDay.now(),
+                    helpText: 'Choisir une heure',
+                    // Can be used as title
+                    cancelText: 'annuler',
+                    confirmText: 'ok',
+                  );
+                  _page = 0;
+                  _notifications.clear();
+                  await _getNotifications(_page);
+                  _shouldLoad = true;
+                },
+              ),
+            ],
+          )
               : ListView.builder(
-                  itemCount: _notifications.length,
-                  itemBuilder: (context, index) {
-                    return ExpansionTile(
-                      initiallyExpanded: false,
-                      children: <Widget>[
-                        _childrenWidgets(_notifications[index].deviceID,
-                            _notifications[index].timestamp)
-                      ],
-                      backgroundColor: Colors.transparent,
-                      // onExpansionChanged: (value) {
-                      //   if (value) {}
-                      // },
-                      leading: Image.asset(
-                        _notifications[index].getAssetPath(),
-                        color: Colors.black,
-                      ),
-                      title: Text(
-                        '${_notifications[index].vehicleModel}',
+            itemCount: _notifications.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                // initiallyExpanded: false,
+                // children: <Widget>[
+                //   _childrenWidgets(_notifications[index].deviceID,
+                //       _notifications[index].timestamp)
+                // ],
+                // backgroundColor: Colors.transparent,
+                // onExpansionChanged: (value) {
+                //   if (value) {}
+                // },
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          NotificationMap(
+                            notificationData: _notifications[index],),
+                    ),
+                  );
+                },
+                leading: Image.asset(
+                  _notifications[index].getAssetPath(),
+                  color: Colors.black,
+                ),
+                title: Text(
+                  '${_notifications[index].vehicleModel}',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                  ),
+                ),
+                subtitle: Column(
+                  children: [
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          '${_notifications[index].message}',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.blueAccent,
+                          ),
+                        )),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        '${_notifications[index].timestampAsString}',
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 18,
+                          fontSize: 14,
                         ),
                       ),
-                      subtitle: Column(
-                        children: [
-                          Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                '${_notifications[index].message}',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.blueAccent,
-                                ),
-                              )),
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              '${_notifications[index].timestampAsString}',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      trailing: Icon(
-                        Icons.map_outlined,
-                        color: Colors.black,
-                      ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
+                trailing: Icon(
+                  Icons.map_outlined,
+                  color: Colors.black,
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -315,7 +326,7 @@ class _NotificationsViewState extends State<NotificationsView> {
         if (state != 'init') _vehiclesFilter();
       }
     }).catchError((error) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.toString()),
         ),
@@ -333,32 +344,138 @@ class _NotificationsViewState extends State<NotificationsView> {
         builder: (BuildContext context) {
           return _vehicleErrorMsg == ""
               ? StatefulBuilder(
-                  builder: (context, setState) => Container(
-                    color: Colors.white,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ListView.builder(
+            builder: (context, setState) =>
+                Container(
+                  color: Colors.white,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: _devices.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              //without behavior we'll encounter a problem
+                              //when user tap on row blank space
+                              behavior: HitTestBehavior.translucent,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        _devices
+                                            .elementAt(index)
+                                            .vehicleModel,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 20,
+                                        height: 20,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(
+                                            color: Colors.green,
+                                            width: _devices
+                                                .elementAt(index)
+                                                .selected
+                                                ? 10
+                                                : 1,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5)),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  _devices
+                                      .elementAt(index)
+                                      .selected =
+                                  !_devices
+                                      .elementAt(index)
+                                      .selected;
+                                });
+                              },
+                            );
+                          }),
+                      RaisedButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(color: Colors.green)),
+                          padding: const EdgeInsets.symmetric(horizontal: 60),
+                          child: Text(
+                            'ok',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          color: Colors.green,
+                          onPressed: () async {
+                            Navigator.pop(context);
+                            _shouldLoad = true;
+                            _page = 0;
+                            _notifications.clear();
+                            await _getNotifications(_page);
+                          }),
+                    ],
+                  ),
+                ),
+          )
+              : Container(
+            color: Colors.white,
+            child: Text(
+              _vehicleErrorMsg,
+              style: TextStyle(fontSize: 22),
+            ),
+          );
+        });
+  }
+
+  _modalEventFilters() {
+    return showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
+        ),
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (context, setState) =>
+                Container(
+                  color: Colors.white,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: _devices.length,
+                            itemCount: _eventFilters.length,
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 //without behavior we'll encounter a problem
                                 //when user tap on row blank space
                                 behavior: HitTestBehavior.translucent,
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(16.0),
                                   child: Container(
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          _devices
+                                          _eventFilters
                                               .elementAt(index)
-                                              .vehicleModel,
+                                              .filterName,
                                           style: TextStyle(
                                             fontSize: 20,
                                           ),
@@ -370,9 +487,9 @@ class _NotificationsViewState extends State<NotificationsView> {
                                             color: Colors.white,
                                             border: Border.all(
                                               color: Colors.green,
-                                              width: _devices
-                                                      .elementAt(index)
-                                                      .selected
+                                              width: _eventFilters
+                                                  .elementAt(index)
+                                                  .filterValue
                                                   ? 10
                                                   : 1,
                                             ),
@@ -386,131 +503,37 @@ class _NotificationsViewState extends State<NotificationsView> {
                                 ),
                                 onTap: () {
                                   setState(() {
-                                    _devices.elementAt(index).selected =
-                                        !_devices.elementAt(index).selected;
+                                    _eventFilters
+                                        .elementAt(index)
+                                        .filterValue =
+                                    !_eventFilters
+                                        .elementAt(index)
+                                        .filterValue;
                                   });
                                 },
                               );
                             }),
-                        RaisedButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.green)),
-                            padding: const EdgeInsets.symmetric(horizontal: 60),
-                            child: Text(
-                              'ok',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            color: Colors.green,
-                            onPressed: () async {
-                              Navigator.pop(context);
-                              _shouldLoad = true;
-                              _page = 0;
-                              _notifications.clear();
-                              await _getNotifications(_page);
-                            }),
-                      ],
-                    ),
-                  ),
-                )
-              : Container(
-                  color: Colors.white,
-                  child: Text(
-                    _vehicleErrorMsg,
-                    style: TextStyle(fontSize: 22),
-                  ),
-                );
-        });
-  }
-
-  _modalEventFilters() {
-    return showModalBottomSheet(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
-        ),
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-            builder: (context, setState) => Container(
-              color: Colors.white,
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: _eventFilters.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            //without behavior we'll encounter a problem
-                            //when user tap on row blank space
-                            behavior: HitTestBehavior.translucent,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Container(
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      _eventFilters.elementAt(index).filterName,
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 20,
-                                      height: 20,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(
-                                          color: Colors.green,
-                                          width: _eventFilters
-                                                  .elementAt(index)
-                                                  .filterValue
-                                              ? 10
-                                              : 1,
-                                        ),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5)),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            onTap: () {
-                              setState(() {
-                                _eventFilters.elementAt(index).filterValue =
-                                    !_eventFilters.elementAt(index).filterValue;
-                              });
-                            },
-                          );
-                        }),
-                  ),
-                  RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                          side: BorderSide(color: Colors.green)),
-                      padding: const EdgeInsets.symmetric(horizontal: 60),
-                      child: Text(
-                        AppLocalizations.of(context).translate("Validate"),
-                        style: TextStyle(color: Colors.white),
                       ),
-                      color: Colors.green,
-                      onPressed: () async {
-                        Navigator.pop(context);
-                        _shouldLoad = true;
-                        _page = 0;
-                        _notifications.clear();
-                        await _getNotifications(_page);
-                      }),
-                ],
-              ),
-            ),
+                      RaisedButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(color: Colors.green)),
+                          padding: const EdgeInsets.symmetric(horizontal: 60),
+                          child: Text(
+                            AppLocalizations.of(context).translate("Validate"),
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          color: Colors.green,
+                          onPressed: () async {
+                            Navigator.pop(context);
+                            _shouldLoad = true;
+                            _page = 0;
+                            _notifications.clear();
+                            await _getNotifications(_page);
+                          }),
+                    ],
+                  ),
+                ),
           );
         });
   }
@@ -529,16 +552,16 @@ class _NotificationsViewState extends State<NotificationsView> {
       'deviceIDs': _devices.where((element) => element.selected).toList(),
       'filters': _eventFilters.where((element) => element.filterValue).toList(),
       'timestampStart': DateTime(
-                  _dateStartChose.year,
-                  _dateStartChose.month,
-                  _dateStartChose.day,
-                  _timeStartChose.hour,
-                  _timeStartChose.minute)
-              .millisecondsSinceEpoch ~/
+          _dateStartChose.year,
+          _dateStartChose.month,
+          _dateStartChose.day,
+          _timeStartChose.hour,
+          _timeStartChose.minute)
+          .millisecondsSinceEpoch ~/
           1000,
       'timestampEnd': DateTime(_dateEndChose.year, _dateEndChose.month,
-                  _dateEndChose.day, _timeEndChose.hour, _timeEndChose.minute)
-              .millisecondsSinceEpoch ~/
+          _dateEndChose.day, _timeEndChose.hour, _timeEndChose.minute)
+          .millisecondsSinceEpoch ~/
           1000,
       "page": page,
       "accountID": _accountID,
@@ -561,7 +584,7 @@ class _NotificationsViewState extends State<NotificationsView> {
         });
       }
     }).catchError((error) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.toString()),
         ),
@@ -573,9 +596,9 @@ class _NotificationsViewState extends State<NotificationsView> {
 
   _getPositionDetails(deviceID, timestamp) async {
     return await Api.getPositionByTimestampAndDeviceID(
-            jsonEncode({"deviceID": deviceID, "timestamp": timestamp}))
+        jsonEncode({"deviceID": deviceID, "timestamp": timestamp}))
         .catchError((error) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.toString()),
         ),
@@ -601,8 +624,11 @@ class _NotificationsViewState extends State<NotificationsView> {
             } else {
               var data = snapshot.data.responseBody;
               return Container(
-                width: MediaQuery.of(context).size.width,
-                height: 200,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
+                height: 300,
                 child: GoogleMap(
                   initialCameraPosition: CameraPosition(
                       target: LatLng(snapshot.data.responseBody.latitude ?? 0,
@@ -613,7 +639,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                     Marker(
                         markerId: MarkerId('${data.timestamp}'),
                         position:
-                            LatLng(data.latitude ?? 0, data.longitude ?? 0),
+                        LatLng(data.latitude ?? 0, data.longitude ?? 0),
                         infoWindow: InfoWindow(
                             snippet: "Speed: ${data.speedKPH} Km/h more...",
                             title: "${data.vehicleModel}",
@@ -625,11 +651,17 @@ class _NotificationsViewState extends State<NotificationsView> {
                                       alignment: Alignment.center,
                                       child: Container(
                                         height:
-                                            MediaQuery.of(context).size.height /
-                                                2,
+                                        MediaQuery
+                                            .of(context)
+                                            .size
+                                            .height /
+                                            2,
                                         width:
-                                            MediaQuery.of(context).size.width /
-                                                1.5,
+                                        MediaQuery
+                                            .of(context)
+                                            .size
+                                            .width /
+                                            1.5,
                                         color: Colors.white,
                                         child: SingleChildScrollView(
                                           child: Column(
@@ -643,7 +675,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
-                                                            TextDecoration.none,
+                                                        TextDecoration.none,
                                                         color: Colors.green),
                                                   ),
                                                 ),
@@ -659,7 +691,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
-                                                            TextDecoration.none,
+                                                        TextDecoration.none,
                                                         color: Colors.black),
                                                   ),
                                                   Text(
@@ -667,7 +699,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
-                                                            TextDecoration.none,
+                                                        TextDecoration.none,
                                                         color: Colors.green),
                                                   ),
                                                 ],
@@ -679,11 +711,13 @@ class _NotificationsViewState extends State<NotificationsView> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "${AppLocalizations.of(context).translate("Time")}: ",
+                                                    "${AppLocalizations.of(
+                                                        context).translate(
+                                                        "Time")}: ",
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
-                                                            TextDecoration.none,
+                                                        TextDecoration.none,
                                                         color: Colors.black),
                                                   ),
                                                   Text(
@@ -691,7 +725,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
-                                                            TextDecoration.none,
+                                                        TextDecoration.none,
                                                         color: Colors.green),
                                                   ),
                                                 ],
@@ -703,11 +737,13 @@ class _NotificationsViewState extends State<NotificationsView> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "${AppLocalizations.of(context).translate("Latitude")}: ",
+                                                    "${AppLocalizations.of(
+                                                        context).translate(
+                                                        "Latitude")}: ",
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
-                                                            TextDecoration.none,
+                                                        TextDecoration.none,
                                                         color: Colors.black),
                                                   ),
                                                   Text(
@@ -715,7 +751,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
-                                                            TextDecoration.none,
+                                                        TextDecoration.none,
                                                         color: Colors.green),
                                                   ),
                                                 ],
@@ -727,11 +763,13 @@ class _NotificationsViewState extends State<NotificationsView> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "${AppLocalizations.of(context).translate("Longitude")}: ",
+                                                    "${AppLocalizations.of(
+                                                        context).translate(
+                                                        "Longitude")}: ",
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
-                                                            TextDecoration.none,
+                                                        TextDecoration.none,
                                                         color: Colors.black),
                                                   ),
                                                   Text(
@@ -739,7 +777,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
-                                                            TextDecoration.none,
+                                                        TextDecoration.none,
                                                         color: Colors.green),
                                                   ),
                                                 ],
@@ -751,11 +789,13 @@ class _NotificationsViewState extends State<NotificationsView> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "${AppLocalizations.of(context).translate("Oil level")}: ",
+                                                    "${AppLocalizations.of(
+                                                        context).translate(
+                                                        "Oil level")}: ",
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
-                                                            TextDecoration.none,
+                                                        TextDecoration.none,
                                                         color: Colors.black),
                                                   ),
                                                   Text(
@@ -763,7 +803,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
-                                                            TextDecoration.none,
+                                                        TextDecoration.none,
                                                         color: Colors.green),
                                                   ),
                                                 ],
@@ -775,11 +815,13 @@ class _NotificationsViewState extends State<NotificationsView> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "${AppLocalizations.of(context).translate("Status")}: ",
+                                                    "${AppLocalizations.of(
+                                                        context).translate(
+                                                        "Status")}: ",
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
-                                                            TextDecoration.none,
+                                                        TextDecoration.none,
                                                         color: Colors.black),
                                                   ),
                                                   Text(
@@ -788,7 +830,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
-                                                            TextDecoration.none,
+                                                        TextDecoration.none,
                                                         color: Colors.green),
                                                   ),
                                                 ],
@@ -800,11 +842,13 @@ class _NotificationsViewState extends State<NotificationsView> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "${AppLocalizations.of(context).translate("Battery")}: ",
+                                                    "${AppLocalizations.of(
+                                                        context).translate(
+                                                        "Battery")}: ",
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
-                                                            TextDecoration.none,
+                                                        TextDecoration.none,
                                                         color: Colors.black),
                                                   ),
                                                   Text(
@@ -812,7 +856,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
-                                                            TextDecoration.none,
+                                                        TextDecoration.none,
                                                         color: Colors.green),
                                                   ),
                                                 ],
@@ -824,11 +868,13 @@ class _NotificationsViewState extends State<NotificationsView> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "${AppLocalizations.of(context).translate("Engine temp")}: ",
+                                                    "${AppLocalizations.of(
+                                                        context).translate(
+                                                        "Engine temp")}: ",
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
-                                                            TextDecoration.none,
+                                                        TextDecoration.none,
                                                         color: Colors.black),
                                                   ),
                                                   Text(
@@ -836,7 +882,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
-                                                            TextDecoration.none,
+                                                        TextDecoration.none,
                                                         color: Colors.green),
                                                   ),
                                                 ],
@@ -848,11 +894,13 @@ class _NotificationsViewState extends State<NotificationsView> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "${AppLocalizations.of(context).translate("Signal")}: ",
+                                                    "${AppLocalizations.of(
+                                                        context).translate(
+                                                        "Signal")}: ",
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         decoration:
-                                                            TextDecoration.none,
+                                                        TextDecoration.none,
                                                         color: Colors.black),
                                                   ),
                                                   Icon(

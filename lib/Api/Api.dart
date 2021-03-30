@@ -491,7 +491,7 @@ class Api {
   }
 
   //used in notification view
-  static Future<Response> getPositionByTimestampAndDeviceID(body) async {
+  static Future<Response<EventData>> getPositionByTimestampAndDeviceID(body) async {
     await connected();
     var httpCustom = HttpCustom(url: '$baseUrl/position', body: body);
 

@@ -123,7 +123,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
             // }
           }
         }).catchError((err) {
-          _scaffoldKey.currentState.showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(err.toString()),
             ),
@@ -148,7 +148,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
     await Api.getActualPosition(this._deviceID).then((r) async{
       await _setData(r.responseBody);
     }).catchError((err) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(err.toString()),
         ),
@@ -162,7 +162,7 @@ class _VehicleLivePositionState extends State<VehicleLivePosition> {
     await Api.getGroupActualPosition().then((r) async{
       await _setData(r.responseBody);
     }).catchError((err) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(err.toString()),
         ),

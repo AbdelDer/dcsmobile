@@ -480,13 +480,13 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
         }
         _nameController.value = TextEditingValue(text: '');
         await _getInsuranceData();
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(AppLocalizations.of(context).translate("Updated")),
         ));
         Navigator.of(context).pop();
       }
     }).catchError((error) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.toString()),
         ),
@@ -521,13 +521,13 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
         }
         _nameController.value = TextEditingValue(text: '');
         await _getInsuranceData();
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(AppLocalizations.of(context).translate("Updated")),
         ));
         Navigator.of(context).pop();
       }
     }).catchError((error) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.toString()),
         ),
@@ -540,17 +540,17 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
   _deleteInsurance(id) async {
     await Api.deleteInsurance(jsonEncode(id)).then((value) {
       if (value.status == Status.ERROR) {
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(value.responseBody.message),
         ));
       } else {
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(AppLocalizations.of(context).translate("Removed")),
         ));
         _getInsuranceData();
       }
     }).catchError((error) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.toString()),
         ),

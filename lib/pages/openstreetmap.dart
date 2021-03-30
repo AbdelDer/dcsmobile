@@ -136,7 +136,7 @@ class _OpenStreetMapState extends State<OpenStreetMap>
           }
           readyToPlay = true;
         }).catchError((err) {
-          _scaffoldKey.currentState.showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(err.toString()),
             ),
@@ -178,6 +178,8 @@ class _OpenStreetMapState extends State<OpenStreetMap>
     }
   }
 
+  /*
+  we can use this function to animate camera
   void _animatedMapMove(LatLng destLocation) {
     // Create some tweens. These serve to split up the transition from one location to another.
     // In our case, we want to split the transition be<tween> our current map center and the destination.
@@ -210,7 +212,7 @@ class _OpenStreetMapState extends State<OpenStreetMap>
     });
 
     controller.forward();
-  }
+  }*/
 
   _getActualPosition() async {
     await Api.getActualPosition(this._deviceID).then((r) async {
@@ -309,7 +311,7 @@ class _OpenStreetMapState extends State<OpenStreetMap>
         _popupLayerController.hidePopup();
       });
     }).catchError((err) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(err.toString()),
         ),
@@ -335,7 +337,6 @@ class _OpenStreetMapState extends State<OpenStreetMap>
                     .hidePopup(), // Hide popup when the map is tapped.
                 center: LatLng(30.0, -9.0),
                 zoom: 5.0,
-
                 // maxZoom: 18
               ),
               layers: [
@@ -413,7 +414,7 @@ class _OpenStreetMapState extends State<OpenStreetMap>
                                           ),
                                           TextSpan(
                                             text:
-                                                ' (${data.engineTemp ?? ''}°C/${_data.last.batteryVolts ?? ''}V)',
+                                                ' (${data.engineTemp ?? ''}°C/${data.batteryVolts ?? ''}V)',
                                           ),
                                         ],
                                       ),
@@ -991,7 +992,7 @@ class _OpenStreetMapState extends State<OpenStreetMap>
     if (await canLaunch(encodedURl)) {
       await launch(encodedURl);
     } else {
-      _scaffoldKey.currentState.showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Ne peut pas ouvrir Google Maps"),
       ));
     }

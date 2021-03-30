@@ -50,7 +50,7 @@ class _ReportScreenState extends State<ReportScreen> {
 
     await Api.devices(params).then((_) {
       if (_.message != null) {
-        _scaffoldKey.currentState.showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Something wrong !'),
           ),
@@ -64,7 +64,7 @@ class _ReportScreenState extends State<ReportScreen> {
         list = _.responseBody;
       }
     }).catchError((err) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(err.toString()),
         ),
@@ -194,7 +194,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     if (snapshot.hasError) {
-                      _scaffoldKey.currentState.showSnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(snapshot.error),
                         ),
@@ -207,7 +207,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       return _dropDownMenuButton(snapshot.data);
                     }
                   } else if (snapshot.connectionState == ConnectionState.none) {
-                    _scaffoldKey.currentState.showSnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Problème de connexion'),
                       ),

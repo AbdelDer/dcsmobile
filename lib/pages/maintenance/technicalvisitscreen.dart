@@ -481,13 +481,13 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
         }
         _nameController.value = TextEditingValue(text: '');
         await _getTechnicalVisitData();
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(AppLocalizations.of(context).translate("Updated")),
         ));
         Navigator.of(context).pop();
       }
     }).catchError((error) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.toString()),
         ),
@@ -523,13 +523,13 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
         }
         _nameController.value = TextEditingValue(text: '');
         await _getTechnicalVisitData();
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(AppLocalizations.of(context).translate("Updated")),
         ));
         Navigator.of(context).pop();
       }
     }).catchError((error) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.toString()),
         ),
@@ -542,17 +542,17 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
   _deleteTechnicalVisit(id) async {
     await Api.deleteTechnicalVisit(id).then((value) {
       if (value.status == Status.ERROR) {
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(value.responseBody.message),
         ));
       } else {
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(AppLocalizations.of(context).translate("Removed")),
         ));
         _getTechnicalVisitData();
       }
     }).catchError((error) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.toString()),
         ),

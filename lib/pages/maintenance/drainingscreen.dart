@@ -497,13 +497,13 @@ class _DrainingScreenState extends State<DrainingScreen> {
           });
         }
         await _getDrainingData();
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("${AppLocalizations.of(context).translate("Updated")}"),
         ));
         Navigator.of(context).pop();
       }
     }).catchError((error) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.toString()),
         ),
@@ -537,13 +537,13 @@ class _DrainingScreenState extends State<DrainingScreen> {
           });
         }
         await _getDrainingData();
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("${AppLocalizations.of(context).translate("Updated")}"),
         ));
         Navigator.of(context).pop();
       }
     }).catchError((error) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.toString()),
         ),
@@ -556,17 +556,17 @@ class _DrainingScreenState extends State<DrainingScreen> {
   _deleteDraining(id) async {
     await Api.deleteDraining(id).then((value) {
       if (value.status == Status.ERROR) {
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(value.message),
         ));
       } else {
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("${AppLocalizations.of(context).translate("Removed")}"),
         ));
         _getDrainingData();
       }
     }).catchError((error) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.toString()),
         ),

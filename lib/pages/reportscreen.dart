@@ -346,7 +346,7 @@ class ReportScreenState extends State<ReportScreen> {
                         );
                       }
                     } else if (_deviceID == "choisir véhicule(s)") {
-                      _scaffoldKey.currentState.showSnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('veuillez chosir un ou plusieurs véhicules'),
                         ),
@@ -356,7 +356,7 @@ class ReportScreenState extends State<ReportScreen> {
                       //     message: 'veuillez chosir un ou plusieurs véhicules',
                       //     type: 'error');
                     } else if (_selectedType == null) {
-                      _scaffoldKey.currentState.showSnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('Veuillez choisir un type de rapport'),
                         ),
@@ -366,7 +366,7 @@ class ReportScreenState extends State<ReportScreen> {
                       //     message: 'veuillez chosir un type de rapport',
                       //     type: 'error');
                     } else {
-                      _scaffoldKey.currentState.showSnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('date fin doit être supérieure à date début'),
                         ),

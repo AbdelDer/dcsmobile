@@ -54,7 +54,7 @@ class VehicleListViewState extends State {
       stream: _stream,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          _scaffoldKey.currentState.showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(snapshot.error),
             ),
@@ -99,7 +99,7 @@ class VehicleListViewState extends State {
         _deviceCardKey.currentState.data = _.responseBody;
       });
     }).catchError((err) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(err.toString()),
         ),

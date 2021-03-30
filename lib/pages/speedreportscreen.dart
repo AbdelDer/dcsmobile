@@ -80,7 +80,7 @@ class _SpeedReportScreenState extends State<SpeedReportScreen> {
           future: _fetchData(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              _scaffoldKey.currentState.showSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(snapshot.error.toString()),
                 ),
@@ -133,7 +133,7 @@ class _SpeedReportScreenState extends State<SpeedReportScreen> {
       },
     ).catchError(
       (error) {
-        _scaffoldKey.currentState.showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(error.toString()),
           ),

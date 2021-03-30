@@ -62,7 +62,7 @@ class _ReportViewState extends State<ReportView> {
       await Api.getReport(deviceID).then((r) {
         response = r;
       }).catchError((err) {
-        _scaffoldKey.currentState.showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(err.toString()),
           ),

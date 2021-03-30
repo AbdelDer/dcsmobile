@@ -603,7 +603,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
       //   ApiShowDialog.dialog(
       //       scaffoldKey: _scaffoldKey, message: error.toString(), type: 'error');
       // });
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.toString()),
         ),

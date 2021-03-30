@@ -465,7 +465,7 @@ class _EntretienScreenState extends State<EntretienScreen> {
         Navigator.of(context).pop();
       }
     }).catchError((error) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.toString()),
         ),
@@ -495,13 +495,13 @@ class _EntretienScreenState extends State<EntretienScreen> {
           errorMsgVisibility = false;
         });
         await _getEntretienData();
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(AppLocalizations.of(context).translate("Updated")),
         ));
         Navigator.of(context).pop();
       }
     }).catchError((error) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.toString()),
         ),
@@ -514,17 +514,17 @@ class _EntretienScreenState extends State<EntretienScreen> {
   _deleteEntretien(id) async {
     await Api.deleteEntretien(id).then((value) {
       if (value.status == Status.ERROR) {
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(value.responseBody.message),
         ));
       } else {
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(AppLocalizations.of(context).translate("Removed")),
         ));
         _getEntretienData();
       }
     }).catchError((error) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.toString()),
         ),
