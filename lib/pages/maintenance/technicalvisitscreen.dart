@@ -144,7 +144,7 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
                                 content:
                                     Text("Are you sure you want to delete?"),
                                 actions: <Widget>[
-                                  FlatButton(
+                                  TextButton(
                                     child: Text(
                                       AppLocalizations.of(context)
                                           .translate("Cancel"),
@@ -154,7 +154,7 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
                                       Navigator.of(context).pop();
                                     },
                                   ),
-                                  FlatButton(
+                                  TextButton(
                                     child: Text(
                                       AppLocalizations.of(context)
                                           .translate("Delete"),
@@ -398,7 +398,7 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            FlatButton(
+                            TextButton(
                               child: Text(
                                 AppLocalizations.of(context).translate("Close"),
                                 style: TextStyle(
@@ -408,8 +408,10 @@ class _TechnicalVisitScreenState extends State<TechnicalVisitScreen> {
                                 Navigator.of(context).pop();
                               },
                             ),
-                            FlatButton.icon(
-                              color: Colors.white,
+                            TextButton.icon(
+                              style: TextButton.styleFrom(
+                                primary: Colors.white,
+                              ),
                               icon: Icon(
                                 Icons.save_alt,
                                 color: Colors.black,

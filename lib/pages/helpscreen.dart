@@ -20,7 +20,8 @@ class HelpScreen extends StatefulWidget {
 class _HelpScreenState extends State<HelpScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _title;
-
+  String _email = "geotechinfo19@gmail.com";
+  String _phoneNumber = "+212660971903";
   _HelpScreenState(this._title);
 
   @override
@@ -76,7 +77,7 @@ class _HelpScreenState extends State<HelpScreen> {
                     ],
                   ),
                   onPressed: () => setState(() {
-                    _launchInBrowser("mailto://geotechinfo19@gmail.com");
+                    _launchInBrowser("mailto://$_email");
                   }),
                 ),
               ),
@@ -111,7 +112,7 @@ class _HelpScreenState extends State<HelpScreen> {
                     ],
                   ),
                   onPressed: () => setState(() {
-                    _launchWhatsApp(phone: "+212661721860");
+                    _launchWhatsApp(phone: "$_phoneNumber");
                   }),
                 ),
               ),

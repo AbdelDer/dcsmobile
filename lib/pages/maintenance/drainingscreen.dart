@@ -138,7 +138,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
                                 content:
                                     Text("Are you sure you want to delete?"),
                                 actions: <Widget>[
-                                  FlatButton(
+                                  TextButton(
                                     child: Text(
                                       '${AppLocalizations.of(context).translate("Cancel")}',
                                       style: TextStyle(color: Colors.black),
@@ -147,7 +147,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
                                       Navigator.of(context).pop();
                                     },
                                   ),
-                                  FlatButton(
+                                  TextButton(
                                     child: Text(
                                       "${AppLocalizations.of(context).translate("Delete")}",
                                       style: TextStyle(color: Colors.red),
@@ -430,7 +430,7 @@ class _DrainingScreenState extends State<DrainingScreen> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            FlatButton(
+                            TextButton(
                               child: Text(
                                 "${AppLocalizations.of(context).translate("Close")}",
                                 style: TextStyle(
@@ -440,8 +440,10 @@ class _DrainingScreenState extends State<DrainingScreen> {
                                 Navigator.of(context).pop();
                               },
                             ),
-                            FlatButton.icon(
-                              color: Colors.white,
+                            TextButton.icon(
+                              style: TextButton.styleFrom(
+                                primary: Colors.white,
+                              ),
                               icon: Icon(
                                 Icons.save_alt,
                                 color: Colors.black,

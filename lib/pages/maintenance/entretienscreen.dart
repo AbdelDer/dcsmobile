@@ -137,7 +137,7 @@ class _EntretienScreenState extends State<EntretienScreen> {
                                 content:
                                     Text("Are you sure you want to delete?"),
                                 actions: <Widget>[
-                                  FlatButton(
+                                  TextButton(
                                     child: Text(
                                       AppLocalizations.of(context)
                                           .translate("Cancel"),
@@ -147,7 +147,7 @@ class _EntretienScreenState extends State<EntretienScreen> {
                                       Navigator.of(context).pop();
                                     },
                                   ),
-                                  FlatButton(
+                                  TextButton(
                                     child: Text(
                                       AppLocalizations.of(context)
                                           .translate("Delete"),
@@ -396,7 +396,7 @@ class _EntretienScreenState extends State<EntretienScreen> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            FlatButton(
+                            TextButton(
                               child: Text(
                                 "close",
                                 style: TextStyle(
@@ -406,8 +406,10 @@ class _EntretienScreenState extends State<EntretienScreen> {
                                 Navigator.of(context).pop();
                               },
                             ),
-                            FlatButton.icon(
-                              color: Colors.white,
+                            TextButton.icon(
+                              style: TextButton.styleFrom(
+                                primary: Colors.white,
+                              ),
                               icon: Icon(
                                 Icons.save_alt,
                                 color: Colors.black,

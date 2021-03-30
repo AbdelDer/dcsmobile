@@ -182,7 +182,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                         style: TextStyle(fontSize: 20),
                       ),
                     ),
-                    FlatButton(
+                    TextButton(
                       child: Text(
                         "Choisir une autre date",
                         style: TextStyle(

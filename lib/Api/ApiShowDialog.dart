@@ -23,7 +23,7 @@ class ApiShowDialog{
             title: Text(type, style: TextStyle(color: type =='error' ? Colors.red : Colors.blue),),
             content: Text(message.toString()),
             actions: <Widget>[
-              FlatButton(child: Text('ok'),onPressed: () => Navigator.of(__).pop(),)
+              TextButton(child: Text('ok'),onPressed: () => Navigator.of(__).pop(),)
             ],
           ));
     }

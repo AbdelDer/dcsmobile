@@ -4,6 +4,7 @@ import 'package:dcsmobile/pages/HistoryScreen.dart';
 import 'package:dcsmobile/pages/alarmscreen.dart';
 import 'package:dcsmobile/pages/commandsdialog.dart';
 import 'package:dcsmobile/pages/maintenance/drainingscreen.dart';
+import 'package:dcsmobile/pages/maintenance/editvehicledialog.dart';
 import 'package:dcsmobile/pages/maintenance/entretienscreen.dart';
 import 'package:dcsmobile/pages/maintenance/insurancescreen.dart';
 import 'package:dcsmobile/pages/maintenance/technicalvisitscreen.dart';
@@ -445,6 +446,32 @@ class DeviceCardState extends State<DeviceCard> {
                   ),
                 ),
               );
+            },
+          ),
+        ),
+        Container(
+          width: 300,
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                  side: BorderSide(color: Colors.green)),
+              padding: const EdgeInsets.symmetric(horizontal: 60),
+              primary: Colors.white,
+            ),
+            icon: Image.asset('assets/maintenance/entretien.png'),
+            label: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                // "${AppLocalizations.of(context).translate("Entretiens")}",
+                "modifier véhicule",
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+            onPressed: () {
+              showDialog(context: context, builder: (context) {
+                return EditVehicleDialog();
+              });
             },
           ),
         ),
