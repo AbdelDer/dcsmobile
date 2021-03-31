@@ -94,6 +94,8 @@ class _OpenStreetMapState extends State<OpenStreetMap>
 
   int index = 0;
 
+  bool canPlay = false;
+
   _OpenStreetMapState(this._deviceID, this._option);
 
   _OpenStreetMapState.History(
@@ -111,7 +113,7 @@ class _OpenStreetMapState extends State<OpenStreetMap>
       _positionDetails();
     });
     _progressValue = 0.0;
-    _playbackSpeed = 300;
+    _playbackSpeed = 400;
   }
 
   @override
@@ -135,6 +137,7 @@ class _OpenStreetMapState extends State<OpenStreetMap>
             }
           }
           readyToPlay = true;
+          canPlay = true;
         }).catchError((err) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -549,17 +552,13 @@ class _OpenStreetMapState extends State<OpenStreetMap>
                     width: 0,
                   ),
             _option == 'Live' || _option == 'Group'
-                ? Padding(
-                    padding: EdgeInsets.only(
-                      top: 1,
-                    ),
-                    child: LinearProgressIndicator(
-                      backgroundColor: Colors.greenAccent.shade100,
-                      valueColor: new AlwaysStoppedAnimation<Color>(
-                          Colors.green.shade900),
-                      value: _progressValue,
-                    ),
-                  )
+                ? LinearProgressIndicator(
+                  minHeight: 8,
+                  backgroundColor: Colors.greenAccent.shade100,
+                  valueColor: new AlwaysStoppedAnimation<Color>(
+                      Colors.green.shade900),
+                  value: _progressValue,
+                )
                 : SizedBox(
                     height: 0,
                     width: 0,
@@ -765,7 +764,8 @@ class _OpenStreetMapState extends State<OpenStreetMap>
                               width: 45,
                               height: 40,
                               decoration: new BoxDecoration(
-                                color: Colors.greenAccent,
+                                color:
+                                    canPlay ? Colors.greenAccent : Colors.grey,
                                 borderRadius: new BorderRadius.only(
                                   topLeft: const Radius.circular(25.0),
                                   topRight: const Radius.circular(25.0),
@@ -777,42 +777,47 @@ class _OpenStreetMapState extends State<OpenStreetMap>
                                 padding: const EdgeInsets.only(right: 4.0),
                                 child: Icon(
                                   Icons.play_arrow,
-                                  color: Colors.green.shade700,
+                                  color: canPlay
+                                      ? Colors.green.shade700
+                                      : Colors.black,
                                   size: 20,
                                 ),
                               ),
                             ),
-                            onPressed: () async {
-                              if (mounted) {
-                                setState(() {
-                                  if (!onPause) {
-                                    _markers.clear();
-                                  }
-                                  onPause = false;
-                                });
-                                for (int i = index;
-                                    i < oldMarkers.length;
-                                    i++) {
-                                  if (onPause) {
-                                    index = i - 1;
-                                    break;
-                                  }
-                                  await Future.delayed(
-                                      Duration(milliseconds: _playbackSpeed));
-                                  if (mounted) {
-                                    setState(() {
-                                      _markers.add(oldMarkers[i]);
-                                    });
-                                    _mapController.move(
-                                        _markers.last.point, 16);
-                                  }
-                                  // this is really important if the user will replay the history
-                                  if(i == oldMarkers.length -1) {
-                                    index = 0;
-                                  }
-                                }
-                              }
-                            },
+                            onPressed: !canPlay
+                                ? null
+                                : () async {
+                                    if (mounted) {
+                                      setState(() {
+                                        canPlay = !canPlay;
+                                        if (!onPause) {
+                                          _markers.clear();
+                                        }
+                                        onPause = false;
+                                      });
+                                      for (int i = index;
+                                          i < oldMarkers.length;
+                                          i++) {
+                                        if (onPause) {
+                                          index = i - 1;
+                                          break;
+                                        }
+                                        await Future.delayed(Duration(
+                                            milliseconds: _playbackSpeed));
+                                        if (mounted) {
+                                          setState(() {
+                                            _markers.add(oldMarkers[i]);
+                                          });
+                                          _mapController.move(
+                                              _markers.last.point, 16);
+                                        }
+                                        // this is really important if the user will replay the history
+                                        if (i == oldMarkers.length - 1) {
+                                          index = 0;
+                                        }
+                                      }
+                                    }
+                                  },
                           )
                         : SizedBox(
                             height: 0,
@@ -824,7 +829,8 @@ class _OpenStreetMapState extends State<OpenStreetMap>
                               width: 45,
                               height: 40,
                               decoration: new BoxDecoration(
-                                color: Colors.greenAccent,
+                                color:
+                                    canPlay ? Colors.grey : Colors.greenAccent,
                                 borderRadius: new BorderRadius.only(
                                   topLeft: const Radius.circular(25.0),
                                   topRight: const Radius.circular(25.0),
@@ -836,16 +842,83 @@ class _OpenStreetMapState extends State<OpenStreetMap>
                                 padding: const EdgeInsets.only(right: 4.0),
                                 child: Icon(
                                   Icons.pause,
-                                  color: Colors.green.shade700,
+                                  color: canPlay
+                                      ? Colors.black
+                                      : Colors.green.shade700,
                                   size: 20,
                                 ),
                               ),
                             ),
-                            onPressed: () async {
-                              if (mounted) {
+                            onPressed: canPlay
+                                ? null
+                                : () async {
+                                    if (mounted) {
+                                      setState(() {
+                                        canPlay = !canPlay;
+                                        onPause = true;
+                                      });
+                                    }
+                                  },
+                          )
+                        : SizedBox(
+                            height: 0,
+                            width: 0,
+                          ),
+                    _option == 'History' && readyToPlay
+                        ? IconButton(
+                            icon: Container(
+                              width: 45,
+                              height: 40,
+                              decoration: new BoxDecoration(
+                                color: _playbackSpeed == 200
+                                    ? Colors.grey
+                                    : Colors.greenAccent,
+                                borderRadius: new BorderRadius.only(
+                                  topLeft: const Radius.circular(25.0),
+                                  topRight: const Radius.circular(25.0),
+                                  bottomLeft: const Radius.circular(25.0),
+                                  bottomRight: const Radius.circular(25.0),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
+                                child: Icon(
+                                  Icons.fast_forward,
+                                  color: _playbackSpeed == 200
+                                      ? Colors.black
+                                      : Colors.green.shade700,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                            onPressed: () {
+                              if (_playbackSpeed != 200) {
                                 setState(() {
-                                  onPause = true;
+                                  _playbackSpeed -= 200;
                                 });
+                                ScaffoldMessenger.of(context)
+                                    ?.hideCurrentSnackBar();
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  backgroundColor: Colors.greenAccent,
+                                  width: 62,
+                                  behavior: SnackBarBehavior.floating,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: const Radius.circular(25.0),
+                                      topRight: const Radius.circular(25.0),
+                                      bottomLeft: const Radius.circular(25.0),
+                                      bottomRight: const Radius.circular(25.0),
+                                    ),
+                                  ),
+                                  content: Text(
+                                    "${(400 / _playbackSpeed).toStringAsFixed(2)}",
+                                    style: TextStyle(
+                                      color: Colors.green.shade700,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ));
                               }
                             },
                           )
@@ -858,45 +931,11 @@ class _OpenStreetMapState extends State<OpenStreetMap>
                             icon: Container(
                               width: 45,
                               height: 40,
-                              decoration: new BoxDecoration(
-                                color: Colors.greenAccent,
-                                borderRadius: new BorderRadius.only(
-                                  topLeft: const Radius.circular(25.0),
-                                  topRight: const Radius.circular(25.0),
-                                  bottomLeft: const Radius.circular(25.0),
-                                  bottomRight: const Radius.circular(25.0),
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 4.0),
-                                child: Icon(
-                                  Icons.fast_forward,
-                                  color: Colors.green.shade700,
-                                  size: 20,
-                                ),
-                              ),
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                if (_playbackSpeed == 1000)
-                                  setState(() {
-                                    _playbackSpeed = 300;
-                                  });
-                              });
-                            },
-                          )
-                        : SizedBox(
-                            height: 0,
-                            width: 0,
-                          ),
-                    _option == 'History' && readyToPlay
-                        ? IconButton(
-                            icon: Container(
-                              width: 45,
-                              height: 40,
-                              decoration: new BoxDecoration(
-                                color: Colors.greenAccent,
-                                borderRadius: new BorderRadius.only(
+                              decoration: BoxDecoration(
+                                color: _playbackSpeed == 2000
+                                    ? Colors.grey
+                                    : Colors.greenAccent,
+                                borderRadius: BorderRadius.only(
                                   topLeft: const Radius.circular(25.0),
                                   topRight: const Radius.circular(25.0),
                                   bottomLeft: const Radius.circular(25.0),
@@ -907,18 +946,42 @@ class _OpenStreetMapState extends State<OpenStreetMap>
                                 padding: const EdgeInsets.only(right: 4.0),
                                 child: Icon(
                                   Icons.fast_rewind,
-                                  color: Colors.green.shade700,
+                                  color: _playbackSpeed == 2000
+                                      ? Colors.black
+                                      : Colors.green.shade700,
                                   size: 20,
                                 ),
                               ),
                             ),
                             onPressed: () {
-                              setState(() {
-                                if (_playbackSpeed == 300)
-                                  setState(() {
-                                    _playbackSpeed = 1000;
-                                  });
-                              });
+                              if (_playbackSpeed != 2000) {
+                                setState(() {
+                                  _playbackSpeed += 200;
+                                });
+                                ScaffoldMessenger.of(context)
+                                    ?.hideCurrentSnackBar();
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  backgroundColor: Colors.greenAccent,
+                                  width: 62,
+                                  behavior: SnackBarBehavior.floating,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: const Radius.circular(25.0),
+                                      topRight: const Radius.circular(25.0),
+                                      bottomLeft: const Radius.circular(25.0),
+                                      bottomRight: const Radius.circular(25.0),
+                                    ),
+                                  ),
+                                  content: Text(
+                                    "${(400 / _playbackSpeed).toStringAsFixed(2)}",
+                                    style: TextStyle(
+                                      color: Colors.green.shade700,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ));
+                              }
                             },
                           )
                         : SizedBox(
@@ -979,7 +1042,7 @@ class _OpenStreetMapState extends State<OpenStreetMap>
       _points?.add(lt.LatLng(ed.latitude, ed.longitude));
       _data?.add(ed);
       oldMarkers.add(_markers?.last);
-      _mapController.move(_markers?.last.point, 18);
+      _mapController.move(_markers[_markers.length ~/ 2].point, 10);
     });
   }
 
