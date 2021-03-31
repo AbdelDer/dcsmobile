@@ -104,6 +104,7 @@
   "All vehicles": "Tous les véhicules",
   "Wrong" : "Quelque chose ne va pas",
   "Max" : "MAX",
+  "modifyVehicle" : "Modifier véhicule",
   "Empty Pass" : "Mot de passe est obligatoire",
   "Empty Name" : "Nom du Compte est obligatoire",
   "Name Caracters": "Nom doit contenir seuelement des alphabets",

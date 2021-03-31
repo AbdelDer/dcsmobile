@@ -7,16 +7,20 @@ class Device {
   String _accountID;
   String _deviceID;
   String _vehicleModel;
+  String _vehicleID;
   double _latitude;
   double _longitude;
   num _timestamp;
   double _speedKPH;
+  double _lastOdometerKM;
 
   String get accountID => _accountID;
 
   String get deviceID => _deviceID;
 
   String get vehicleModel => _vehicleModel;
+
+  String get vehicleID => _vehicleID;
 
   double get latitude => _latitude;
 
@@ -26,8 +30,11 @@ class Device {
 
   double get speedKPH => _speedKPH;
 
+  double get lastOdometerKM => _lastOdometerKM;
+
   String get timestampAsString {
-    final date = new DateTime.fromMillisecondsSinceEpoch(timestamp.toInt() * 1000);
+    final date =
+        new DateTime.fromMillisecondsSinceEpoch(timestamp.toInt() * 1000);
     final formatter = new DateFormat('yyyy-MM-dd HH:mm:ss');
     final String formatted = formatter.format(date);
     return formatted;
@@ -46,16 +53,20 @@ class Device {
       {accountID,
       deviceID,
       vehicleModel,
+      vehicleID,
       latitude,
       longitude,
       timestamp,
+      lastOdometerKM,
       speedKPH})
       : _accountID = accountID,
         _deviceID = deviceID,
         _vehicleModel = vehicleModel,
+        _vehicleID = vehicleID,
         _latitude = latitude,
         _longitude = longitude,
         _timestamp = timestamp,
+        _lastOdometerKM = lastOdometerKM,
         _speedKPH = speedKPH;
 
   // ignore: missing_return
@@ -70,14 +81,27 @@ class Device {
   }*/
 
   factory Device.fromJson(Map<dynamic, dynamic> json) {
-    return Device(
-        deviceID: json['deviceID']['deviceID'],
-        accountID: json['deviceID']['accountID'],
-        vehicleModel: json['vehicleModel'],
-        latitude: json['latitude'],
-        longitude: json['longitude'],
-        timestamp: json['timestamp'],
-        speedKPH: json['speedKPH']);
+    if (json['vehicleID'] == null) {
+      return Device(
+          deviceID: json['deviceID'],
+          accountID: json['accountID'],
+          vehicleModel: json['vehicleModel'],
+          latitude: json['latitude'],
+          longitude: json['longitude'],
+          timestamp: json['timestamp'],
+          speedKPH: json['speedKPH']);
+    } else {
+      return Device(
+          deviceID: json['deviceID'],
+          accountID: json['accountID'],
+          vehicleModel: json['vehicleModel'],
+          vehicleID: json['vehicleID'],
+          latitude: json['latitude'],
+          longitude: json['longitude'],
+          timestamp: json['timestamp'],
+          lastOdometerKM: json['lastOdometerKM'] ?? 0.0,
+          speedKPH: json['speedKPH']);
+    }
   }
 
   @override

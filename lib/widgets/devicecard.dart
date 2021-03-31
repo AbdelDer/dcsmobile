@@ -459,18 +459,17 @@ class DeviceCardState extends State<DeviceCard> {
               padding: const EdgeInsets.symmetric(horizontal: 60),
               primary: Colors.white,
             ),
-            icon: Image.asset('assets/maintenance/entretien.png'),
+            icon: Icon(Icons.edit, color: Colors.black),
             label: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                // "${AppLocalizations.of(context).translate("Entretiens")}",
-                "modifier véhicule",
+                "${AppLocalizations.of(context).translate("modifyVehicle")}",
                 style: TextStyle(color: Colors.black),
               ),
             ),
             onPressed: () {
               showDialog(context: context, builder: (context) {
-                return EditVehicleDialog();
+                return EditVehicleDialog(deviceID: data.deviceID,);
               });
             },
           ),

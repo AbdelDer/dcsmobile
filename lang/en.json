@@ -104,6 +104,7 @@
   "All vehicles": "All vehicles",
   "Wrong": "Something's wrong",
   "Max": "MAX",
+  "modifyVehicle" : "Edit vehicle",
   "Empty Pass": "Password should not be empty",
   "Empty Name": "Account name should not be empty",
   "Name Caracters": "Name must contain only alphabets",

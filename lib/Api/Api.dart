@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dcsmobile/Api/Response.dart';
 import 'package:dcsmobile/models/Account.dart';
+import 'package:dcsmobile/models/Device.dart' as d;
 import 'package:dcsmobile/models/EventData.dart';
 import 'package:dcsmobile/models/Group.dart';
 import 'package:dcsmobile/models/Report.dart';
@@ -434,6 +435,27 @@ class Api {
     return Response.completed(Alarm.fromJson(responseBody));
   }
 
+  static Future<Response<d.Device>> getDevice(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/find/device', body: body);
+
+    final httpResponse = await httpCustom
+        .post()
+        .catchError((err) => throw ('erreur lié au serveur'));
+    if (httpResponse.bodyBytes.isEmpty) throw ('404');
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode == 404) {
+      throw ('404');
+    } else if (httpResponse.statusCode != 200) {
+      return Response.error(responseBody['message']);
+    }
+
+    // return Response.completed(
+    //     responseBody.map((alarm) => Alarm.fromJson(alarm)));$
+    return Response.completed(d.Device.fromJson(responseBody));
+  }
+
   static Future<Response<List<Activity>>> getHistoryTimeLine(body) async {
     await connected();
     var httpCustom = HttpCustom(url: '$baseUrl/history/timeline', body: body);
@@ -521,6 +543,26 @@ class Api {
 
     var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
     return Response.completed('added');
+  }
+
+  static Future<Response> updateDevice(body) async {
+    await connected();
+    var httpCustom = HttpCustom(url: '$baseUrl/short/update/device', body: body);
+
+    final httpResponse = await httpCustom
+        .put()
+        .catchError((err) => throw ('erreur lié au serveur'));
+
+    var responseBody = json.decode(utf8.decode(httpResponse.bodyBytes));
+
+    if (httpResponse.statusCode != 200) {
+      if (responseBody['message'] == null || responseBody['message'] == "") {
+        return Response.error('Réssayer plus tard');
+      } else {
+        return Response.error(responseBody['message']);
+      }
+    }
+    return Response.completed(Device.fromJson(responseBody));
   }
 
   static Future<Response> updateDeviceAlarmSettings(body) async {
