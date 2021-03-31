@@ -227,36 +227,38 @@ class _OpenStreetMapState extends State<OpenStreetMap>
         } else {
           icon = _data[0].iconPath();
         }
-        for (var coord in _coordsBetweenTwoGeoPoints.getCoords(
-            _markers[0].point.latitude,
-            _markers[0].point.longitude,
-            data.latitude,
-            data.longitude,
-            _data[0].speedKPH)) {
-          // print(coord);
-          _markers?.clear();
-          _data?.clear();
-          data.latitude = coord[0];
-          data.longitude = coord[1];
-          // data.speedKPH = _data[0].speedKPH;
-          _data?.add(data);
-          setState(() {
-            _markers?.add(Marker(
-                point: LatLng(
-                  coord[0],
-                  coord[1],
-                ),
-                width: 30,
-                height: 30,
-                anchorPos: AnchorPos.align(AnchorAlign.top),
-                builder: (context) {
-                  return Image.asset(icon);
-                }));
-            _mapController.move(_markers?.last?.point, 18);
-            // _popupLayerController.togglePopup(_markers?.last);
-            // _animatedMapMove(_markers.last.point);
-          });
-          await Future.delayed(Duration(milliseconds: 2));
+        if(_data[0].speedKPH != 0){
+          for (var coord in _coordsBetweenTwoGeoPoints.getCoords(
+              _markers[0].point.latitude,
+              _markers[0].point.longitude,
+              data.latitude,
+              data.longitude,
+              _data[0].speedKPH)) {
+            // print(coord);
+            _markers?.clear();
+            _data?.clear();
+            data.latitude = coord[0];
+            data.longitude = coord[1];
+            // data.speedKPH = _data[0].speedKPH;
+            _data?.add(data);
+            setState(() {
+              _markers?.add(Marker(
+                  point: LatLng(
+                    coord[0],
+                    coord[1],
+                  ),
+                  width: 30,
+                  height: 30,
+                  anchorPos: AnchorPos.align(AnchorAlign.top),
+                  builder: (context) {
+                    return Image.asset(icon);
+                  }));
+              _mapController.move(_markers?.last?.point, 18);
+              // _popupLayerController.togglePopup(_markers?.last);
+              // _animatedMapMove(_markers.last.point);
+            });
+            await Future.delayed(Duration(milliseconds: 2));
+          }
         }
       }
       _markers?.clear();
